@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace aspect
+namespace Aspect
 {
     public partial class App : Application
     {

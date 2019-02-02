@@ -1,6 +1,6 @@
 using System.Windows;
 
-namespace aspect
+namespace Aspect.UI
 {
     public partial class MainWindow : Window
     {
