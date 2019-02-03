@@ -7,14 +7,63 @@
                  xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                  xmlns:ui="clr-namespace:Aspect.UI"
                  xmlns:models="clr-namespace:Aspect.Models"
-                 xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
                  mc:Ignorable="d"
                  d:DataContext="{d:DesignInstance ui:MainViewModel}"
                  Title="{Binding FileList.View.CurrentItem, TargetNullValue=aspect}"
                  TitleCharacterCasing="Normal"
-                 Height="450" Width="800">
+                 Height="450" Width="800"
+                 x:Name="Window">
   <mah:MetroWindow.Flyouts>
-    <mah:FlyoutsControl />
+    <mah:FlyoutsControl>
+
+      <mah:Flyout Header="Images" Position="Right" Width="300"
+                  TitleVisibility="Collapsed" CloseButtonVisibility="Collapsed"
+                  IsPinned="False" ExternalCloseButton="Left"
+                  IsOpen="{Binding ElementName=ListToggleButton, Path=IsChecked, Mode=TwoWay}"
+                  IsOpenChanged="_HandleImagesFlyoutIsOpenChanged">
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+          </Grid.ColumnDefinitions>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="{Binding ElementName=Window, Path=TitlebarHeight, Mode=OneWay}" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+          </Grid.RowDefinitions>
+          <!-- row 0 is padding to avoid overlapping title bar items  -->
+          <Label Grid.Row="1" Grid.Column="0" Content="Sort" VerticalAlignment="Center" />
+          <ComboBox Grid.Row="1" Grid.Column="1"
+                    ItemsSource="{Binding AvailableSortBy}" SelectedValue="{Binding FileList.Sort}"
+                    DisplayMemberPath="Item2" SelectedValuePath="Item1"
+                    VerticalAlignment="Center"
+                    Margin="4" />
+
+          <ListView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding FileList.View}"
+                    IsSynchronizedWithCurrentItem="True" BorderThickness="0"
+                    x:Name="mImageList">
+            <ListView.ItemTemplate>
+              <DataTemplate DataType="models:FileData">
+                <Grid>
+                  <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                  </Grid.RowDefinitions>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                  </Grid.ColumnDefinitions>
+                  <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding Name}" />
+                  <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding ModifiedInstant}" />
+                  <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Size}" />
+                </Grid>
+              </DataTemplate>
+            </ListView.ItemTemplate>
+          </ListView>
+        </Grid>
+      </mah:Flyout>
+    </mah:FlyoutsControl>
   </mah:MetroWindow.Flyouts>
   <mah:MetroWindow.RightWindowCommands>
     <mah:WindowCommands>
@@ -37,51 +86,6 @@
       </ToggleButton>
     </mah:WindowCommands>
   </mah:MetroWindow.RightWindowCommands>
-  <Grid>
-    <ui:ImageViewer x:Name="ImageViewer" File="{Binding FileList.View.CurrentItem}"
-                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-
-    <mah:Flyout Header="Images" Position="Right" Width="300"
-                TitleVisibility="Collapsed" CloseButtonVisibility="Collapsed"
-                IsOpen="{Binding ElementName=ListToggleButton, Path=IsChecked}">
-      <Grid>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="Auto" />
-          <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-          <RowDefinition Height="Auto" />
-          <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Label Grid.Row="0" Grid.Column="0" Content="Sort" VerticalAlignment="Center" />
-        <ComboBox Grid.Row="0" Grid.Column="1"
-                  ItemsSource="{Binding AvailableSortBy}" SelectedValue="{Binding FileList.Sort}"
-                  DisplayMemberPath="Item2" SelectedValuePath="Item1"
-                  VerticalAlignment="Center"
-                  Margin="4" />
-
-        <ListView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding FileList.View}"
-                  IsSynchronizedWithCurrentItem="True" BorderThickness="0">
-          <ListView.ItemTemplate>
-            <DataTemplate DataType="models:FileData">
-              <Grid>
-                <Grid.RowDefinitions>
-                  <RowDefinition Height="Auto" />
-                  <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                  <ColumnDefinition Width="Auto" />
-                  <ColumnDefinition Width="*" />
-                  <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding Name}" />
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding ModifiedInstant}" />
-                <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Size}" />
-              </Grid>
-            </DataTemplate>
-          </ListView.ItemTemplate>
-        </ListView>
-      </Grid>
-    </mah:Flyout>
-  </Grid>
+  <ui:ImageViewer x:Name="ImageViewer" File="{Binding FileList.View.CurrentItem}"
+                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
 </mah:MetroWindow>
