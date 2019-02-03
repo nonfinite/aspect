@@ -15,13 +15,18 @@
                  x:Name="Window">
   <mah:MetroWindow.Flyouts>
     <mah:FlyoutsControl>
-
       <mah:Flyout Header="Images" Position="Right" Width="300"
                   TitleVisibility="Collapsed" CloseButtonVisibility="Collapsed"
                   IsPinned="False" ExternalCloseButton="Left"
                   IsOpen="{Binding ElementName=ListToggleButton, Path=IsChecked, Mode=TwoWay}"
                   IsOpenChanged="_HandleImagesFlyoutIsOpenChanged">
         <Grid>
+          <Grid.Resources>
+            <Style TargetType="iconPacks:PackIconModern">
+              <Setter Property="VerticalAlignment" Value="Center" />
+              <Setter Property="Margin" Value="4 0" />
+            </Style>
+          </Grid.Resources>
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
@@ -32,7 +37,7 @@
             <RowDefinition Height="*" />
           </Grid.RowDefinitions>
           <!-- row 0 is padding to avoid overlapping title bar items  -->
-          <Label Grid.Row="1" Grid.Column="0" Content="Sort" VerticalAlignment="Center" />
+          <iconPacks:PackIconModern Grid.Row="1" Grid.Column="0" Kind="Sort" />
           <ComboBox Grid.Row="1" Grid.Column="1"
                     ItemsSource="{Binding AvailableSortBy}" SelectedValue="{Binding FileList.Sort}"
                     DisplayMemberPath="Item2" SelectedValuePath="Item1"
