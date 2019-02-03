@@ -61,6 +61,7 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -73,11 +74,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\Dimensions.cs" />
     <Compile Include="Models\FileData.cs" />
     <Compile Include="Models\FileList.cs" />
     <Compile Include="Models\FileSize.cs" />
     <Compile Include="Models\SortBy.cs" />
+    <Compile Include="UI\Converters\EnumToBoolConverter.cs" />
+    <Compile Include="UI\ImageViewer.xaml.cs">
+      <DependentUpon>ImageViewer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utility\NotifyPropertyChanged.cs" />
+    <Page Include="UI\ImageViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

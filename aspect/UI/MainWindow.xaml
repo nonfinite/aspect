@@ -18,16 +18,28 @@
   </mah:MetroWindow.Flyouts>
   <mah:MetroWindow.RightWindowCommands>
     <mah:WindowCommands>
+      <StackPanel Orientation="Horizontal">
+        <ToggleButton
+          IsChecked="{Binding ElementName=ImageViewer, Path=ImageFit, Converter={StaticResource ConvertEnumToBool}, ConverterParameter={x:Static ui:ImageFit.FitAll}}">
+          <iconPacks:PackIconModern Kind="ArrowExpand" />
+        </ToggleButton>
+        <ToggleButton
+          IsChecked="{Binding ElementName=ImageViewer, Path=ImageFit, Converter={StaticResource ConvertEnumToBool}, ConverterParameter={x:Static ui:ImageFit.FitHeight}}">
+          <iconPacks:PackIconModern Kind="DimensionArrowLineHeightShort" />
+        </ToggleButton>
+        <ToggleButton
+          IsChecked="{Binding ElementName=ImageViewer, Path=ImageFit, Converter={StaticResource ConvertEnumToBool}, ConverterParameter={x:Static ui:ImageFit.FitWidth}}">
+          <iconPacks:PackIconModern Kind="DimensionArrowLineWidthShort" />
+        </ToggleButton>
+      </StackPanel>
       <ToggleButton x:Name="ListToggleButton">
         <iconPacks:PackIconModern Kind="List" />
       </ToggleButton>
     </mah:WindowCommands>
   </mah:MetroWindow.RightWindowCommands>
   <Grid>
-    <Image gif:AnimationBehavior.SourceUri="{Binding FileList.View.CurrentItem.Uri}"
-           gif:AnimationBehavior.AutoStart="True"
-           gif:AnimationBehavior.RepeatBehavior="Forever"
-           gif:AnimationBehavior.Loaded="_HandleImageLoaded" />
+    <ui:ImageViewer x:Name="ImageViewer" File="{Binding FileList.View.CurrentItem}"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
 
     <mah:Flyout Header="Images" Position="Right" Width="300"
                 TitleVisibility="Collapsed" CloseButtonVisibility="Collapsed"
@@ -46,7 +58,7 @@
                   ItemsSource="{Binding AvailableSortBy}" SelectedValue="{Binding FileList.Sort}"
                   DisplayMemberPath="Item2" SelectedValuePath="Item1"
                   VerticalAlignment="Center"
-                  Margin="4"/>
+                  Margin="4" />
 
         <ListView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding FileList.View}"
                   IsSynchronizedWithCurrentItem="True" BorderThickness="0">

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows.Media.Imaging;
 
 using Aspect.Utility;
 
@@ -38,6 +39,12 @@ namespace Aspect.Models
         {
             get => mRandomKey;
             set => Set(ref mRandomKey, value);
+        }
+
+        public Dimensions GetDimensions()
+        {
+            var decoder = BitmapDecoder.Create(Uri, BitmapCreateOptions.DelayCreation, BitmapCacheOption.OnDemand);
+            return new Dimensions((uint) decoder.Frames[0].PixelWidth, (uint) decoder.Frames[0].PixelHeight);
         }
 
         private static Uri _PathToUri(string path) => new Uri(Path.GetFullPath(path));
