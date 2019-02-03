@@ -77,11 +77,16 @@
     <Compile Include="Models\FileData.cs" />
     <Compile Include="Models\FileList.cs" />
     <Compile Include="Models\FileSize.cs" />
+    <Compile Include="Models\Rating.cs" />
     <Compile Include="Models\SortBy.cs" />
     <Compile Include="UI\Converters\EnumToBoolConverter.cs" />
     <Compile Include="UI\ImageViewer.xaml.cs">
       <DependentUpon>ImageViewer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\RatingControl.xaml.cs">
+      <DependentUpon>RatingControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Utility\MathEx.cs" />
     <Compile Include="Utility\NotifyPropertyChanged.cs" />
     <Page Include="UI\ImageViewer.xaml">
       <SubType>Designer</SubType>
@@ -100,6 +105,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="UI\RatingControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

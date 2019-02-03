@@ -13,6 +13,28 @@
                  TitleCharacterCasing="Normal"
                  Height="450" Width="800"
                  x:Name="Window">
+  <mah:MetroWindow.RightWindowCommands>
+    <mah:WindowCommands>
+      <ui:RatingControl Rating="{Binding FileList.View.CurrentItem.Rating, Mode=TwoWay}" />
+      <StackPanel Orientation="Horizontal">
+        <ToggleButton
+          IsChecked="{Binding ElementName=ImageViewer, Path=ImageFit, Converter={StaticResource ConvertEnumToBool}, ConverterParameter={x:Static ui:ImageFit.FitAll}}">
+          <iconPacks:PackIconModern Kind="ArrowExpand" />
+        </ToggleButton>
+        <ToggleButton
+          IsChecked="{Binding ElementName=ImageViewer, Path=ImageFit, Converter={StaticResource ConvertEnumToBool}, ConverterParameter={x:Static ui:ImageFit.FitHeight}}">
+          <iconPacks:PackIconModern Kind="DimensionArrowLineHeightShort" />
+        </ToggleButton>
+        <ToggleButton
+          IsChecked="{Binding ElementName=ImageViewer, Path=ImageFit, Converter={StaticResource ConvertEnumToBool}, ConverterParameter={x:Static ui:ImageFit.FitWidth}}">
+          <iconPacks:PackIconModern Kind="DimensionArrowLineWidthShort" />
+        </ToggleButton>
+      </StackPanel>
+      <ToggleButton x:Name="ListToggleButton">
+        <iconPacks:PackIconModern Kind="List" />
+      </ToggleButton>
+    </mah:WindowCommands>
+  </mah:MetroWindow.RightWindowCommands>
   <mah:MetroWindow.Flyouts>
     <mah:FlyoutsControl>
       <mah:Flyout Header="Images" Position="Right" Width="300"
@@ -34,6 +56,8 @@
           <Grid.RowDefinitions>
             <RowDefinition Height="{Binding ElementName=Window, Path=TitlebarHeight, Mode=OneWay}" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
           </Grid.RowDefinitions>
           <!-- row 0 is padding to avoid overlapping title bar items  -->
@@ -44,7 +68,14 @@
                     VerticalAlignment="Center"
                     Margin="4" />
 
-          <ListView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding FileList.View}"
+          <Border Grid.Row="2" Grid.Column="0" BorderThickness="0 0 0 2" Margin="4 0 0 4"
+                  BorderBrush="{StaticResource AccentColorBrush}" />
+          <Label Grid.Row="2" Grid.Column="1" Content="Filters" BorderThickness="0 0 0 2" Margin="0 0 4 4"
+                 BorderBrush="{StaticResource AccentColorBrush}" />
+
+          <ui:RatingControl Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Rating="{Binding FileList.FilterRating}" />
+
+          <ListView Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding FileList.View}"
                     IsSynchronizedWithCurrentItem="True" BorderThickness="0"
                     x:Name="mImageList">
             <ListView.ItemTemplate>
@@ -70,27 +101,6 @@
       </mah:Flyout>
     </mah:FlyoutsControl>
   </mah:MetroWindow.Flyouts>
-  <mah:MetroWindow.RightWindowCommands>
-    <mah:WindowCommands>
-      <StackPanel Orientation="Horizontal">
-        <ToggleButton
-          IsChecked="{Binding ElementName=ImageViewer, Path=ImageFit, Converter={StaticResource ConvertEnumToBool}, ConverterParameter={x:Static ui:ImageFit.FitAll}}">
-          <iconPacks:PackIconModern Kind="ArrowExpand" />
-        </ToggleButton>
-        <ToggleButton
-          IsChecked="{Binding ElementName=ImageViewer, Path=ImageFit, Converter={StaticResource ConvertEnumToBool}, ConverterParameter={x:Static ui:ImageFit.FitHeight}}">
-          <iconPacks:PackIconModern Kind="DimensionArrowLineHeightShort" />
-        </ToggleButton>
-        <ToggleButton
-          IsChecked="{Binding ElementName=ImageViewer, Path=ImageFit, Converter={StaticResource ConvertEnumToBool}, ConverterParameter={x:Static ui:ImageFit.FitWidth}}">
-          <iconPacks:PackIconModern Kind="DimensionArrowLineWidthShort" />
-        </ToggleButton>
-      </StackPanel>
-      <ToggleButton x:Name="ListToggleButton">
-        <iconPacks:PackIconModern Kind="List" />
-      </ToggleButton>
-    </mah:WindowCommands>
-  </mah:MetroWindow.RightWindowCommands>
   <ui:ImageViewer x:Name="ImageViewer" File="{Binding FileList.View.CurrentItem}"
                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
 </mah:MetroWindow>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows.Data;
 
 using Aspect.Utility;
@@ -21,7 +22,15 @@ namespace Aspect.Models
         }
 
         private readonly FileData[] mFiles;
+
+        private Rating? mFilterRating;
         private SortBy mSort;
+
+        public Rating? FilterRating
+        {
+            get => mFilterRating;
+            set => _SetFilter(ref mFilterRating, value);
+        }
 
         public SortBy Sort
         {
@@ -73,9 +82,31 @@ namespace Aspect.Models
             }
         }
 
-        public static Option<FileList> Load(string path)
+        private void _SetFilter<TProperty>(ref TProperty field, TProperty value,
+            [CallerMemberName] string propertyName = null)
         {
-            return LoadFile(path).Else(() => LoadDir(path));
+            if (Set(ref field, value, propertyName))
+            {
+                View.Refresh();
+            }
+        }
+
+        public static Option<FileList> Load(string path) => LoadFile(path).Else(() => LoadDir(path));
+
+        public static Option<FileList> LoadDir(string directoryPath)
+        {
+            if (!Directory.Exists(directoryPath))
+            {
+                return Option.None<FileList>();
+            }
+
+            var files = new List<FileData>();
+            foreach (var file in Directory.EnumerateFiles(directoryPath))
+            {
+                FileData.From(file).MatchSome(files.Add);
+            }
+
+            return Option.Some(new FileList(files.ToArray()));
         }
 
         public static Option<FileList> LoadFile(string filePath)
@@ -96,22 +127,6 @@ namespace Aspect.Models
 
                 return list;
             });
-        }
-
-        public static Option<FileList> LoadDir(string directoryPath)
-        {
-            if (!Directory.Exists(directoryPath))
-            {
-                return Option.None<FileList>();
-            }
-
-            var files = new List<FileData>();
-            foreach (var file in Directory.EnumerateFiles(directoryPath))
-            {
-                FileData.From(file).MatchSome(files.Add);
-            }
-
-            return Option.Some(new FileList(files.ToArray()));
         }
     }
 }

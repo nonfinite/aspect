@@ -39,10 +39,11 @@ namespace Aspect.Models
 
         private long mRandomKey;
 
-        public Uri Uri { get; }
-        public string Name { get; }
+        private Rating? mRating;
+
+        public Size Dimensions => mDimensions.Value;
         public DateTime ModifiedInstant { get; }
-        public FileSize Size { get; }
+        public string Name { get; }
 
         public long RandomKey
         {
@@ -50,11 +51,17 @@ namespace Aspect.Models
             set => Set(ref mRandomKey, value);
         }
 
-        public Size Dimensions => mDimensions.Value;
+        public Rating? Rating
+        {
+            get => mRating;
+            set => Set(ref mRating, value);
+        }
+
+        public FileSize Size { get; }
+
+        public Uri Uri { get; }
 
         private static Uri _PathToUri(string path) => new Uri(Path.GetFullPath(path));
-
-        public override string ToString() => $"{Name} | {ModifiedInstant}";
 
         public static Option<FileData> From(string filePath)
         {
@@ -76,5 +83,7 @@ namespace Aspect.Models
             Uri.Compare(Uri, _PathToUri(filePath),
                 UriComponents.AbsoluteUri,
                 UriFormat.Unescaped, StringComparison.OrdinalIgnoreCase) == 0;
+
+        public override string ToString() => $"{Name} | {ModifiedInstant}";
     }
 }
