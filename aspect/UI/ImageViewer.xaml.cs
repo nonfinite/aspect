@@ -108,10 +108,9 @@ namespace Aspect.UI
             {
                 return;
             }
-
-            var dims = file.GetDimensions();
-            mImage.Width = dims.Width;
-            mImage.Height = dims.Height;
+            
+            mImage.Width = file.Dimensions.Width;
+            mImage.Height = file.Dimensions.Height;
 
             if (ImageFit == ImageFit.Custom)
             {

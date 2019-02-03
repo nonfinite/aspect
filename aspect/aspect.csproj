@@ -74,7 +74,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Models\Dimensions.cs" />
     <Compile Include="Models\FileData.cs" />
     <Compile Include="Models\FileList.cs" />
     <Compile Include="Models\FileSize.cs" />

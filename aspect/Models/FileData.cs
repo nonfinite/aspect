@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows;
 using System.Windows.Media.Imaging;
 
 using Aspect.Utility;
@@ -17,6 +18,12 @@ namespace Aspect.Models
             Name = Path.GetFileName(path) ?? "";
             ModifiedInstant = modifiedInstant;
             Size = size;
+
+            mDimensions = new Lazy<Size>(() =>
+            {
+                var decoder = BitmapDecoder.Create(Uri, BitmapCreateOptions.DelayCreation, BitmapCacheOption.OnDemand);
+                return new Size(decoder.Frames[0].PixelWidth, decoder.Frames[0].PixelHeight);
+            });
         }
 
         private static readonly HashSet<string> SupportedFileExtensions = new HashSet<string>(new[]
@@ -27,6 +34,8 @@ namespace Aspect.Models
             ".jpeg",
             ".gif",
         }, StringComparer.OrdinalIgnoreCase);
+
+        private readonly Lazy<Size> mDimensions;
 
         private long mRandomKey;
 
@@ -41,11 +50,7 @@ namespace Aspect.Models
             set => Set(ref mRandomKey, value);
         }
 
-        public Dimensions GetDimensions()
-        {
-            var decoder = BitmapDecoder.Create(Uri, BitmapCreateOptions.DelayCreation, BitmapCacheOption.OnDemand);
-            return new Dimensions((uint) decoder.Frames[0].PixelWidth, (uint) decoder.Frames[0].PixelHeight);
-        }
+        public Size Dimensions => mDimensions.Value;
 
         private static Uri _PathToUri(string path) => new Uri(Path.GetFullPath(path));
 
