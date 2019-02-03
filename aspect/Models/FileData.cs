@@ -12,7 +12,7 @@ namespace Aspect.Models
     {
         public FileData(string path, DateTime modifiedInstant, FileSize size)
         {
-            FilePath = Path.GetFullPath(path);
+            Uri = _PathToUri(path);
             Name = Path.GetFileName(path) ?? "";
             ModifiedInstant = modifiedInstant;
             Size = size;
@@ -29,7 +29,7 @@ namespace Aspect.Models
 
         private long mRandomKey;
 
-        public string FilePath { get; }
+        public Uri Uri { get; }
         public string Name { get; }
         public DateTime ModifiedInstant { get; }
         public FileSize Size { get; }
@@ -40,10 +40,9 @@ namespace Aspect.Models
             set => Set(ref mRandomKey, value);
         }
 
-        public override string ToString()
-        {
-            return $"{Name} | {ModifiedInstant}";
-        }
+        private static Uri _PathToUri(string path) => new Uri(Path.GetFullPath(path));
+
+        public override string ToString() => $"{Name} | {ModifiedInstant}";
 
         public static Option<FileData> From(string filePath)
         {
@@ -61,10 +60,9 @@ namespace Aspect.Models
             return Option.Some(new FileData(info.FullName, info.LastWriteTime, new FileSize(info.Length)));
         }
 
-        public bool IsFile(string filePath)
-        {
-            var normalized = Path.GetFullPath(filePath);
-            return FilePath.Equals(normalized, StringComparison.OrdinalIgnoreCase);
-        }
+        public bool IsFile(string filePath) =>
+            Uri.Compare(Uri, _PathToUri(filePath),
+                UriComponents.AbsoluteUri,
+                UriFormat.Unescaped, StringComparison.OrdinalIgnoreCase) == 0;
     }
 }

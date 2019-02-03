@@ -1,3 +1,5 @@
+using System.Windows;
+
 using MahApps.Metro.Controls;
 
 namespace Aspect.UI
@@ -7,6 +9,10 @@ namespace Aspect.UI
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void _HandleImageLoaded(object sender, RoutedEventArgs e)
+        {
         }
     }
 }

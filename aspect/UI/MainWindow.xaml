@@ -7,6 +7,7 @@
                  xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                  xmlns:ui="clr-namespace:Aspect.UI"
                  xmlns:models="clr-namespace:Aspect.Models"
+                 xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
                  mc:Ignorable="d"
                  d:DataContext="{d:DesignInstance ui:MainViewModel}"
                  Title="{Binding FileList.View.CurrentItem, TargetNullValue=aspect}"
@@ -17,36 +18,58 @@
   </mah:MetroWindow.Flyouts>
   <mah:MetroWindow.RightWindowCommands>
     <mah:WindowCommands>
-      <ComboBox ItemsSource="{Binding AvailableSortBy}" SelectedValue="{Binding FileList.Sort}"
-                DisplayMemberPath="Item2" SelectedValuePath="Item1"
-                Width="90" VerticalAlignment="Center" />
       <ToggleButton x:Name="ListToggleButton">
         <iconPacks:PackIconModern Kind="List" />
       </ToggleButton>
     </mah:WindowCommands>
   </mah:MetroWindow.RightWindowCommands>
-  <mah:Flyout Header="Images" Position="Right" Width="300"
-              TitleVisibility="Collapsed" CloseButtonVisibility="Collapsed"
-              IsOpen="{Binding ElementName=ListToggleButton, Path=IsChecked}">
-    <ListView ItemsSource="{Binding FileList.View}" IsSynchronizedWithCurrentItem="True">
-      <ListView.ItemTemplate>
-        <DataTemplate DataType="models:FileData">
-          <Grid>
-            <Grid.RowDefinitions>
-              <RowDefinition Height="Auto" />
-              <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="Auto" />
-              <ColumnDefinition Width="*" />
-              <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding Name}" />
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding ModifiedInstant}" />
-            <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Size}" />
-          </Grid>
-        </DataTemplate>
-      </ListView.ItemTemplate>
-    </ListView>
-  </mah:Flyout>
+  <Grid>
+    <Image gif:AnimationBehavior.SourceUri="{Binding FileList.View.CurrentItem.Uri}"
+           gif:AnimationBehavior.AutoStart="True"
+           gif:AnimationBehavior.RepeatBehavior="Forever"
+           gif:AnimationBehavior.Loaded="_HandleImageLoaded" />
+
+    <mah:Flyout Header="Images" Position="Right" Width="300"
+                TitleVisibility="Collapsed" CloseButtonVisibility="Collapsed"
+                IsOpen="{Binding ElementName=ListToggleButton, Path=IsChecked}">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" Grid.Column="0" Content="Sort" VerticalAlignment="Center" />
+        <ComboBox Grid.Row="0" Grid.Column="1"
+                  ItemsSource="{Binding AvailableSortBy}" SelectedValue="{Binding FileList.Sort}"
+                  DisplayMemberPath="Item2" SelectedValuePath="Item1"
+                  VerticalAlignment="Center"
+                  Margin="4"/>
+
+        <ListView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding FileList.View}"
+                  IsSynchronizedWithCurrentItem="True" BorderThickness="0">
+          <ListView.ItemTemplate>
+            <DataTemplate DataType="models:FileData">
+              <Grid>
+                <Grid.RowDefinitions>
+                  <RowDefinition Height="Auto" />
+                  <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto" />
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding Name}" />
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding ModifiedInstant}" />
+                <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Size}" />
+              </Grid>
+            </DataTemplate>
+          </ListView.ItemTemplate>
+        </ListView>
+      </Grid>
+    </mah:Flyout>
+  </Grid>
 </mah:MetroWindow>
