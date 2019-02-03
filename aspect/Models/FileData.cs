@@ -27,10 +27,18 @@ namespace Aspect.Models
             ".gif",
         }, StringComparer.OrdinalIgnoreCase);
 
+        private long mRandomKey;
+
         public string FilePath { get; }
         public string Name { get; }
         public DateTime ModifiedInstant { get; }
         public FileSize Size { get; }
+
+        public long RandomKey
+        {
+            get => mRandomKey;
+            set => Set(ref mRandomKey, value);
+        }
 
         public override string ToString()
         {

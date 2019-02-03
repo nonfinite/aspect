@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -16,10 +17,61 @@ namespace Aspect.Models
         {
             mFiles = files;
             View = CollectionViewSource.GetDefaultView(mFiles);
+            View.SortDescriptions.Add(new SortDescription(nameof(FileData.Name), ListSortDirection.Ascending));
         }
 
         private readonly FileData[] mFiles;
+        private SortBy mSort;
+
+        public SortBy Sort
+        {
+            get => mSort;
+            set
+            {
+                if (Set(ref mSort, value) || View.SortDescriptions.Count == 0)
+                {
+                    using (View.DeferRefresh())
+                    {
+                        View.SortDescriptions.Clear();
+                        string sortProperty;
+                        switch (value)
+                        {
+                            case SortBy.Name:
+                                sortProperty = nameof(FileData.Name);
+                                break;
+                            case SortBy.ModifiedDate:
+                                sortProperty = nameof(FileData.ModifiedInstant);
+                                break;
+                            case SortBy.Size:
+                                sortProperty = nameof(FileData.Size);
+                                break;
+                            case SortBy.Random:
+                                sortProperty = nameof(FileData.RandomKey);
+                                _ResetRandomKeys();
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException(nameof(value), value, null);
+                        }
+
+                        View.SortDescriptions.Add(new SortDescription(sortProperty, ListSortDirection.Ascending));
+                    }
+                }
+            }
+        }
+
         public ICollectionView View { get; }
+
+        private void _ResetRandomKeys()
+        {
+            var rnd = new Random();
+            var randomKeys = Enumerable.Range(0, mFiles.Length).ToList();
+            foreach (var file in mFiles)
+            {
+                var idx = rnd.Next(0, randomKeys.Count);
+                file.RandomKey = randomKeys[idx];
+                randomKeys.RemoveAt(idx);
+            }
+        }
 
         public static Option<FileList> Load(string path)
         {

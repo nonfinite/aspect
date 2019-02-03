@@ -1,6 +1,8 @@
+using System;
+
 namespace Aspect.Models
 {
-    public struct FileSize
+    public struct FileSize : IComparable<FileSize>, IComparable
     {
         public FileSize(long bytes)
         {
@@ -40,6 +42,23 @@ namespace Aspect.Models
             }
 
             return string.Format(format, value);
+        }
+
+        public int CompareTo(FileSize other)
+        {
+            return Bytes.CompareTo(other.Bytes);
+        }
+
+        public int CompareTo(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return 1;
+            }
+
+            return obj is FileSize other
+                ? CompareTo(other)
+                : throw new ArgumentException($"Object must be of type {nameof(FileSize)}");
         }
     }
 }

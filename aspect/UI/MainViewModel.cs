@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 
 using Aspect.Models;
@@ -16,6 +17,14 @@ namespace Aspect.UI
             get => mFileList;
             private set => Set(ref mFileList, value);
         }
+
+        public Tuple<SortBy, string>[] AvailableSortBy { get; } = new[]
+        {
+            Tuple.Create(SortBy.Name, "Name"),
+            Tuple.Create(SortBy.ModifiedDate, "Modified"),
+            Tuple.Create(SortBy.Size, "Size"),
+            Tuple.Create(SortBy.Random, "Random"),
+        };
 
         public async Task Initialize(string[] args)
         {
