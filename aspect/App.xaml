@@ -1,8 +1,7 @@
-<Application x:Class="aspect.App"
+<Application x:Class="Aspect.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:aspect"
-             StartupUri="UI/MainWindow.xaml">
+             Startup="_HandleStartup">
   <Application.Resources>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
