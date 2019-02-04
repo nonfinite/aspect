@@ -20,7 +20,6 @@
           <converters:RatingToByteConverter x:Key="ConvertRatingToByte" />
           <converters:ParamToNullConverter x:Key="ConvertParamToNull" />
           <Style TargetType="iconPacks:PackIconModern" BasedOn="{StaticResource {x:Type iconPacks:PackIconModern}}">
-            <Setter Property="Margin" Value="4 0" />
             <Setter Property="VerticalAlignment" Value="Center" />
           </Style>
         </ResourceDictionary>

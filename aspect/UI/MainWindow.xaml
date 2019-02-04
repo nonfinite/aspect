@@ -13,6 +13,17 @@
                  TitleCharacterCasing="Normal"
                  Height="450" Width="800"
                  x:Name="Window">
+  <mah:MetroWindow.DataContext>
+    <ui:MainViewModel x:Name="mViewModel" x:FieldModifier="private" />
+  </mah:MetroWindow.DataContext>
+  <mah:MetroWindow.CommandBindings>
+    <CommandBinding Command="BrowseBack" Executed="_HandleBrowseBack" />
+    <CommandBinding Command="BrowseForward" Executed="_HandleBrowseForward" />
+  </mah:MetroWindow.CommandBindings>
+  <mah:MetroWindow.InputBindings>
+    <KeyBinding Key="Right" Command="BrowseForward" />
+    <KeyBinding Key="Left" Command="BrowseBack" />
+  </mah:MetroWindow.InputBindings>
   <mah:MetroWindow.RightWindowCommands>
     <mah:WindowCommands>
       <ui:RatingControl Rating="{Binding FileList.View.CurrentItem.Rating, Mode=TwoWay}" />
@@ -29,6 +40,14 @@
           IsChecked="{Binding ElementName=ImageViewer, Path=ImageFit, Converter={StaticResource ConvertEnumToBool}, ConverterParameter={x:Static ui:ImageFit.FitWidth}}">
           <iconPacks:PackIconModern Kind="DimensionArrowLineWidthShort" />
         </ToggleButton>
+      </StackPanel>
+      <StackPanel Orientation="Horizontal">
+        <Button Command="BrowseBack">
+          <iconPacks:PackIconModern Kind="ArrowLeft" />
+        </Button>
+        <Button Command="BrowseForward">
+          <iconPacks:PackIconModern Kind="ArrowRight" />
+        </Button>
       </StackPanel>
       <ToggleButton x:Name="ListToggleButton">
         <iconPacks:PackIconModern Kind="List" />
@@ -61,7 +80,7 @@
             <RowDefinition Height="*" />
           </Grid.RowDefinitions>
           <!-- row 0 is padding to avoid overlapping title bar items  -->
-          <iconPacks:PackIconModern Grid.Row="1" Grid.Column="0" Kind="Sort" />
+          <iconPacks:PackIconModern Grid.Row="1" Grid.Column="0" Kind="Sort" Margin="4 0" />
           <ComboBox Grid.Row="1" Grid.Column="1"
                     ItemsSource="{Binding AvailableSortBy}" SelectedValue="{Binding FileList.Sort}"
                     DisplayMemberPath="Item2" SelectedValuePath="Item1"

@@ -38,5 +38,31 @@ namespace Aspect.UI
                 }
             }
         }
+
+        public void NavBack()
+        {
+            var fileList = FileList?.View;
+            if (fileList != null)
+            {
+                if (!fileList.MoveCurrentToPrevious())
+                {
+                    // start of list
+                    fileList.MoveCurrentToLast();
+                }
+            }
+        }
+
+        public void NavForward()
+        {
+            var fileList = FileList?.View;
+            if (fileList != null)
+            {
+                if (!fileList.MoveCurrentToNext())
+                {
+                    // end of list
+                    fileList.MoveCurrentToFirst();
+                }
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
 using System.Windows;
+
 using Aspect.UI;
 
 namespace Aspect
@@ -7,10 +8,10 @@ namespace Aspect
     {
         private async void _HandleStartup(object sender, StartupEventArgs e)
         {
-            var viewModel = new MainViewModel();
-            MainWindow = new MainWindow {DataContext = viewModel};
+            var window = new MainWindow();
+            MainWindow = window;
             MainWindow.Show();
-            await viewModel.Initialize(e.Args);
+            await window.ViewModel.Initialize(e.Args);
         }
     }
 }

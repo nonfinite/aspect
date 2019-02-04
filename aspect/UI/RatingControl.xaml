@@ -16,7 +16,7 @@
       <ColumnDefinition Width="Auto" />
       <ColumnDefinition Width="*" />
     </Grid.ColumnDefinitions>
-    <iconPacks:PackIconModern Grid.Column="0" Kind="Star" />
+    <iconPacks:PackIconModern Grid.Column="0" Kind="Star" Margin="4 0" />
     <ComboBox Grid.Column="1" MinWidth="50" VerticalAlignment="Center" Margin="4 0"
               ItemsSource="{Binding ElementName=ControlRoot, Path=AvailableRatings}"
               SelectedItem="{Binding ElementName=ControlRoot, Path=Rating, Mode=TwoWay, Converter={StaticResource ConvertRatingToByte}}">
