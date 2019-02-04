@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
 using Aspect.Models;
+using Aspect.Services.DbModels;
 using Aspect.Utility;
+
+using Dapper;
 
 using DbUp;
 using DbUp.Engine;
@@ -32,16 +35,37 @@ namespace Aspect.Services
         private readonly string mConnectionString;
 
 
-        public Task InitializeFiles(IEnumerable<FileData> files)
+        public async Task InitializeFiles(IEnumerable<FileData> files)
         {
-            Debug.WriteLine("TODO: initialize files");
-            return Task.CompletedTask;
+            var filesByName = files.ToDictionary(file => file.Name, StringComparer.OrdinalIgnoreCase);
+
+            using (var connection = _Connect())
+            {
+                var rows = await connection.QueryAsync<FileRow>("SELECT * FROM File");
+                foreach (var row in rows)
+                {
+                    if (filesByName.TryGetValue(row.Name, out var file))
+                    {
+                        file.Rating = row.Rating.HasValue ? new Rating(row.Rating.Value) : (Rating?) null;
+                    }
+                }
+            }
         }
 
-        public Task UpdateRating(FileData file)
+        public async Task UpdateRating(FileData file)
         {
-            Debug.WriteLine("TODO: update file rating");
-            return Task.CompletedTask;
+            using (var connection = _Connect())
+            {
+                await connection.ExecuteAsync(@"
+INSERT INTO File   ( name,  rating)
+            VALUES (@name, @rating)
+ON CONFLICT (name)
+DO UPDATE SET rating = @rating", new
+                {
+                    name = file.Name,
+                    rating = file.Rating?.Value
+                }).DontCaptureContext();
+            }
         }
 
         private SQLiteConnection _Connect() => new SQLiteConnection(mConnectionString, true);
