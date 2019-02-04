@@ -13,9 +13,9 @@ using Optional;
 
 namespace Aspect.Models
 {
-    public sealed class FileList : NotifyPropertyChanged
+    public sealed class FileList : NotifyPropertyChanged, IDisposable
     {
-        private FileList(FileData[] files, PersistenceService persistence)
+        private FileList(FileData[] files, IPersistenceService persistence)
         {
             mFiles = files;
             mPersistence = persistence;
@@ -33,7 +33,7 @@ namespace Aspect.Models
         }
 
         private readonly FileData[] mFiles;
-        private readonly PersistenceService mPersistence;
+        private readonly IPersistenceService mPersistence;
         private SortBy mSort;
 
         public FileFilter Filter { get; } = new FileFilter();
@@ -75,6 +75,8 @@ namespace Aspect.Models
         }
 
         public ICollectionView View { get; }
+
+        public void Dispose() => mPersistence.Dispose();
 
 
         private bool _Filter(object obj)

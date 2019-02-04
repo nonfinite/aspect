@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
@@ -15,16 +14,35 @@ using DbUp.SQLite.Helpers;
 
 namespace Aspect.Services
 {
-    public class PersistenceService : IDisposable
+    public interface IPersistenceService : IDisposable
     {
-        private PersistenceService(IDbConnection connection)
+        Task InitializeFiles(IEnumerable<FileData> files);
+
+        Task UpdateRating(FileData file);
+    }
+
+    public class PersistenceService : IPersistenceService
+    {
+        private PersistenceService(SQLiteConnection connection)
         {
             mConnection = connection;
         }
 
-        private readonly IDbConnection mConnection;
+        private readonly SQLiteConnection mConnection;
 
         public void Dispose() => mConnection.Dispose();
+
+        public Task InitializeFiles(IEnumerable<FileData> files)
+        {
+            Debug.WriteLine("TODO: initialize files");
+            return Task.CompletedTask;
+        }
+
+        public Task UpdateRating(FileData file)
+        {
+            Debug.WriteLine("TODO: update file rating");
+            return Task.CompletedTask;
+        }
 
         public static async Task<PersistenceService> Initialize(string directory)
         {
@@ -62,18 +80,6 @@ namespace Aspect.Services
             }
 
             return new PersistenceService(connection);
-        }
-
-        public Task InitializeFiles(IEnumerable<FileData> files)
-        {
-            Debug.WriteLine("TODO: initialize files");
-            return Task.CompletedTask;
-        }
-
-        public Task UpdateRating(FileData file)
-        {
-            Debug.WriteLine("TODO: update file rating");
-            return Task.CompletedTask;
         }
     }
 }
