@@ -80,6 +80,7 @@
     <Compile Include="Models\FileSize.cs" />
     <Compile Include="Models\Rating.cs" />
     <Compile Include="Models\SortBy.cs" />
+    <Compile Include="Services\PersistenceService.cs" />
     <Compile Include="UI\Converters\EnumToBoolConverter.cs" />
     <Compile Include="UI\Converters\ParamToNullConverter.cs" />
     <Compile Include="UI\Converters\RatingToByteConverter.cs" />

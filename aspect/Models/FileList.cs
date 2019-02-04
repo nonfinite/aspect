@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Data;
 
+using Aspect.Services;
 using Aspect.Utility;
 
 using Optional;
@@ -13,17 +15,25 @@ namespace Aspect.Models
 {
     public sealed class FileList : NotifyPropertyChanged
     {
-        private FileList(FileData[] files)
+        private FileList(FileData[] files, PersistenceService persistence)
         {
             mFiles = files;
+            mPersistence = persistence;
+
             View = CollectionViewSource.GetDefaultView(mFiles);
             View.Filter = _Filter;
             View.SortDescriptions.Add(new SortDescription(nameof(FileData.Name), ListSortDirection.Ascending));
 
             Filter.PropertyChanged += _HandleFilterChanged;
+
+            foreach (var file in files)
+            {
+                file.PropertyChanged += _HandleFileChanged;
+            }
         }
 
         private readonly FileData[] mFiles;
+        private readonly PersistenceService mPersistence;
         private SortBy mSort;
 
         public FileFilter Filter { get; } = new FileFilter();
@@ -77,6 +87,20 @@ namespace Aspect.Models
             return Filter.IsMatch(file);
         }
 
+        private void _HandleFileChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var file = (FileData) sender;
+
+            switch (e.PropertyName)
+            {
+                case nameof(FileData.Rating):
+                    mPersistence.UpdateRating(file);
+                    break;
+                default:
+                    break;
+            }
+        }
+
         private void _HandleFilterChanged(object sender, PropertyChangedEventArgs e)
         {
             View.Refresh();
@@ -84,6 +108,41 @@ namespace Aspect.Models
             {
                 View.MoveCurrentToFirst();
             }
+        }
+
+        private static async Task<Option<FileList>> _LoadDir(string directoryPath)
+        {
+            var files = await Task.Run(() =>
+            {
+                var fileList = new List<FileData>();
+                foreach (var file in Directory.EnumerateFiles(directoryPath))
+                {
+                    FileData.From(file).MatchSome(fileList.Add);
+                }
+
+                return fileList.ToArray();
+            });
+
+            var persistence = await PersistenceService.Initialize(directoryPath);
+            await persistence.InitializeFiles(files);
+
+            return Option.Some(new FileList(files.ToArray(), persistence));
+        }
+
+        private static async Task<Option<FileList>> _LoadFile(string filePath)
+        {
+            var dir = Path.GetDirectoryName(filePath);
+            var option = await _LoadDir(dir);
+            return option.Map(list =>
+            {
+                var data = list.mFiles.FirstOrDefault(file => file.IsFile(filePath));
+                if (data != null)
+                {
+                    list.View.MoveCurrentTo(data);
+                }
+
+                return list;
+            });
         }
 
         private void _ResetRandomKeys()
@@ -98,42 +157,19 @@ namespace Aspect.Models
             }
         }
 
-        public static Option<FileList> Load(string path) => LoadFile(path).Else(() => LoadDir(path));
-
-        public static Option<FileList> LoadDir(string directoryPath)
+        public static Task<Option<FileList>> Load(string path)
         {
-            if (!Directory.Exists(directoryPath))
+            if (File.Exists(path))
             {
-                return Option.None<FileList>();
+                return _LoadFile(path);
             }
 
-            var files = new List<FileData>();
-            foreach (var file in Directory.EnumerateFiles(directoryPath))
+            if (Directory.Exists(path))
             {
-                FileData.From(file).MatchSome(files.Add);
+                return _LoadDir(path);
             }
 
-            return Option.Some(new FileList(files.ToArray()));
-        }
-
-        public static Option<FileList> LoadFile(string filePath)
-        {
-            if (!File.Exists(filePath))
-            {
-                return Option.None<FileList>();
-            }
-
-            var dir = Path.GetDirectoryName(filePath);
-            return LoadDir(dir).Map(list =>
-            {
-                var data = list.mFiles.FirstOrDefault(file => file.IsFile(filePath));
-                if (data != null)
-                {
-                    list.View.MoveCurrentTo(data);
-                }
-
-                return list;
-            });
+            return Task.FromResult(Option.None<FileList>());
         }
     }
 }

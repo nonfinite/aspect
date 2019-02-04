@@ -12,12 +12,6 @@ namespace Aspect.UI
     {
         private FileList mFileList;
 
-        public FileList FileList
-        {
-            get => mFileList;
-            private set => Set(ref mFileList, value);
-        }
-
         public Tuple<SortBy, string>[] AvailableSortBy { get; } = new[]
         {
             Tuple.Create(SortBy.Name, "Name"),
@@ -26,20 +20,23 @@ namespace Aspect.UI
             Tuple.Create(SortBy.Random, "Random"),
         };
 
+        public FileList FileList
+        {
+            get => mFileList;
+            private set => Set(ref mFileList, value);
+        }
+
         public async Task Initialize(string[] args)
         {
-            await Task.Run(() =>
+            foreach (var path in args)
             {
-                foreach (var path in args)
+                var maybeFile = await FileList.Load(path);
+                if (maybeFile.HasValue)
                 {
-                    var maybeFile = FileList.Load(path);
-                    if (maybeFile.HasValue)
-                    {
-                        FileList = maybeFile.ValueOrFailure();
-                        break;
-                    }
+                    FileList = maybeFile.ValueOrFailure();
+                    break;
                 }
-            });
+            }
         }
     }
 }
