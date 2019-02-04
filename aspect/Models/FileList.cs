@@ -13,7 +13,7 @@ using Optional;
 
 namespace Aspect.Models
 {
-    public sealed class FileList : NotifyPropertyChanged, IDisposable
+    public sealed class FileList : NotifyPropertyChanged
     {
         private FileList(FileData[] files, IPersistenceService persistence)
         {
@@ -76,8 +76,6 @@ namespace Aspect.Models
 
         public ICollectionView View { get; }
 
-        public void Dispose() => mPersistence.Dispose();
-
 
         private bool _Filter(object obj)
         {
@@ -125,8 +123,8 @@ namespace Aspect.Models
                 return fileList.ToArray();
             });
 
-            var persistence = await PersistenceService.Initialize(directoryPath);
-            await persistence.InitializeFiles(files);
+            var persistence = await PersistenceService.Create(directoryPath).DontCaptureContext();
+            await persistence.InitializeFiles(files).DontCaptureContext();
 
             return Option.Some(new FileList(files.ToArray(), persistence));
         }

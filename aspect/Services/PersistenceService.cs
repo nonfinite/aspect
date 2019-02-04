@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 
 using Aspect.Models;
+using Aspect.Utility;
 
 using DbUp;
 using DbUp.Engine;
@@ -14,7 +15,7 @@ using DbUp.SQLite.Helpers;
 
 namespace Aspect.Services
 {
-    public interface IPersistenceService : IDisposable
+    public interface IPersistenceService
     {
         Task InitializeFiles(IEnumerable<FileData> files);
 
@@ -23,14 +24,13 @@ namespace Aspect.Services
 
     public class PersistenceService : IPersistenceService
     {
-        private PersistenceService(SQLiteConnection connection)
+        private PersistenceService(string connectionString)
         {
-            mConnection = connection;
+            mConnectionString = connectionString;
         }
 
-        private readonly SQLiteConnection mConnection;
+        private readonly string mConnectionString;
 
-        public void Dispose() => mConnection.Dispose();
 
         public Task InitializeFiles(IEnumerable<FileData> files)
         {
@@ -44,7 +44,20 @@ namespace Aspect.Services
             return Task.CompletedTask;
         }
 
-        public static async Task<PersistenceService> Initialize(string directory)
+        private SQLiteConnection _Connect() => new SQLiteConnection(mConnectionString, true);
+
+        private Task<DatabaseUpgradeResult> _Initialize()
+        {
+            var upgradeEngine = DeployChanges.To
+                .SQLiteDatabase(new SharedConnection(_Connect()))
+                .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
+                .LogToTrace()
+                .Build();
+
+            return Task.Run(new Func<DatabaseUpgradeResult>(upgradeEngine.PerformUpgrade));
+        }
+
+        public static async Task<PersistenceService> Create(string directory)
         {
             var dbFile = new FileInfo(Path.Combine(directory, ".aspect.sqlite"));
             if (!dbFile.Exists)
@@ -62,16 +75,8 @@ namespace Aspect.Services
                 ReadOnly = false
             }.ToString();
 
-            var connection = new SQLiteConnection(connectionString, true);
-            connection.Open();
-
-            var upgradeEngine = DeployChanges.To
-                .SQLiteDatabase(new SharedConnection(connection))
-                .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
-                .LogToTrace()
-                .Build();
-
-            var results = await Task.Run(new Func<DatabaseUpgradeResult>(upgradeEngine.PerformUpgrade));
+            var persistence = new PersistenceService(connectionString);
+            var results = await persistence._Initialize().DontCaptureContext();
 
             if (!results.Successful)
             {
@@ -79,7 +84,7 @@ namespace Aspect.Services
                 throw new Exception($"Failed to migrate database: {dbFile.FullName}", results.Error);
             }
 
-            return new PersistenceService(connection);
+            return persistence;
         }
     }
 }
