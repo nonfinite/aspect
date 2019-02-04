@@ -16,19 +16,11 @@ namespace Aspect.UI
             "Rating", typeof(Rating?), typeof(RatingControl),
             new PropertyMetadata(default(Rating?)));
 
-        public Rating?[] AvailableRatings { get; } =
-        {
-            null,
-            new Rating(1),
-            new Rating(2),
-            new Rating(3),
-            new Rating(4),
-            new Rating(5),
-        };
+        public byte[] AvailableRatings { get; } = {0, 1, 2, 3, 4, 5};
 
         public Rating? Rating
         {
-            get => (Rating) GetValue(RatingProperty);
+            get => (Rating?) GetValue(RatingProperty);
             set => SetValue(RatingProperty, value);
         }
     }

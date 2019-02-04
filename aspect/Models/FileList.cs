@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Windows.Data;
 
 using Aspect.Utility;
@@ -18,19 +17,16 @@ namespace Aspect.Models
         {
             mFiles = files;
             View = CollectionViewSource.GetDefaultView(mFiles);
+            View.Filter = _Filter;
             View.SortDescriptions.Add(new SortDescription(nameof(FileData.Name), ListSortDirection.Ascending));
+
+            Filter.PropertyChanged += _HandleFilterChanged;
         }
 
         private readonly FileData[] mFiles;
-
-        private Rating? mFilterRating;
         private SortBy mSort;
 
-        public Rating? FilterRating
-        {
-            get => mFilterRating;
-            set => _SetFilter(ref mFilterRating, value);
-        }
+        public FileFilter Filter { get; } = new FileFilter();
 
         public SortBy Sort
         {
@@ -70,6 +66,26 @@ namespace Aspect.Models
 
         public ICollectionView View { get; }
 
+
+        private bool _Filter(object obj)
+        {
+            if (!(obj is FileData file))
+            {
+                return false;
+            }
+
+            return Filter.IsMatch(file);
+        }
+
+        private void _HandleFilterChanged(object sender, PropertyChangedEventArgs e)
+        {
+            View.Refresh();
+            if (View.CurrentItem == null)
+            {
+                View.MoveCurrentToFirst();
+            }
+        }
+
         private void _ResetRandomKeys()
         {
             var rnd = new Random();
@@ -79,15 +95,6 @@ namespace Aspect.Models
                 var idx = rnd.Next(0, randomKeys.Count);
                 file.RandomKey = randomKeys[idx];
                 randomKeys.RemoveAt(idx);
-            }
-        }
-
-        private void _SetFilter<TProperty>(ref TProperty field, TProperty value,
-            [CallerMemberName] string propertyName = null)
-        {
-            if (Set(ref field, value, propertyName))
-            {
-                View.Refresh();
             }
         }
 

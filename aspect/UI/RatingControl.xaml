@@ -5,17 +5,27 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Aspect.UI"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d"
              x:Name="ControlRoot">
   <Grid>
+    <Grid.Resources>
+      <system:Byte x:Key="ByteZero">0</system:Byte>
+    </Grid.Resources>
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="Auto" />
       <ColumnDefinition Width="*" />
     </Grid.ColumnDefinitions>
     <iconPacks:PackIconModern Grid.Column="0" Kind="Star" />
     <ComboBox Grid.Column="1" MinWidth="50" VerticalAlignment="Center" Margin="4 0"
-              DisplayMemberPath="Value"
               ItemsSource="{Binding ElementName=ControlRoot, Path=AvailableRatings}"
-              SelectedItem="{Binding ElementName=ControlRoot, Path=Rating, Mode=TwoWay}" />
+              SelectedItem="{Binding ElementName=ControlRoot, Path=Rating, Mode=TwoWay, Converter={StaticResource ConvertRatingToByte}}">
+      <ComboBox.ItemTemplate>
+        <DataTemplate>
+          <TextBlock
+            Text="{Binding Converter={StaticResource ConvertParamToNull}, ConverterParameter={StaticResource ByteZero}}" />
+        </DataTemplate>
+      </ComboBox.ItemTemplate>
+    </ComboBox>
   </Grid>
 </UserControl>

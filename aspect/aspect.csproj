@@ -75,11 +75,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Models\FileData.cs" />
+    <Compile Include="Models\FileFilter.cs" />
     <Compile Include="Models\FileList.cs" />
     <Compile Include="Models\FileSize.cs" />
     <Compile Include="Models\Rating.cs" />
     <Compile Include="Models\SortBy.cs" />
     <Compile Include="UI\Converters\EnumToBoolConverter.cs" />
+    <Compile Include="UI\Converters\ParamToNullConverter.cs" />
+    <Compile Include="UI\Converters\RatingToByteConverter.cs" />
     <Compile Include="UI\ImageViewer.xaml.cs">
       <DependentUpon>ImageViewer.xaml</DependentUpon>
     </Compile>

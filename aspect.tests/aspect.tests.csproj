@@ -49,6 +49,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\FileFilterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\MathExTests.cs" />
   </ItemGroup>

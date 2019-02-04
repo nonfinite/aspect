@@ -44,5 +44,8 @@ namespace Aspect.Models
         public static bool operator ==(Rating left, Rating right) => left.Equals(right);
 
         public static bool operator !=(Rating left, Rating right) => !left.Equals(right);
+
+        public static bool operator <(Rating left, Rating right) => left.CompareTo(right) < 0;
+        public static bool operator >(Rating left, Rating right) => left.CompareTo(right) > 0;
     }
 }
