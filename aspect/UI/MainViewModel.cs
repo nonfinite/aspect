@@ -30,6 +30,7 @@ namespace Aspect.UI
         {
             foreach (var path in args)
             {
+                this.Log().Information("Initializing from {Path}", path);
                 var maybeFile = await FileList.Load(path);
                 if (maybeFile.HasValue)
                 {
