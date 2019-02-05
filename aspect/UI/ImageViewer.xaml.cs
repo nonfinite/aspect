@@ -6,6 +6,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 
 using Aspect.Models;
+using Aspect.Utility;
 
 using XamlAnimatedGif;
 
@@ -89,6 +90,9 @@ namespace Aspect.UI
                 matrix.Translate(0, (ActualHeight - imageHeight) / 2.0);
             }
 
+            this.Log().Information("Setting image to {Fit} scale of {Scale} at {OffsetX},{OffsetY}",
+                fit, scale, matrix.OffsetX, matrix.OffsetY);
+
             mMatrixTransform.Matrix = matrix;
         }
 
@@ -125,13 +129,17 @@ namespace Aspect.UI
             if (input.IsMouseCaptured)
             {
                 var position = e.GetPosition(input);
-                var v = mMouseStart - position;
+                var v = position - mMouseStart;
                 mMouseStart = position;
                 var matrix = mMatrixTransform.Matrix;
-                matrix.Translate(-v.X, -v.Y);
+                matrix.Translate(v.X, v.Y);
                 // MatrixTransform needs Matrix reset in order to notice the translate
                 mMatrixTransform.Matrix = matrix;
+
                 ImageFit = ImageFit.Custom;
+
+                this.Log().Verbose("Translating image by {Vector} to {OffsetX},{OffsetY}",
+                    v, matrix.OffsetX, matrix.OffsetY);
             }
         }
 
@@ -148,6 +156,7 @@ namespace Aspect.UI
 
             var point = e.GetPosition(mImage);
 
+            this.Log().Verbose("Scaling image by {Scale} as {Point}", scale, point);
             matrix.ScaleAtPrepend(scale, scale, point.X, point.Y);
             mMatrixTransform.Matrix = matrix;
 
@@ -158,6 +167,8 @@ namespace Aspect.UI
 
         private void _InitFromFile(FileData file)
         {
+            this.Log().Information("Loading {Uri}", file?.Uri);
+
             AnimationBehavior.SetSourceUri(mImage, file?.Uri);
             if (file == null)
             {
@@ -166,6 +177,7 @@ namespace Aspect.UI
 
             mImage.Width = file.Dimensions.Width;
             mImage.Height = file.Dimensions.Height;
+            this.Log().Information("Setting image size to {Width}x{Height}", mImage.Width, mImage.Height);
 
             if (ImageFit == ImageFit.Custom)
             {

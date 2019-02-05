@@ -10,12 +10,14 @@ namespace Aspect
 {
     public partial class App : Application
     {
+        private void _HandleExit(object sender, ExitEventArgs e) => Log.CloseAndFlush();
+
         private async void _HandleStartup(object sender, StartupEventArgs e)
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
                 .Enrich.FromLogContext()
-                .WriteTo.Trace(outputTemplate: "{SourceContext} [{Level}] {Message}{NewLine}{Exception}")
+                .WriteTo.Trace(outputTemplate: "[{Level}] {SourceContext}\r\n=> {Message}{NewLine}{Exception}")
                 .CreateLogger();
 
             if (Settings.Default.SettingsUpgradeRequired)
