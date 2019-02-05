@@ -7,15 +7,13 @@
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
              SizeChanged="_HandleSizeChanged">
-  <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ClipToBounds="True"
-          MouseDown="_HandleMouseDown" MouseMove="_HandleMouseMove" MouseUp="_HandleMouseUp">
+  <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ClipToBounds="True" Background="Transparent"
+          MouseDown="_HandleMouseDown" MouseMove="_HandleMouseMove" MouseUp="_HandleMouseUp"
+          MouseWheel="_HandleMouseWheel">
     <Image x:Name="mImage" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="None"
            SizeChanged="_HandleSizeChanged">
       <Image.RenderTransform>
-        <TransformGroup>
-          <ScaleTransform x:Name="mScaleTransform" />
-          <TranslateTransform x:Name="mTranslateTransform" />
-        </TransformGroup>
+        <MatrixTransform x:Name="mMatrixTransform" />
       </Image.RenderTransform>
     </Image>
   </Canvas>

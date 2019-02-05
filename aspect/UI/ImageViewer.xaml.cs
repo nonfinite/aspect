@@ -2,6 +2,7 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 
 using Aspect.Models;
@@ -37,7 +38,6 @@ namespace Aspect.UI
 
         private Point mMouseStart = new Point(0, 0);
 
-        private Point mTransformStart;
 
         public FileData File
         {
@@ -60,40 +60,36 @@ namespace Aspect.UI
                 return;
             }
 
+            var scale = 1.0;
             if (fit == ImageFit.FitAll)
             {
-                mScaleTransform.ScaleX = mScaleTransform.ScaleY =
-                    Math.Min(ActualWidth / mImage.ActualWidth, ActualHeight / mImage.ActualHeight);
+                scale = Math.Min(ActualWidth / mImage.ActualWidth, ActualHeight / mImage.ActualHeight);
             }
             else if (fit == ImageFit.FitHeight)
             {
-                mScaleTransform.ScaleX = mScaleTransform.ScaleY = ActualHeight / mImage.ActualHeight;
+                scale = ActualHeight / mImage.ActualHeight;
             }
             else if (fit == ImageFit.FitWidth)
             {
-                mScaleTransform.ScaleX = mScaleTransform.ScaleY = ActualWidth / mImage.ActualWidth;
+                scale = ActualWidth / mImage.ActualWidth;
             }
 
+            var matrix = new Matrix();
+            matrix.Scale(scale, scale);
 
-            var imageWidth = mImage.ActualWidth * mScaleTransform.ScaleX;
-            if (ActualWidth < imageWidth)
+            var imageWidth = mImage.ActualWidth * scale;
+            if (!(ActualWidth < imageWidth))
             {
-                mTranslateTransform.X = 0;
-            }
-            else
-            {
-                mTranslateTransform.X = (ActualWidth - imageWidth) / 2.0;
+                matrix.Translate((ActualWidth - imageWidth) / 2.0, 0);
             }
 
-            var imageHeight = mImage.ActualHeight * mScaleTransform.ScaleY;
-            if (ActualHeight < imageHeight)
+            var imageHeight = mImage.ActualHeight * scale;
+            if (!(ActualHeight < imageHeight))
             {
-                mTranslateTransform.Y = 0;
+                matrix.Translate(0, (ActualHeight - imageHeight) / 2.0);
             }
-            else
-            {
-                mTranslateTransform.Y = (ActualHeight - imageHeight) / 2.0;
-            }
+
+            mMatrixTransform.Matrix = matrix;
         }
 
         private static void _HandleFileChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -120,7 +116,6 @@ namespace Aspect.UI
         {
             var input = (IInputElement) sender;
             mMouseStart = e.GetPosition(input);
-            mTransformStart = new Point(mTranslateTransform.X, mTranslateTransform.Y);
             input.CaptureMouse();
         }
 
@@ -131,8 +126,11 @@ namespace Aspect.UI
             {
                 var position = e.GetPosition(input);
                 var v = mMouseStart - position;
-                mTranslateTransform.X = mTransformStart.X - v.X;
-                mTranslateTransform.Y = mTransformStart.Y - v.Y;
+                mMouseStart = position;
+                var matrix = mMatrixTransform.Matrix;
+                matrix.Translate(-v.X, -v.Y);
+                // MatrixTransform needs Matrix reset in order to notice the translate
+                mMatrixTransform.Matrix = matrix;
                 ImageFit = ImageFit.Custom;
             }
         }
@@ -141,6 +139,19 @@ namespace Aspect.UI
         {
             var input = (IInputElement) sender;
             input.ReleaseMouseCapture();
+        }
+
+        private void _HandleMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            var matrix = mMatrixTransform.Matrix;
+            var scale = e.Delta > 0 ? 1.1 : (1.0 / 1.1);
+
+            var point = e.GetPosition(mImage);
+
+            matrix.ScaleAtPrepend(scale, scale, point.X, point.Y);
+            mMatrixTransform.Matrix = matrix;
+
+            ImageFit = ImageFit.Custom;
         }
 
         private void _HandleSizeChanged(object sender, SizeChangedEventArgs e) => _FitImage();
