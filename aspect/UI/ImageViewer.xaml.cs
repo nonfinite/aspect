@@ -1,6 +1,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media.Animation;
 
 using Aspect.Models;
@@ -34,12 +35,9 @@ namespace Aspect.UI
             "File", typeof(FileData), typeof(ImageViewer),
             new PropertyMetadata(default(FileData), _HandleFileChanged));
 
+        private Point mMouseStart = new Point(0, 0);
 
-        public ImageFit ImageFit
-        {
-            get => (ImageFit) GetValue(ImageFitProperty);
-            set => SetValue(ImageFitProperty, value);
-        }
+        private Point mTransformStart;
 
         public FileData File
         {
@@ -47,14 +45,11 @@ namespace Aspect.UI
             set => SetValue(FileProperty, value);
         }
 
-        private static void _HandleImageFitChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (!(d is ImageViewer viewer))
-            {
-                return;
-            }
 
-            viewer._FitImage();
+        public ImageFit ImageFit
+        {
+            get => (ImageFit) GetValue(ImageFitProperty);
+            set => SetValue(ImageFitProperty, value);
         }
 
         private void _FitImage()
@@ -101,6 +96,55 @@ namespace Aspect.UI
             }
         }
 
+        private static void _HandleFileChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (!(d is ImageViewer viewer))
+            {
+                return;
+            }
+
+            viewer._InitFromFile((FileData) e.NewValue);
+        }
+
+        private static void _HandleImageFitChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (!(d is ImageViewer viewer))
+            {
+                return;
+            }
+
+            viewer._FitImage();
+        }
+
+        private void _HandleMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var input = (IInputElement) sender;
+            mMouseStart = e.GetPosition(input);
+            mTransformStart = new Point(mTranslateTransform.X, mTranslateTransform.Y);
+            input.CaptureMouse();
+        }
+
+        private void _HandleMouseMove(object sender, MouseEventArgs e)
+        {
+            var input = (IInputElement) sender;
+            if (input.IsMouseCaptured)
+            {
+                var position = e.GetPosition(input);
+                var v = mMouseStart - position;
+                mTranslateTransform.X = mTransformStart.X - v.X;
+                mTranslateTransform.Y = mTransformStart.Y - v.Y;
+                ImageFit = ImageFit.Custom;
+            }
+        }
+
+        private void _HandleMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            var input = (IInputElement) sender;
+            input.ReleaseMouseCapture();
+        }
+
+        private void _HandleSizeChanged(object sender, SizeChangedEventArgs e) => _FitImage();
+
         private void _InitFromFile(FileData file)
         {
             AnimationBehavior.SetSourceUri(mImage, file?.Uri);
@@ -108,7 +152,7 @@ namespace Aspect.UI
             {
                 return;
             }
-            
+
             mImage.Width = file.Dimensions.Width;
             mImage.Height = file.Dimensions.Height;
 
@@ -121,17 +165,5 @@ namespace Aspect.UI
                 _FitImage();
             }
         }
-
-        private static void _HandleFileChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (!(d is ImageViewer viewer))
-            {
-                return;
-            }
-
-            viewer._InitFromFile((FileData) e.NewValue);
-        }
-
-        private void _HandleSizeChanged(object sender, SizeChangedEventArgs e) => _FitImage();
     }
 }

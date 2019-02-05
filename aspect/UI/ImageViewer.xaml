@@ -7,7 +7,8 @@
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
              SizeChanged="_HandleSizeChanged">
-  <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ClipToBounds="True">
+  <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ClipToBounds="True"
+          MouseDown="_HandleMouseDown" MouseMove="_HandleMouseMove" MouseUp="_HandleMouseUp">
     <Image x:Name="mImage" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="None"
            SizeChanged="_HandleSizeChanged">
       <Image.RenderTransform>
