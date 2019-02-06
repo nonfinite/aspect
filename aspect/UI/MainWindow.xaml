@@ -7,6 +7,8 @@
                  xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                  xmlns:ui="clr-namespace:Aspect.UI"
                  xmlns:models="clr-namespace:Aspect.Models"
+                 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                 xmlns:behaviors="clr-namespace:Aspect.UI.Behaviors"
                  mc:Ignorable="d"
                  d:DataContext="{d:DesignInstance ui:MainViewModel}"
                  Title="{Binding FileList.View.CurrentItem, TargetNullValue=aspect}"
@@ -84,6 +86,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
           </Grid.RowDefinitions>
           <!-- row 0 is padding to avoid overlapping title bar items  -->
@@ -99,11 +102,18 @@
           <Label Grid.Row="2" Grid.Column="1" Content="Filters" BorderThickness="0 0 0 2" Margin="0 0 4 4"
                  BorderBrush="{StaticResource AccentColorBrush}" />
 
-          <ui:RatingControl Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+          <iconPacks:PackIconModern Grid.Row="3" Grid.Column="0" Kind="Magnify" Margin="4 0" />
+          <TextBox Grid.Row="3" Grid.Column="1" Margin="4" Text="{Binding FileList.Filter.Text}">
+            <i:Interaction.Behaviors>
+              <behaviors:UpdateSourceOnKeyUpBehavior Key="Enter" Property="{x:Static TextBox.TextProperty}" />
+            </i:Interaction.Behaviors>
+          </TextBox>
+
+          <ui:RatingControl Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
                             Rating="{Binding FileList.Filter.Rating, Mode=TwoWay}" />
 
-          <ListView Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding FileList.View}"
-                    IsSynchronizedWithCurrentItem="True" BorderThickness="0"
+          <ListView Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding FileList.View}"
+                    IsSynchronizedWithCurrentItem="True" BorderThickness="0" Margin="0 4 0 0"
                     x:Name="mImageList">
             <ListView.ItemTemplate>
               <DataTemplate DataType="models:FileData">

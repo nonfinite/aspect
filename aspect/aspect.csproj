@@ -104,6 +104,7 @@
     <Compile Include="Models\SortBy.cs" />
     <Compile Include="Services\DbModels\FileRow.cs" />
     <Compile Include="Services\PersistenceService.cs" />
+    <Compile Include="UI\Behaviors\UpdateSourceOnKeyUpBehavior.cs" />
     <Compile Include="UI\Converters\EnumToBoolConverter.cs" />
     <Compile Include="UI\Converters\ParamToNullConverter.cs" />
     <Compile Include="UI\Converters\RatingToByteConverter.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="UI\RatingControl.xaml.cs">
       <DependentUpon>RatingControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utility\LazyEx.cs" />
     <Compile Include="Utility\LogEx.cs" />
     <Compile Include="Utility\MathEx.cs" />
     <Compile Include="Utility\NotifyPropertyChanged.cs" />
