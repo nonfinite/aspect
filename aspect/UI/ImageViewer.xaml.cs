@@ -7,6 +7,7 @@ using System.Windows.Media.Animation;
 
 using Aspect.Models;
 using Aspect.Properties;
+using Aspect.Services.Win32;
 using Aspect.Utility;
 
 using XamlAnimatedGif;
@@ -236,6 +237,15 @@ namespace Aspect.UI
             }
 
             mMatrixTransform.Matrix = matrix;
+        }
+
+        private void _ShowProperties(object sender, RoutedEventArgs e)
+        {
+            var filePath = File?.Uri.LocalPath;
+            if (filePath != null)
+            {
+                Shell32.ShowFileProperties(filePath);
+            }
         }
     }
 }

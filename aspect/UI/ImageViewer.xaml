@@ -10,6 +10,11 @@
   <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ClipToBounds="True" Background="Transparent"
           MouseDown="_HandleMouseDown" MouseMove="_HandleMouseMove" MouseUp="_HandleMouseUp"
           MouseWheel="_HandleMouseWheel">
+    <Canvas.ContextMenu>
+      <ContextMenu>
+        <MenuItem Header="Properties" Click="_ShowProperties"/>
+      </ContextMenu>
+    </Canvas.ContextMenu>
     <Image x:Name="mImage" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="None"
            SizeChanged="_HandleSizeChanged">
       <Image.RenderTransform>
