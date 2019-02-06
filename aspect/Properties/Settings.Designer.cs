@@ -46,5 +46,17 @@ namespace Aspect.Properties {
                 this["SettingsUpgradeRequired"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool KeepImageOnScreen {
+            get {
+                return ((bool)(this["KeepImageOnScreen"]));
+            }
+            set {
+                this["KeepImageOnScreen"] = value;
+            }
+        }
     }
 }

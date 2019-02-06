@@ -6,6 +6,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 
 using Aspect.Models;
+using Aspect.Properties;
 using Aspect.Utility;
 
 using XamlAnimatedGif;
@@ -93,7 +94,7 @@ namespace Aspect.UI
             this.Log().Information("Setting image to {Fit} scale of {Scale} at {OffsetX},{OffsetY}",
                 fit, scale, matrix.OffsetX, matrix.OffsetY);
 
-            mMatrixTransform.Matrix = matrix;
+            _SetMatrix(matrix);
         }
 
         private static void _HandleFileChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -134,12 +135,9 @@ namespace Aspect.UI
                 var matrix = mMatrixTransform.Matrix;
                 matrix.Translate(v.X, v.Y);
                 // MatrixTransform needs Matrix reset in order to notice the translate
-                mMatrixTransform.Matrix = matrix;
+                _SetMatrix(matrix);
 
                 ImageFit = ImageFit.Custom;
-
-                this.Log().Verbose("Translating image by {Vector} to {OffsetX},{OffsetY}",
-                    v, matrix.OffsetX, matrix.OffsetY);
             }
         }
 
@@ -158,7 +156,7 @@ namespace Aspect.UI
 
             this.Log().Verbose("Scaling image by {Scale} as {Point}", scale, point);
             matrix.ScaleAtPrepend(scale, scale, point.X, point.Y);
-            mMatrixTransform.Matrix = matrix;
+            _SetMatrix(matrix);
 
             ImageFit = ImageFit.Custom;
         }
@@ -187,6 +185,57 @@ namespace Aspect.UI
             {
                 _FitImage();
             }
+        }
+
+        private double _LockBounds(double low, double high, double boundLow, double boundHigh, double current)
+        {
+            var size = high - low;
+            var target = boundHigh - boundLow;
+            if (size < target)
+            {
+                // if smaller, prevent pushing out sides
+                if (low < 0)
+                {
+                    return 0;
+                }
+
+                if (high > target)
+                {
+                    return target - size;
+                }
+            }
+            else
+            {
+                // if larger, prevent dragging past side
+                if (low > 0)
+                {
+                    return 0;
+                }
+
+                if (high < target)
+                {
+                    return target - size;
+                }
+            }
+
+            return current;
+        }
+
+        private void _SetMatrix(Matrix matrix)
+        {
+            this.Log().Verbose("Setting matrix to {Matrix} at {OffsetX},{OffsetY}",
+                matrix, matrix.OffsetX, matrix.OffsetY);
+
+            if (Settings.Default.KeepImageOnScreen)
+            {
+                var topLeft = matrix.Transform(new Point(0, 0));
+                var bottomRight = matrix.Transform(new Point(mImage.Width, mImage.Height));
+
+                matrix.OffsetX = _LockBounds(topLeft.X, bottomRight.X, 0, ActualWidth, matrix.OffsetX);
+                matrix.OffsetY = _LockBounds(topLeft.Y, bottomRight.Y, 0, ActualHeight, matrix.OffsetY);
+            }
+
+            mMatrixTransform.Matrix = matrix;
         }
     }
 }
