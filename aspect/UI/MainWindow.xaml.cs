@@ -34,25 +34,11 @@ namespace Aspect.UI
 
         private void _HandleBrowseForward(object sender, ExecutedRoutedEventArgs e) => ViewModel.NavForward();
 
-        private void _HandleImagesFlyoutIsOpenChanged(object sender, RoutedEventArgs e)
-        {
-            if (!(sender is Flyout flyout) || !flyout.IsOpen)
-            {
-                return;
-            }
-
-            var item = mImageList.SelectedItem;
-            if (item != null)
-            {
-                mImageList.ScrollIntoView(item);
-            }
-        }
-
         private void _HandleSearch(object sender, ExecutedRoutedEventArgs e)
         {
             if (mImageListFlyout.IsOpen)
             {
-                mSearchTextBox.Focus();
+                mImageListView.FocusSearchBox();
             }
             else
             {
@@ -65,7 +51,7 @@ namespace Aspect.UI
                 if (mImageListFlyout.IsOpen)
                 {
                     mImageListFlyout.IsOpenChanged -= _FocusOnOpen;
-                    Dispatcher.Invoke(mSearchTextBox.Focus, DispatcherPriority.Input);
+                    Dispatcher.Invoke(mImageListView.FocusSearchBox, DispatcherPriority.Input);
                 }
             }
         }

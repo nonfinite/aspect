@@ -6,9 +6,6 @@
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                  xmlns:ui="clr-namespace:Aspect.UI"
-                 xmlns:models="clr-namespace:Aspect.Models"
-                 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-                 xmlns:behaviors="clr-namespace:Aspect.UI.Behaviors"
                  mc:Ignorable="d"
                  d:DataContext="{d:DesignInstance ui:MainViewModel}"
                  Title="{Binding FileList.View.CurrentItem, TargetNullValue=aspect}"
@@ -68,82 +65,23 @@
   </mah:MetroWindow.RightWindowCommands>
   <mah:MetroWindow.Flyouts>
     <mah:FlyoutsControl>
-      <mah:Flyout x:Name="mImageListFlyout" Header="Images" Position="Right" Width="300"
+      <mah:Flyout x:Name="mImageListFlyout"
+                  Header="Images" Position="Right" Width="300"
                   TitleVisibility="Collapsed" CloseButtonVisibility="Collapsed"
                   IsPinned="False" ExternalCloseButton="Left"
-                  IsOpen="{Binding ElementName=mListToggleButton, Path=IsChecked, Mode=TwoWay}"
-                  IsOpenChanged="_HandleImagesFlyoutIsOpenChanged">
+                  IsOpen="{Binding ElementName=mListToggleButton, Path=IsChecked, Mode=TwoWay}">
         <mah:Flyout.InputBindings>
-          <KeyBinding Key="Escape" Command="Close"/>
+          <KeyBinding Key="Escape" Command="Close" />
         </mah:Flyout.InputBindings>
         <mah:Flyout.CommandBindings>
-          <CommandBinding Command="Close" Executed="_CloseFlyout"/>
+          <CommandBinding Command="Close" Executed="_CloseFlyout" />
         </mah:Flyout.CommandBindings>
         <Grid>
-          <Grid.Resources>
-            <Style TargetType="iconPacks:PackIconModern">
-              <Setter Property="VerticalAlignment" Value="Center" />
-              <Setter Property="Margin" Value="4 0" />
-            </Style>
-          </Grid.Resources>
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-          </Grid.ColumnDefinitions>
           <Grid.RowDefinitions>
-            <RowDefinition Height="{Binding ElementName=mWindow, Path=TitlebarHeight, Mode=OneWay}" />
+            <RowDefinition Height="{Binding ElementName=mWindow, Path=TitlebarHeight}" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
           </Grid.RowDefinitions>
-          <!-- row 0 is padding to avoid overlapping title bar items  -->
-          <iconPacks:PackIconModern Grid.Row="1" Grid.Column="0" Kind="Sort" Margin="4 0" />
-          <ComboBox Grid.Row="1" Grid.Column="1"
-                    ItemsSource="{Binding AvailableSortBy}" SelectedValue="{Binding FileList.Sort}"
-                    DisplayMemberPath="Item2" SelectedValuePath="Item1"
-                    VerticalAlignment="Center"
-                    Margin="4" />
-
-          <Border Grid.Row="2" Grid.Column="0" BorderThickness="0 0 0 2" Margin="4 0 0 4"
-                  BorderBrush="{StaticResource AccentColorBrush}" />
-          <Label Grid.Row="2" Grid.Column="1" Content="Filters" BorderThickness="0 0 0 2" Margin="0 0 4 4"
-                 BorderBrush="{StaticResource AccentColorBrush}" />
-
-          <iconPacks:PackIconModern Grid.Row="3" Grid.Column="0" Kind="Magnify" Margin="4 0" />
-          <TextBox x:Name="mSearchTextBox" Grid.Row="3" Grid.Column="1"
-                   Text="{Binding FileList.Filter.Text}" Margin="4">
-            <i:Interaction.Behaviors>
-              <behaviors:UpdateSourceOnKeyUpBehavior Key="Enter" Property="{x:Static TextBox.TextProperty}" />
-            </i:Interaction.Behaviors>
-          </TextBox>
-
-          <ui:RatingControl Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
-                            Rating="{Binding FileList.Filter.Rating, Mode=TwoWay}" />
-
-          <ListView Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding FileList.View}"
-                    IsSynchronizedWithCurrentItem="True" BorderThickness="0" Margin="0 4 0 0"
-                    x:Name="mImageList">
-            <ListView.ItemTemplate>
-              <DataTemplate DataType="models:FileData">
-                <Grid>
-                  <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                  </Grid.RowDefinitions>
-                  <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                  </Grid.ColumnDefinitions>
-                  <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding Name}" />
-                  <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding ModifiedInstant}" />
-                  <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Size}" />
-                </Grid>
-              </DataTemplate>
-            </ListView.ItemTemplate>
-          </ListView>
+          <ui:ImageListView x:Name="mImageListView" Grid.Row="1" />
         </Grid>
       </mah:Flyout>
     </mah:FlyoutsControl>
