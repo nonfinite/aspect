@@ -26,6 +26,13 @@
     <KeyBinding Key="F" Modifiers="Control" Command="Search" />
     <KeyBinding Key="E" Modifiers="Control" Command="Search" />
   </mah:MetroWindow.InputBindings>
+  <mah:MetroWindow.LeftWindowCommands>
+    <mah:WindowCommands>
+      <ToggleButton x:Name="mSettingsToggleButton">
+        <iconPacks:PackIconModern Kind="Settings" />
+      </ToggleButton>
+    </mah:WindowCommands>
+  </mah:MetroWindow.LeftWindowCommands>
   <mah:MetroWindow.RightWindowCommands>
     <mah:WindowCommands>
       <ToggleButton IsChecked="{Binding IsSlideshowRunning, Mode=TwoWay}">
@@ -82,6 +89,28 @@
             <RowDefinition Height="Auto" />
           </Grid.RowDefinitions>
           <ui:ImageListView x:Name="mImageListView" Grid.Row="1" />
+        </Grid>
+      </mah:Flyout>
+      <mah:Flyout Position="Left" IsPinned="False" ExternalCloseButton="Left"
+                  TitleVisibility="Collapsed" CloseButtonVisibility="Collapsed"
+                  Height="{Binding ElementName=mWindow, Path=ActualHeight}"
+                  Width="{Binding ElementName=mWindow, Path=ActualWidth}"
+                  IsOpen="{Binding ElementName=mSettingsToggleButton, Path=IsChecked, Mode=TwoWay}">
+        <mah:Flyout.InputBindings>
+          <KeyBinding Key="Escape" Command="Close" />
+        </mah:Flyout.InputBindings>
+        <mah:Flyout.CommandBindings>
+          <CommandBinding Command="Close" Executed="_CloseFlyout" />
+        </mah:Flyout.CommandBindings>
+        <mah:Flyout.Background>
+          <SolidColorBrush Color="{StaticResource FlyoutColor}" Opacity="0.8" />
+        </mah:Flyout.Background>
+        <Grid>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="{Binding ElementName=mWindow, Path=TitlebarHeight}" />
+            <RowDefinition Height="Auto" />
+          </Grid.RowDefinitions>
+          <ui:SettingsView Grid.Row="1" Margin="12" />
         </Grid>
       </mah:Flyout>
     </mah:FlyoutsControl>
