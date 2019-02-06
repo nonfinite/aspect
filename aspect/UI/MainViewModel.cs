@@ -1,7 +1,9 @@
 using System;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 using Aspect.Models;
+using Aspect.Properties;
 using Aspect.Utility;
 
 using Optional.Unsafe;
@@ -10,9 +12,22 @@ namespace Aspect.UI
 {
     public class MainViewModel : NotifyPropertyChanged
     {
-        private FileList mFileList;
+        public MainViewModel()
+        {
+            _ResetSlideshowTimer();
+            mSlideshowTimer = new DispatcherTimer(
+                TimeSpan.FromSeconds(1), DispatcherPriority.Input,
+                _HandleSlideshowTick, Dispatcher.CurrentDispatcher)
+            {
+                IsEnabled = false
+            };
+        }
 
-        public Tuple<SortBy, string>[] AvailableSortBy { get; } = new[]
+        private readonly DispatcherTimer mSlideshowTimer;
+        private FileList mFileList;
+        private byte mSlideshowSecondsRemaining;
+
+        public Tuple<SortBy, string>[] AvailableSortBy { get; } =
         {
             Tuple.Create(SortBy.Name, "Name"),
             Tuple.Create(SortBy.ModifiedDate, "Modified"),
@@ -25,6 +40,43 @@ namespace Aspect.UI
             get => mFileList;
             private set => Set(ref mFileList, value);
         }
+
+        public bool IsSlideshowRunning
+        {
+            get => mSlideshowTimer.IsEnabled;
+            set
+            {
+                if (IsSlideshowRunning != value)
+                {
+                    OnPropertyChanging();
+                    _ResetSlideshowTimer();
+                    mSlideshowTimer.IsEnabled = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public byte SlideshowSecondsRemaining
+        {
+            get => mSlideshowSecondsRemaining;
+            private set => Set(ref mSlideshowSecondsRemaining, value);
+        }
+
+        private void _HandleSlideshowTick(object sender, EventArgs e)
+        {
+            if (SlideshowSecondsRemaining <= 1)
+            {
+                NavForward();
+                _ResetSlideshowTimer();
+            }
+            else
+            {
+                SlideshowSecondsRemaining--;
+            }
+        }
+
+        private void _ResetSlideshowTimer() =>
+            SlideshowSecondsRemaining = Math.Max(Settings.Default.SlideshowDurationInSeconds, (byte) 1);
 
         public async Task Initialize(string[] args)
         {

@@ -26,6 +26,13 @@
   </mah:MetroWindow.InputBindings>
   <mah:MetroWindow.RightWindowCommands>
     <mah:WindowCommands>
+      <ToggleButton IsChecked="{Binding IsSlideshowRunning, Mode=TwoWay}">
+        <StackPanel Orientation="Horizontal">
+          <TextBlock Text="{Binding SlideshowSecondsRemaining, StringFormat='00'}" Margin="0 0 2 0" MinWidth="14"
+                     VerticalAlignment="Center" />
+          <iconPacks:PackIconModern Kind="Timer" VerticalAlignment="Center" />
+        </StackPanel>
+      </ToggleButton>
       <ui:RatingControl Rating="{Binding FileList.View.CurrentItem.Rating, Mode=TwoWay}" />
       <StackPanel Orientation="Horizontal">
         <ToggleButton

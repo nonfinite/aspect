@@ -58,5 +58,17 @@ namespace Aspect.Properties {
                 this["KeepImageOnScreen"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("15")]
+        public byte SlideshowDurationInSeconds {
+            get {
+                return ((byte)(this["SlideshowDurationInSeconds"]));
+            }
+            set {
+                this["SlideshowDurationInSeconds"] = value;
+            }
+        }
     }
 }
