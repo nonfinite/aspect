@@ -19,8 +19,25 @@ namespace Aspect.UI
             {
                 if (KeepImageOnScreen != value)
                 {
+                    OnPropertyChanging();
                     mSettings.KeepImageOnScreen = value;
                     mSettings.Save();
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public bool MaximizeOnStartup
+        {
+            get => mSettings.MaximizeOnStartup;
+            set
+            {
+                if (MaximizeOnStartup != value)
+                {
+                    OnPropertyChanging();
+                    mSettings.MaximizeOnStartup = value;
+                    mSettings.Save();
+                    OnPropertyChanged();
                 }
             }
         }
@@ -32,8 +49,10 @@ namespace Aspect.UI
             {
                 if (SlideshowDurationInSeconds != value)
                 {
+                    OnPropertyChanging();
                     mSettings.SlideshowDurationInSeconds = value;
                     mSettings.Save();
+                    OnPropertyChanged();
                 }
             }
         }
