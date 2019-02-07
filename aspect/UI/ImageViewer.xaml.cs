@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -166,28 +167,22 @@ namespace Aspect.UI
         {
             this.Log().Information("Loading {Uri}", file?.Uri);
 
-            mBrush = null;
-            mAnimator?.Dispose();
-            mAnimator = null;
             if (file == null)
             {
+                mBrush = null;
+                mAnimator?.Dispose();
+                mAnimator = null;
                 return;
             }
 
             mLoadingBar.Visibility = Visibility.Visible;
 
-            try
-            {
-                mAnimator = await BrushAnimator.CreateAsync(file.Uri, RepeatBehavior.Forever);
-                mBrush = mAnimator.Brush;
-                mAnimator.Play();
-            }
-            catch
-            {
-                mBrush = new ImageBrush(new BitmapImage(file.Uri));
-            }
-
-            mImageSize = file.Dimensions;
+            var result = await _Load(file);
+            mAnimator?.Dispose();
+            mAnimator = result.Item2;
+            mBrush = result.Item1;
+            mImageSize = result.Item3;
+            mAnimator?.Play();
 
             mLoadingBar.Visibility = Visibility.Collapsed;
 
@@ -198,6 +193,22 @@ namespace Aspect.UI
             else
             {
                 _FitImage();
+            }
+        }
+
+        private async Task<Tuple<Brush, BrushAnimator, Size>> _Load(FileData file)
+        {
+            try
+            {
+                var animator = await BrushAnimator.CreateAsync(file.Uri, RepeatBehavior.Forever);
+                return new Tuple<Brush, BrushAnimator, Size>(animator.Brush, animator, file.Dimensions);
+            }
+            catch
+            {
+                var image = new BitmapImage(file.Uri);
+                var brush = new ImageBrush(image);
+                return new Tuple<Brush, BrushAnimator, Size>(
+                    brush, null, new Size(image.PixelWidth, image.PixelHeight));
             }
         }
 
