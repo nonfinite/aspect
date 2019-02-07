@@ -26,7 +26,7 @@ namespace Aspect.Models
             });
         }
 
-        private static readonly HashSet<string> SupportedFileExtensions = new HashSet<string>(new[]
+        public static readonly HashSet<string> SupportedFileExtensions = new HashSet<string>(new[]
         {
             ".png",
             ".bmp",

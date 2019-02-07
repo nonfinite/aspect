@@ -1,10 +1,15 @@
 using System;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Threading;
 
 using Aspect.Models;
 using Aspect.Properties;
 using Aspect.Utility;
+
+using Microsoft.Win32;
 
 using Optional.Unsafe;
 
@@ -90,6 +95,14 @@ namespace Aspect.UI
                     break;
                 }
             }
+
+            if (FileList == null)
+            {
+                if (!await Open())
+                {
+                    Application.Current.Shutdown();
+                }
+            }
         }
 
         public void NavBack()
@@ -116,6 +129,39 @@ namespace Aspect.UI
                     fileList.MoveCurrentToFirst();
                 }
             }
+        }
+
+        public async Task<bool> Open()
+        {
+            var currentFile = (FileList?.View.CurrentItem as FileData)?.Uri.LocalPath;
+            var currentDir = Path.GetDirectoryName(currentFile);
+
+            var supportedExtensions = string.Join(";", FileData.SupportedFileExtensions
+                .Select(ext => $"*{ext}")
+                .OrderBy(ext => ext));
+            var ofd = new OpenFileDialog
+            {
+                CheckFileExists = true,
+                CheckPathExists = true,
+                DereferenceLinks = true,
+                RestoreDirectory = true,
+                Filter = $"Supported Images ({supportedExtensions})|{supportedExtensions}",
+                FileName = Path.GetFileName(currentFile) ?? "",
+                InitialDirectory = currentDir ?? "",
+            };
+
+            if (ofd.ShowDialog(Application.Current.MainWindow) ?? false)
+            {
+                var list = await FileList.Load(ofd.FileName);
+                if (list.HasValue)
+                {
+                    FileList = list.ValueOr((FileList) null);
+
+                    return FileList != null;
+                }
+            }
+
+            return false;
         }
     }
 }

@@ -19,6 +19,7 @@
   </UserControl.ContextMenu>
   <Grid>
     <mah:MetroProgressBar x:Name="mLoadingBar" Margin="4" IsIndeterminate="True"
-                          HorizontalAlignment="Stretch" VerticalAlignment="Top" />
+                          HorizontalAlignment="Stretch" VerticalAlignment="Top"
+                          Visibility="Collapsed" />
   </Grid>
 </UserControl>

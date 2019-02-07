@@ -18,6 +18,7 @@
   <mah:MetroWindow.CommandBindings>
     <CommandBinding Command="BrowseBack" Executed="_HandleBrowseBack" />
     <CommandBinding Command="BrowseForward" Executed="_HandleBrowseForward" />
+    <CommandBinding Command="Open" Executed="_HandleOpen" />
     <CommandBinding Command="Search" Executed="_HandleSearch" />
   </mah:MetroWindow.CommandBindings>
   <mah:MetroWindow.InputBindings>
@@ -25,6 +26,7 @@
     <KeyBinding Key="Left" Command="BrowseBack" />
     <KeyBinding Key="F" Modifiers="Control" Command="Search" />
     <KeyBinding Key="E" Modifiers="Control" Command="Search" />
+    <KeyBinding Key="O" Modifiers="Control" Command="Open" />
   </mah:MetroWindow.InputBindings>
   <mah:MetroWindow.LeftWindowCommands>
     <mah:WindowCommands>
@@ -35,6 +37,7 @@
   </mah:MetroWindow.LeftWindowCommands>
   <mah:MetroWindow.RightWindowCommands>
     <mah:WindowCommands>
+      <Button Content="Open" Command="Open" />
       <ToggleButton IsChecked="{Binding IsSlideshowRunning, Mode=TwoWay}">
         <StackPanel Orientation="Horizontal">
           <TextBlock Text="{Binding SlideshowSecondsRemaining, StringFormat='00'}" Margin="0 0 2 0" MinWidth="14"

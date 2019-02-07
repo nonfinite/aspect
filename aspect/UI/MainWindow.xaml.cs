@@ -34,6 +34,8 @@ namespace Aspect.UI
 
         private void _HandleBrowseForward(object sender, ExecutedRoutedEventArgs e) => ViewModel.NavForward();
 
+        private async void _HandleOpen(object sender, RoutedEventArgs e) => await ViewModel.Open();
+
         private void _HandleSearch(object sender, ExecutedRoutedEventArgs e)
         {
             if (mImageListFlyout.IsOpen)
