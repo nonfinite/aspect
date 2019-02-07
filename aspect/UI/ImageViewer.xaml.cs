@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
 
 using Aspect.Models;
 using Aspect.Properties;
@@ -27,8 +28,6 @@ namespace Aspect.UI
         public ImageViewer()
         {
             InitializeComponent();
-            AnimationBehavior.SetAutoStart(mImage, true);
-            AnimationBehavior.SetRepeatBehavior(mImage, RepeatBehavior.Forever);
         }
 
         public static readonly DependencyProperty ImageFitProperty = DependencyProperty.Register(
@@ -39,15 +38,17 @@ namespace Aspect.UI
             "File", typeof(FileData), typeof(ImageViewer),
             new PropertyMetadata(default(FileData), _HandleFileChanged));
 
+        private BrushAnimator mAnimator;
+        private Brush mBrush;
+        private Size mImageSize;
+        private Matrix mMatrix;
         private Point mMouseStart = new Point(0, 0);
-
 
         public FileData File
         {
             get => (FileData) GetValue(FileProperty);
             set => SetValue(FileProperty, value);
         }
-
 
         public ImageFit ImageFit
         {
@@ -66,36 +67,36 @@ namespace Aspect.UI
             var scale = 1.0;
             if (fit == ImageFit.FitAll)
             {
-                scale = Math.Min(ActualWidth / mImage.ActualWidth, ActualHeight / mImage.ActualHeight);
+                scale = Math.Min(ActualWidth / mImageSize.Width, ActualHeight / mImageSize.Height);
             }
             else if (fit == ImageFit.FitHeight)
             {
-                scale = ActualHeight / mImage.ActualHeight;
+                scale = ActualHeight / mImageSize.Height;
             }
             else if (fit == ImageFit.FitWidth)
             {
-                scale = ActualWidth / mImage.ActualWidth;
+                scale = ActualWidth / mImageSize.Width;
             }
 
-            var matrix = new Matrix();
-            matrix.Scale(scale, scale);
+            mMatrix = new Matrix();
+            mMatrix.Scale(scale, scale);
 
-            var imageWidth = mImage.ActualWidth * scale;
+            var imageWidth = mImageSize.Width * scale;
             if (!(ActualWidth < imageWidth))
             {
-                matrix.Translate((ActualWidth - imageWidth) / 2.0, 0);
+                mMatrix.Translate((ActualWidth - imageWidth) / 2.0, 0);
             }
 
-            var imageHeight = mImage.ActualHeight * scale;
+            var imageHeight = mImageSize.Height * scale;
             if (!(ActualHeight < imageHeight))
             {
-                matrix.Translate(0, (ActualHeight - imageHeight) / 2.0);
+                mMatrix.Translate(0, (ActualHeight - imageHeight) / 2.0);
             }
 
             this.Log().Information("Setting image to {Fit} scale of {Scale} at {OffsetX},{OffsetY}",
-                fit, scale, matrix.OffsetX, matrix.OffsetY);
+                fit, scale, mMatrix.OffsetX, mMatrix.OffsetY);
 
-            _SetMatrix(matrix);
+            _UpdateMatrix();
         }
 
         private static void _HandleFileChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -133,10 +134,8 @@ namespace Aspect.UI
                 var position = e.GetPosition(input);
                 var v = position - mMouseStart;
                 mMouseStart = position;
-                var matrix = mMatrixTransform.Matrix;
-                matrix.Translate(v.X, v.Y);
-                // MatrixTransform needs Matrix reset in order to notice the translate
-                _SetMatrix(matrix);
+                mMatrix.Translate(v.X, v.Y);
+                _UpdateMatrix();
 
                 ImageFit = ImageFit.Custom;
             }
@@ -150,33 +149,43 @@ namespace Aspect.UI
 
         private void _HandleMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            var matrix = mMatrixTransform.Matrix;
             var scale = e.Delta > 0 ? 1.1 : (1.0 / 1.1);
 
-            var point = e.GetPosition(mImage);
+            var point = e.GetPosition(this);
 
-            this.Log().Verbose("Scaling image by {Scale} as {Point}", scale, point);
-            matrix.ScaleAtPrepend(scale, scale, point.X, point.Y);
-            _SetMatrix(matrix);
+            this.Log().Verbose("Scaling image by {Scale} at {Point}", scale, point);
+            mMatrix.ScaleAtPrepend(scale, scale, point.X, point.Y);
+            _UpdateMatrix();
 
             ImageFit = ImageFit.Custom;
         }
 
         private void _HandleSizeChanged(object sender, SizeChangedEventArgs e) => _FitImage();
 
-        private void _InitFromFile(FileData file)
+        private async void _InitFromFile(FileData file)
         {
             this.Log().Information("Loading {Uri}", file?.Uri);
 
-            AnimationBehavior.SetSourceUri(mImage, file?.Uri);
+            mBrush = null;
+            mAnimator?.Dispose();
+            mAnimator = null;
             if (file == null)
             {
                 return;
             }
 
-            mImage.Width = file.Dimensions.Width;
-            mImage.Height = file.Dimensions.Height;
-            this.Log().Information("Setting image size to {Width}x{Height}", mImage.Width, mImage.Height);
+            try
+            {
+                mAnimator = await BrushAnimator.CreateAsync(file.Uri, RepeatBehavior.Forever);
+                mBrush = mAnimator.Brush;
+                mAnimator.Play();
+            }
+            catch
+            {
+                mBrush = new ImageBrush(new BitmapImage(file.Uri));
+            }
+
+            mImageSize = file.Dimensions;
 
             if (ImageFit == ImageFit.Custom)
             {
@@ -222,23 +231,6 @@ namespace Aspect.UI
             return current;
         }
 
-        private void _SetMatrix(Matrix matrix)
-        {
-            this.Log().Verbose("Setting matrix to {Matrix} at {OffsetX},{OffsetY}",
-                matrix, matrix.OffsetX, matrix.OffsetY);
-
-            if (Settings.Default.KeepImageOnScreen)
-            {
-                var topLeft = matrix.Transform(new Point(0, 0));
-                var bottomRight = matrix.Transform(new Point(mImage.Width, mImage.Height));
-
-                matrix.OffsetX = _LockBounds(topLeft.X, bottomRight.X, 0, ActualWidth, matrix.OffsetX);
-                matrix.OffsetY = _LockBounds(topLeft.Y, bottomRight.Y, 0, ActualHeight, matrix.OffsetY);
-            }
-
-            mMatrixTransform.Matrix = matrix;
-        }
-
         private void _ShowProperties(object sender, RoutedEventArgs e)
         {
             var filePath = File?.Uri.LocalPath;
@@ -246,6 +238,36 @@ namespace Aspect.UI
             {
                 Shell32.ShowFileProperties(filePath);
             }
+        }
+
+        private void _UpdateMatrix()
+        {
+            this.Log().Verbose("Setting matrix to {Matrix} at {OffsetX},{OffsetY}",
+                mMatrix, mMatrix.OffsetX, mMatrix.OffsetY);
+
+            if (Settings.Default.KeepImageOnScreen)
+            {
+                var topLeft = mMatrix.Transform(new Point(0, 0));
+                var bottomRight = mMatrix.Transform(new Point(mImageSize.Width, mImageSize.Height));
+
+                mMatrix.OffsetX = _LockBounds(topLeft.X, bottomRight.X, 0, ActualWidth, mMatrix.OffsetX);
+                mMatrix.OffsetY = _LockBounds(topLeft.Y, bottomRight.Y, 0, ActualHeight, mMatrix.OffsetY);
+            }
+
+            InvalidateVisual();
+        }
+
+        protected override void OnRender(DrawingContext drawingContext)
+        {
+            if (mBrush == null)
+            {
+                return;
+            }
+
+            var dest = new Rect(
+                mMatrix.Transform(new Point(0, 0)),
+                mMatrix.Transform(new Point(mImageSize.Width, mImageSize.Height)));
+            drawingContext.DrawRectangle(mBrush, null, dest);
         }
     }
 }
