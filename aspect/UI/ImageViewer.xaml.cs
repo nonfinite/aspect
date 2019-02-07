@@ -174,6 +174,8 @@ namespace Aspect.UI
                 return;
             }
 
+            mLoadingBar.Visibility = Visibility.Visible;
+
             try
             {
                 mAnimator = await BrushAnimator.CreateAsync(file.Uri, RepeatBehavior.Forever);
@@ -186,6 +188,8 @@ namespace Aspect.UI
             }
 
             mImageSize = file.Dimensions;
+
+            mLoadingBar.Visibility = Visibility.Collapsed;
 
             if (ImageFit == ImageFit.Custom)
             {
