@@ -21,6 +21,7 @@ namespace Aspect.UI
         FitAll,
         FitWidth,
         FitHeight,
+        FullSize,
         Custom,
     }
 
@@ -77,6 +78,10 @@ namespace Aspect.UI
             else if (fit == ImageFit.FitWidth)
             {
                 scale = ActualWidth / mImageSize.Width;
+            }
+            else if (fit == ImageFit.FullSize)
+            {
+                scale = 1.0;
             }
 
             mMatrix = new Matrix();

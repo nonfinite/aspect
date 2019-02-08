@@ -47,17 +47,21 @@
       </ToggleButton>
       <ui:RatingControl Rating="{Binding FileList.View.CurrentItem.Rating, Mode=TwoWay}" />
       <StackPanel Orientation="Horizontal">
-        <ToggleButton
-          IsChecked="{Binding ElementName=mImageViewer, Path=ImageFit, Converter={StaticResource ConvertEnumToBool}, ConverterParameter={x:Static ui:ImageFit.FitAll}}">
+        <ToggleButton ToolTip="Fit width and height"
+                      IsChecked="{Binding ElementName=mImageViewer, Path=ImageFit, Converter={StaticResource ConvertEnumToBool}, ConverterParameter={x:Static ui:ImageFit.FitAll}}">
           <iconPacks:PackIconModern Kind="ArrowExpand" />
         </ToggleButton>
-        <ToggleButton
-          IsChecked="{Binding ElementName=mImageViewer, Path=ImageFit, Converter={StaticResource ConvertEnumToBool}, ConverterParameter={x:Static ui:ImageFit.FitHeight}}">
+        <ToggleButton ToolTip="Fit height"
+                      IsChecked="{Binding ElementName=mImageViewer, Path=ImageFit, Converter={StaticResource ConvertEnumToBool}, ConverterParameter={x:Static ui:ImageFit.FitHeight}}">
           <iconPacks:PackIconModern Kind="DimensionArrowLineHeightShort" />
         </ToggleButton>
-        <ToggleButton
-          IsChecked="{Binding ElementName=mImageViewer, Path=ImageFit, Converter={StaticResource ConvertEnumToBool}, ConverterParameter={x:Static ui:ImageFit.FitWidth}}">
+        <ToggleButton ToolTip="Fit width"
+                      IsChecked="{Binding ElementName=mImageViewer, Path=ImageFit, Converter={StaticResource ConvertEnumToBool}, ConverterParameter={x:Static ui:ImageFit.FitWidth}}">
           <iconPacks:PackIconModern Kind="DimensionArrowLineWidthShort" />
+        </ToggleButton>
+        <ToggleButton ToolTip="Actual size"
+                      IsChecked="{Binding ElementName=mImageViewer, Path=ImageFit, Converter={StaticResource ConvertEnumToBool}, ConverterParameter={x:Static ui:ImageFit.FullSize}}">
+          <iconPacks:PackIconModern Kind="FullscreenBox" />
         </ToggleButton>
       </StackPanel>
       <StackPanel Orientation="Horizontal">
