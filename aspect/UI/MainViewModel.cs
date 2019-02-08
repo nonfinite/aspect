@@ -7,6 +7,7 @@ using System.Windows.Threading;
 
 using Aspect.Models;
 using Aspect.Properties;
+using Aspect.Services;
 using Aspect.Utility;
 
 using Microsoft.Win32;

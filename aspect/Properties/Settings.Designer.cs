@@ -70,5 +70,41 @@ namespace Aspect.Properties {
                 this["SlideshowDurationInSeconds"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://github.com/nonfinite/aspect/releases/latest")]
+        public string GitHubUpdateUrl {
+            get {
+                return ((string)(this["GitHubUpdateUrl"]));
+            }
+            set {
+                this["GitHubUpdateUrl"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UpdateToPreRelease {
+            get {
+                return ((bool)(this["UpdateToPreRelease"]));
+            }
+            set {
+                this["UpdateToPreRelease"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool UpdateAutomatically {
+            get {
+                return ((bool)(this["UpdateAutomatically"]));
+            }
+            set {
+                this["UpdateAutomatically"] = value;
+            }
+        }
     }
 }

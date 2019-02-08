@@ -14,5 +14,14 @@
     <Setting Name="SlideshowDurationInSeconds" Type="System.Byte" Scope="User">
       <Value Profile="(Default)">15</Value>
     </Setting>
+    <Setting Name="GitHubUpdateUrl" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://github.com/nonfinite/aspect/releases/latest</Value>
+    </Setting>
+    <Setting Name="UpdateToPreRelease" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="UpdateAutomatically" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

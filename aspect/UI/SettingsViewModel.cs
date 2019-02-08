@@ -12,6 +12,7 @@ namespace Aspect.UI
 
         private readonly Settings mSettings;
 
+
         public bool KeepImageOnScreen
         {
             get => mSettings.KeepImageOnScreen;
@@ -51,6 +52,36 @@ namespace Aspect.UI
                 {
                     OnPropertyChanging();
                     mSettings.SlideshowDurationInSeconds = value;
+                    mSettings.Save();
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public bool StableUpdatesOnly
+        {
+            get => !mSettings.UpdateToPreRelease;
+            set
+            {
+                if (StableUpdatesOnly != value)
+                {
+                    OnPropertyChanging();
+                    mSettings.UpdateToPreRelease = !value;
+                    mSettings.Save();
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public bool UpdateAutomatically
+        {
+            get => mSettings.UpdateAutomatically;
+            set
+            {
+                if (UpdateAutomatically != value)
+                {
+                    OnPropertyChanging();
+                    mSettings.UpdateAutomatically = value;
                     mSettings.Save();
                     OnPropertyChanged();
                 }
