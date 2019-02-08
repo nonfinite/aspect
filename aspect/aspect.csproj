@@ -109,6 +109,7 @@
     <Compile Include="UI\Converters\EnumToBoolConverter.cs" />
     <Compile Include="UI\Converters\ParamToNullConverter.cs" />
     <Compile Include="UI\Converters\RatingToByteConverter.cs" />
+    <Compile Include="UI\Converters\ValueMapConverter.cs" />
     <Compile Include="UI\ImageListView.xaml.cs">
       <DependentUpon>ImageListView.xaml</DependentUpon>
     </Compile>

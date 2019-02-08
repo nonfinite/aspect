@@ -6,6 +6,7 @@
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                  xmlns:ui="clr-namespace:Aspect.UI"
+                 xmlns:converters="clr-namespace:Aspect.UI.Converters"
                  mc:Ignorable="d"
                  d:DataContext="{d:DesignInstance ui:MainViewModel}"
                  Title="{Binding FileList.View.CurrentItem, TargetNullValue=aspect}"
@@ -30,22 +31,32 @@
   </mah:MetroWindow.InputBindings>
   <mah:MetroWindow.LeftWindowCommands>
     <mah:WindowCommands>
-      <ToggleButton x:Name="mSettingsToggleButton">
+      <ToggleButton x:Name="mSettingsToggleButton" ToolTip="Open settings">
         <iconPacks:PackIconModern Kind="Settings" />
       </ToggleButton>
     </mah:WindowCommands>
   </mah:MetroWindow.LeftWindowCommands>
   <mah:MetroWindow.RightWindowCommands>
     <mah:WindowCommands>
-      <Button Content="Open" Command="Open" />
+      <Button Content="Open" Command="Open" ToolTip="Open new file/directory" />
       <ToggleButton IsChecked="{Binding IsSlideshowRunning, Mode=TwoWay}">
+        <ToggleButton.ToolTip>
+          <Binding Path="IsSlideshowRunning">
+            <Binding.Converter>
+              <converters:ValueMapConverter>
+                <converters:KeyValue From="{StaticResource True}" To="Stop slideshow" />
+                <converters:KeyValue From="{StaticResource False}" To="Start slideshow" />
+              </converters:ValueMapConverter>
+            </Binding.Converter>
+          </Binding>
+        </ToggleButton.ToolTip>
         <StackPanel Orientation="Horizontal">
           <TextBlock Text="{Binding SlideshowSecondsRemaining, StringFormat='00'}" Margin="0 0 2 0" MinWidth="14"
                      VerticalAlignment="Center" />
           <iconPacks:PackIconModern Kind="Timer" VerticalAlignment="Center" />
         </StackPanel>
       </ToggleButton>
-      <ui:RatingControl Rating="{Binding FileList.View.CurrentItem.Rating, Mode=TwoWay}" />
+      <ui:RatingControl Rating="{Binding FileList.View.CurrentItem.Rating, Mode=TwoWay}" ToolTip="Set rating" />
       <StackPanel Orientation="Horizontal">
         <ToggleButton ToolTip="Fit width and height"
                       IsChecked="{Binding ElementName=mImageViewer, Path=ImageFit, Converter={StaticResource ConvertEnumToBool}, ConverterParameter={x:Static ui:ImageFit.FitAll}}">
@@ -65,14 +76,14 @@
         </ToggleButton>
       </StackPanel>
       <StackPanel Orientation="Horizontal">
-        <Button Command="BrowseBack">
+        <Button Command="BrowseBack" ToolTip="Previous image">
           <iconPacks:PackIconModern Kind="ArrowLeft" />
         </Button>
-        <Button Command="BrowseForward">
+        <Button Command="BrowseForward" ToolTip="Next image">
           <iconPacks:PackIconModern Kind="ArrowRight" />
         </Button>
       </StackPanel>
-      <ToggleButton x:Name="mListToggleButton">
+      <ToggleButton x:Name="mListToggleButton" ToolTip="Open file list">
         <iconPacks:PackIconModern Kind="List" />
       </ToggleButton>
     </mah:WindowCommands>
