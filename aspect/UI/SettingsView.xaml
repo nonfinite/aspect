@@ -10,27 +10,30 @@
   <UserControl.DataContext>
     <local:SettingsViewModel />
   </UserControl.DataContext>
-  <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
-    <StackPanel.Resources>
-      <Style x:Key="Spacer" TargetType="Border">
-        <Setter Property="Margin" Value="4" />
-      </Style>
-    </StackPanel.Resources>
-    <mah:ToggleSwitch Header="Maximize Window On Launch?" IsChecked="{Binding MaximizeOnStartup}"
-                      OnLabel="Yes" OffLabel="No" Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
+  <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                HorizontalAlignment="Stretch">
+    <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
+      <StackPanel.Resources>
+        <Style x:Key="Spacer" TargetType="Border">
+          <Setter Property="Margin" Value="4" />
+        </Style>
+      </StackPanel.Resources>
+      <mah:ToggleSwitch Header="Maximize Window On Launch?" IsChecked="{Binding MaximizeOnStartup}"
+                        OnLabel="Yes" OffLabel="No" Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
 
-    <Border Style="{StaticResource Spacer}" />
+      <Border Style="{StaticResource Spacer}" />
 
-    <mah:ToggleSwitch Header="Keep Image On Screen?" IsChecked="{Binding KeepImageOnScreen}"
-                      OnLabel="Yes" OffLabel="No" Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
+      <mah:ToggleSwitch Header="Keep Image On Screen?" IsChecked="{Binding KeepImageOnScreen}"
+                        OnLabel="Yes" OffLabel="No" Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
 
-    <Border Style="{StaticResource Spacer}" />
+      <Border Style="{StaticResource Spacer}" />
 
-    <TextBlock FontFamily="{StaticResource ToggleSwitchHeaderFontFamily.Win10}"
-               FontSize="{StaticResource ToggleSwitchHeaderFontSize.Win10}"
-               Margin="0 0 0 8"
-               Text="Slideshow Duration" />
-    <mah:NumericUpDown Value="{Binding SlideshowDurationInSeconds}" Minimum="1" Maximum="255"
-                       HorizontalAlignment="Left" Width="120" />
-  </StackPanel>
+      <TextBlock FontFamily="{StaticResource ToggleSwitchHeaderFontFamily.Win10}"
+                 FontSize="{StaticResource ToggleSwitchHeaderFontSize.Win10}"
+                 Margin="0 0 0 8"
+                 Text="Slideshow Duration" />
+      <mah:NumericUpDown Value="{Binding SlideshowDurationInSeconds}" Minimum="1" Maximum="255"
+                         HorizontalAlignment="Left" Width="120" />
+    </StackPanel>
+  </ScrollViewer>
 </UserControl>
