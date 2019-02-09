@@ -16,7 +16,7 @@ namespace Aspect.Services
     public interface IUpdateService
     {
         Task<Option<Dictionary<ReleaseEntry, string>>> CheckForUpdates();
-        void HandleInstallEvents();
+        void HandleInstallEvents(string[] args);
         Task<Option<ReleaseEntry>> Update(bool forceUpdate);
     }
 
@@ -58,17 +58,20 @@ namespace Aspect.Services
             }
         }
 
-        void IUpdateService.HandleInstallEvents()
+        void IUpdateService.HandleInstallEvents(string[] args)
         {
             SquirrelAwareApp.HandleEvents(
-                async v => await _WithManager(_CreateShortcuts),
-                async v => await _WithManager(_CreateShortcuts),
-                onAppUninstall: async v => await _WithManager(mgr => mgr.RemoveShortcutForThisExe())
+                v => _WithManager(_CreateShortcuts),
+                v => _WithManager(_CreateShortcuts),
+                onAppUninstall: v => _WithManager(mgr => mgr.RemoveShortcutForThisExe()),
+                arguments: args
             );
 
-            async Task _WithManager(Action<IUpdateManager> action)
+            void _WithManager(Action<IUpdateManager> action)
             {
-                using (var mgr = await _CreateUpdateManager())
+                // The async call will deadlock when run at this early stage of the program unless we explicitly run it in a task.
+                var mgr = Task.Run(async () => await _CreateUpdateManager()).Result;
+                using (mgr)
                 {
                     if (mgr == null)
                     {

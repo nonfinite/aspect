@@ -30,7 +30,7 @@ namespace Aspect
                 Settings.Default.Save();
             }
 
-            UpdateService.Instance.HandleInstallEvents();
+            UpdateService.Instance.HandleInstallEvents(e.Args);
 
             var window = new MainWindow();
             MainWindow = window;
