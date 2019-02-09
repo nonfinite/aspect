@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{26F37F3A-A852-47A3-89FD-43CC8FF284CC}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		aspect\Aspect.nuspec = aspect\Aspect.nuspec
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aspect.tests", "aspect.tests\aspect.tests.csproj", "{B8889506-E2F9-4D7D-9EDC-EFF3672223E2}"

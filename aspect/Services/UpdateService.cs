@@ -13,7 +13,14 @@ using Squirrel;
 
 namespace Aspect.Services
 {
-    public sealed class UpdateService
+    public interface IUpdateService
+    {
+        Task<Option<Dictionary<ReleaseEntry, string>>> CheckForUpdates();
+        void HandleInstallEvents();
+        Task<Option<ReleaseEntry>> Update(bool forceUpdate);
+    }
+
+    public sealed class UpdateService : IUpdateService
     {
         private readonly Lazy<bool> mIsUpdateable = new Lazy<bool>(() =>
         {
@@ -23,18 +30,9 @@ namespace Aspect.Services
             return isInstalled;
         });
 
-        private Task<UpdateManager> _CreateUpdateManager()
-        {
-            var updateUrl = Settings.Default.GitHubUpdateUrl;
-            var preRelease = Settings.Default.UpdateToPreRelease;
+        public static IUpdateService Instance { get; } = new UpdateService();
 
-            this.Log().Information("Creating update manager with {Url} ({PreRelease})", updateUrl, preRelease);
-
-            return UpdateManager.GitHubUpdateManager(updateUrl, prerelease: preRelease);
-        }
-
-
-        public async Task<Option<Dictionary<ReleaseEntry, string>>> CheckForUpdates()
+        async Task<Option<Dictionary<ReleaseEntry, string>>> IUpdateService.CheckForUpdates()
         {
             if (!mIsUpdateable.Value)
             {
@@ -43,6 +41,11 @@ namespace Aspect.Services
 
             using (var mgr = await _CreateUpdateManager())
             {
+                if (mgr == null)
+                {
+                    return Option.None<Dictionary<ReleaseEntry, string>>();
+                }
+
                 var updates = await mgr.CheckForUpdate();
 
                 if (updates.FutureReleaseEntry != null &&
@@ -55,7 +58,29 @@ namespace Aspect.Services
             }
         }
 
-        public async Task<Option<ReleaseEntry>> Update(bool forceUpdate)
+        void IUpdateService.HandleInstallEvents()
+        {
+            SquirrelAwareApp.HandleEvents(
+                async v => await _WithManager(_CreateShortcuts),
+                async v => await _WithManager(_CreateShortcuts),
+                onAppUninstall: async v => await _WithManager(mgr => mgr.RemoveShortcutForThisExe())
+            );
+
+            async Task _WithManager(Action<IUpdateManager> action)
+            {
+                using (var mgr = await _CreateUpdateManager())
+                {
+                    if (mgr == null)
+                    {
+                        return;
+                    }
+
+                    action(mgr);
+                }
+            }
+        }
+
+        async Task<Option<ReleaseEntry>> IUpdateService.Update(bool forceUpdate)
         {
             if (!mIsUpdateable.Value)
             {
@@ -69,8 +94,37 @@ namespace Aspect.Services
 
             using (var mgr = await _CreateUpdateManager())
             {
+                if (mgr == null)
+                {
+                    return Option.None<ReleaseEntry>();
+                }
+
                 var results = await mgr.UpdateApp();
                 return results.SomeNotNull();
+            }
+        }
+
+        private static void _CreateShortcuts(IUpdateManager mgr) =>
+            mgr.CreateShortcutsForExecutable(
+                Path.GetFileName(Assembly.GetEntryAssembly().Location),
+                ShortcutLocation.StartMenu | ShortcutLocation.Desktop,
+                !Environment.CommandLine.Contains("squirrel-install"), null, null);
+
+        private async Task<IUpdateManager> _CreateUpdateManager()
+        {
+            var updateUrl = Settings.Default.GitHubUpdateUrl;
+            var preRelease = Settings.Default.UpdateToPreRelease;
+
+            this.Log().Information("Creating update manager with {Url} ({PreRelease})", updateUrl, preRelease);
+
+            try
+            {
+                return await UpdateManager.GitHubUpdateManager(updateUrl, prerelease: preRelease);
+            }
+            catch (Exception ex)
+            {
+                this.Log().Error(ex, "Failed to create GitHub update manager");
+                return null;
             }
         }
     }

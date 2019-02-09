@@ -20,8 +20,6 @@ namespace Aspect.UI
 
         private readonly Settings mSettings;
 
-        private readonly UpdateService mUpdateService = new UpdateService();
-
         public bool KeepImageOnScreen
         {
             get => mSettings.KeepImageOnScreen;
@@ -97,7 +95,9 @@ namespace Aspect.UI
             }
         }
 
-        public Task<Option<Dictionary<ReleaseEntry, string>>> CheckForUpdates() => mUpdateService.CheckForUpdates();
-        public Task<Option<ReleaseEntry>> Update() => mUpdateService.Update(true);
+        public Task<Option<Dictionary<ReleaseEntry, string>>> CheckForUpdates() =>
+            UpdateService.Instance.CheckForUpdates();
+
+        public Task<Option<ReleaseEntry>> Update() => UpdateService.Instance.Update(true);
     }
 }

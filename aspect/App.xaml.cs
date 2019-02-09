@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using System.Windows;
 
 using Aspect.Properties;
@@ -7,8 +6,6 @@ using Aspect.UI;
 using Aspect.Utility;
 
 using Serilog;
-
-using Squirrel;
 
 namespace Aspect
 {
@@ -32,6 +29,8 @@ namespace Aspect
                 Settings.Default.SettingsUpgradeRequired = false;
                 Settings.Default.Save();
             }
+
+            UpdateService.Instance.HandleInstallEvents();
 
             var window = new MainWindow();
             MainWindow = window;

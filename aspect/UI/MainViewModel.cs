@@ -33,7 +33,6 @@ namespace Aspect.UI
         }
 
         private readonly DispatcherTimer mSlideshowTimer;
-        private readonly UpdateService mUpdateService = new UpdateService();
         private FileList mFileList;
         private byte mSlideshowSecondsRemaining;
 
@@ -124,7 +123,7 @@ namespace Aspect.UI
                 }
             }
 
-            await mUpdateService.Update(false).ContinueWith(_HandleUpdateCompleted).DontCaptureContext();
+            await UpdateService.Instance.Update(false).ContinueWith(_HandleUpdateCompleted).DontCaptureContext();
         }
 
         public void NavBack()
