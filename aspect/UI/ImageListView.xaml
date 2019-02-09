@@ -52,11 +52,11 @@
     <local:RatingControl Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
                          Rating="{Binding FileList.Filter.Rating, Mode=TwoWay}" />
 
-    <ListView Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding FileList.View}"
+    <ListBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding FileList.View}"
               IsSynchronizedWithCurrentItem="True" BorderThickness="0" Margin="0 4 0 0"
               ScrollViewer.HorizontalScrollBarVisibility="Disabled"
               IsVisibleChanged="_HandleImageListVisibilityChanged">
-      <ListView.ItemTemplate>
+      <ListBox.ItemTemplate>
         <DataTemplate DataType="models:FileData">
           <Grid>
             <Grid.RowDefinitions>
@@ -69,11 +69,21 @@
               <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding Name}" />
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding ModifiedInstant}" />
+            <TextBlock Grid.Row="1" Grid.Column="0" FontStyle="Italic" FontSize="{DynamicResource StatusBarFontSize}"
+                       Margin="8 0 0 0">
+              <TextBlock Text="Last modified: " />
+              <TextBlock Text="{Binding ModifiedInstant, StringFormat=d}" />
+              <TextBlock Text="{Binding ModifiedInstant, StringFormat=t}" />
+            </TextBlock>
             <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Size}" />
           </Grid>
         </DataTemplate>
-      </ListView.ItemTemplate>
-    </ListView>
+      </ListBox.ItemTemplate>
+      <ListBox.ItemsPanel>
+        <ItemsPanelTemplate>
+          <VirtualizingStackPanel />
+        </ItemsPanelTemplate>
+      </ListBox.ItemsPanel>
+    </ListBox>
   </Grid>
 </UserControl>

@@ -36,6 +36,8 @@ namespace Aspect.UI
         private FileList mFileList;
         private byte mSlideshowSecondsRemaining;
 
+        private Task mUpdateTask;
+
         public Tuple<SortBy, string>[] AvailableSortBy { get; } =
         {
             Tuple.Create(SortBy.Name, "Name"),
@@ -97,6 +99,8 @@ namespace Aspect.UI
                     "Automatically updated to release {Version} - {SHA1} {BaseUrl} {FileName} {FileSize}",
                     release.Version, release.SHA1, release.BaseUrl, release.Filename, release.Filesize),
                 () => this.Log().Information("No pending updates"));
+
+            mUpdateTask = null;
         }
 
         private void _ResetSlideshowTimer() =>
@@ -123,7 +127,8 @@ namespace Aspect.UI
                 }
             }
 
-            await UpdateService.Instance.Update(false).ContinueWith(_HandleUpdateCompleted).DontCaptureContext();
+            mUpdateTask = UpdateService.Instance.Update(false)
+                .ContinueWith(_HandleUpdateCompleted);
         }
 
         public void NavBack()
@@ -158,8 +163,8 @@ namespace Aspect.UI
             var currentDir = Path.GetDirectoryName(currentFile);
 
             var supportedExtensions = string.Join(";", FileData.SupportedFileExtensions
-                .Select(ext => $"*{ext}")
-                .OrderBy(ext => ext));
+                                                      .Select(ext => $"*{ext}")
+                                                      .OrderBy(ext => ext));
             var ofd = new OpenFileDialog
             {
                 CheckFileExists = true,

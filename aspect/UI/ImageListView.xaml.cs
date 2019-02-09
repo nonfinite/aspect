@@ -12,7 +12,7 @@ namespace Aspect.UI
 
         private void _HandleImageListVisibilityChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            var imageList = (ListView) sender;
+            var imageList = (ListBox) sender;
 
             var item = imageList.SelectedItem;
             if (item != null)
