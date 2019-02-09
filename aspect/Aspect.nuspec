@@ -12,8 +12,6 @@
         <copyright></copyright>
         <dependencies />
         <releaseNotes>
-            * Fixed manual update to not rely on unavailable release notes.
-            * Optimizations to file list for much faster loading.
         </releaseNotes>
     </metadata>
     <files>
