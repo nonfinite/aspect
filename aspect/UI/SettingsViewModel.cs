@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Aspect.Properties;
@@ -117,8 +116,7 @@ namespace Aspect.UI
             }
         }
 
-        public Task<Option<Dictionary<ReleaseEntry, string>>> CheckForUpdates() =>
-            UpdateService.Instance.CheckForUpdates();
+        public Task<Option<ReleaseEntry>> CheckForUpdates() => UpdateService.Instance.CheckForUpdates();
 
         public Task<Option<ReleaseEntry>> Update() => UpdateService.Instance.Update(true);
     }

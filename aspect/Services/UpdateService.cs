@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -18,7 +17,7 @@ namespace Aspect.Services
 {
     public interface IUpdateService
     {
-        Task<Option<Dictionary<ReleaseEntry, string>>> CheckForUpdates();
+        Task<Option<ReleaseEntry>> CheckForUpdates();
         Task<SemanticVersion> GetCurrentVersion();
         void HandleInstallEvents(string[] args);
         Task<Option<ReleaseEntry>> Update(bool forceUpdate);
@@ -36,18 +35,18 @@ namespace Aspect.Services
 
         public static IUpdateService Instance { get; } = new UpdateService();
 
-        async Task<Option<Dictionary<ReleaseEntry, string>>> IUpdateService.CheckForUpdates()
+        async Task<Option<ReleaseEntry>> IUpdateService.CheckForUpdates()
         {
             if (!mIsUpdateable.Value)
             {
-                return Option.None<Dictionary<ReleaseEntry, string>>();
+                return Option.None<ReleaseEntry>();
             }
 
             using (var mgr = await _CreateUpdateManager())
             {
                 if (mgr == null)
                 {
-                    return Option.None<Dictionary<ReleaseEntry, string>>();
+                    return Option.None<ReleaseEntry>();
                 }
 
                 var updates = await mgr.CheckForUpdate();
@@ -55,10 +54,10 @@ namespace Aspect.Services
                 if (updates.FutureReleaseEntry != null &&
                     updates.FutureReleaseEntry.Version != updates.CurrentlyInstalledVersion.Version)
                 {
-                    return updates.FetchReleaseNotes().Some();
+                    return updates.FutureReleaseEntry.Some();
                 }
 
-                return Option.None<Dictionary<ReleaseEntry, string>>();
+                return Option.None<ReleaseEntry>();
             }
         }
 

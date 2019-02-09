@@ -11,7 +11,7 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <copyright></copyright>
         <dependencies />
-        <releaseNotes>Added display of current version in settings.</releaseNotes>
+        <releaseNotes>Fixed manual update to not rely on unavailable release notes.</releaseNotes>
     </metadata>
     <files>
         <file src="**" target="lib\net45\" exclude="*.pdb;*.nupkg;*.vshost.*" />

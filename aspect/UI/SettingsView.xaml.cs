@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -34,7 +32,7 @@ namespace Aspect.UI
                     if (t.Exception != null)
                     {
                         this.Log().Error(t.Exception.Flatten(), "Manual update check failed");
-                        return Option.None<Dictionary<ReleaseEntry, string>>();
+                        return Option.None<ReleaseEntry>();
                     }
 
                     return t.Result;
@@ -47,12 +45,10 @@ namespace Aspect.UI
                 () => window.ShowMessageAsync("Updates", "You are fully up to date!"));
         }
 
-        private async Task _PromptForUpdate(Dictionary<ReleaseEntry, string> releaseNotes, MetroWindow window)
+        private async Task _PromptForUpdate(ReleaseEntry release, MetroWindow window)
         {
-            var release = releaseNotes.Keys.OrderByDescending(r => r.Version).First();
-            var notes = releaseNotes[release];
             var shouldUpdate = await window.ShowMessageAsync(
-                "Updates", $"A new version {release.Version} is available!\n{notes}",
+                "Updates", $"A new version {release.Version} is available!",
                 MessageDialogStyle.AffirmativeAndNegative, new MetroDialogSettings
                 {
                     AffirmativeButtonText = "Update",
