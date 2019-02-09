@@ -131,7 +131,7 @@ namespace Aspect.Services
         private static void _CreateShortcuts(IUpdateManager mgr) =>
             mgr.CreateShortcutsForExecutable(
                 Path.GetFileName(Assembly.GetEntryAssembly().Location),
-                ShortcutLocation.StartMenu | ShortcutLocation.Desktop,
+                ShortcutLocation.StartMenu,
                 !Environment.CommandLine.Contains("squirrel-install"), null, null);
 
         private async Task<IUpdateManager> _CreateUpdateManager()
