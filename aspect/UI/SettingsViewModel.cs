@@ -16,9 +16,31 @@ namespace Aspect.UI
         public SettingsViewModel()
         {
             mSettings = Settings.Default;
+            UpdateService.Instance.GetCurrentVersion()
+                .ContinueWith(task =>
+                {
+                    if (task.Exception != null)
+                    {
+                        this.Log().Error(task.Exception, "Failed to load version");
+                        CurrentVersion = "unknown";
+                    }
+                    else
+                    {
+                        CurrentVersion = task.Result.ToString();
+                    }
+                }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
+
         private readonly Settings mSettings;
+
+        private string mCurrentVersion = "...loading...";
+
+        public string CurrentVersion
+        {
+            get => mCurrentVersion;
+            private set => Set(ref mCurrentVersion, value);
+        }
 
         public bool KeepImageOnScreen
         {

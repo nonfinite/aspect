@@ -4,18 +4,22 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 
-using Aspect.Properties;
 using Aspect.Utility;
+
+using NuGet;
 
 using Optional;
 
 using Squirrel;
+
+using Settings = Aspect.Properties.Settings;
 
 namespace Aspect.Services
 {
     public interface IUpdateService
     {
         Task<Option<Dictionary<ReleaseEntry, string>>> CheckForUpdates();
+        Task<SemanticVersion> GetCurrentVersion();
         void HandleInstallEvents(string[] args);
         Task<Option<ReleaseEntry>> Update(bool forceUpdate);
     }
@@ -56,6 +60,24 @@ namespace Aspect.Services
 
                 return Option.None<Dictionary<ReleaseEntry, string>>();
             }
+        }
+
+        public async Task<SemanticVersion> GetCurrentVersion()
+        {
+            SemanticVersion version;
+
+            using (var mgr = await _CreateUpdateManager())
+            {
+                version = mgr?.CurrentlyInstalledVersion();
+            }
+
+            if (version == null)
+            {
+                var asmVer = typeof(UpdateService).Assembly.GetName().Version;
+                version = new SemanticVersion(asmVer);
+            }
+
+            return version;
         }
 
         void IUpdateService.HandleInstallEvents(string[] args)

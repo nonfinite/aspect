@@ -10,46 +10,53 @@
   <UserControl.DataContext>
     <local:SettingsViewModel x:Name="mViewModel" />
   </UserControl.DataContext>
-  <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
-                HorizontalAlignment="Stretch">
-    <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
-      <StackPanel.Resources>
-        <Style x:Key="Spacer" TargetType="Border">
-          <Setter Property="Margin" Value="4" />
-        </Style>
-      </StackPanel.Resources>
-      <mah:ToggleSwitch Header="Maximize Window On Launch?" IsChecked="{Binding MaximizeOnStartup}"
-                        OnLabel="Yes" OffLabel="No" Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
+  <Grid>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                  HorizontalAlignment="Stretch">
+      <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
+        <StackPanel.Resources>
+          <Style x:Key="Spacer" TargetType="Border">
+            <Setter Property="Margin" Value="4" />
+          </Style>
+        </StackPanel.Resources>
+        <mah:ToggleSwitch Header="Maximize Window On Launch?" IsChecked="{Binding MaximizeOnStartup}"
+                          OnLabel="Yes" OffLabel="No" Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
 
-      <Border Style="{StaticResource Spacer}" />
-
-      <mah:ToggleSwitch Header="Keep Image On Screen?" IsChecked="{Binding KeepImageOnScreen}"
-                        OnLabel="Yes" OffLabel="No" Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
-
-      <Border Style="{StaticResource Spacer}" />
-
-      <TextBlock FontFamily="{StaticResource ToggleSwitchHeaderFontFamily.Win10}"
-                 FontSize="{StaticResource ToggleSwitchHeaderFontSize.Win10}"
-                 Margin="0 0 0 8"
-                 Text="Slideshow Duration" />
-      <mah:NumericUpDown Value="{Binding SlideshowDurationInSeconds}" Minimum="1" Maximum="255"
-                         HorizontalAlignment="Left" Width="120" />
-
-      <Border Style="{StaticResource Spacer}" />
-
-      <mah:ToggleSwitch Header="Update Automatically?" IsChecked="{Binding UpdateAutomatically}"
-                        OnLabel="Yes" OffLabel="No" Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
-
-      <Border Style="{StaticResource Spacer}" />
-
-      <mah:ToggleSwitch Header="Use Stable Updates Only?" IsChecked="{Binding StableUpdatesOnly}"
-                        OnLabel="Yes" OffLabel="No" Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
-
-      <StackPanel Orientation="Vertical" Visibility="{Binding UpdateAutomatically, Converter={StaticResource ConvertBoolToCollapsedVisible}}">
         <Border Style="{StaticResource Spacer}" />
 
-        <Button Content="Check for updates..." Click="_HandleCheckForUpdatesClick" />
+        <mah:ToggleSwitch Header="Keep Image On Screen?" IsChecked="{Binding KeepImageOnScreen}"
+                          OnLabel="Yes" OffLabel="No" Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
+
+        <Border Style="{StaticResource Spacer}" />
+
+        <TextBlock FontFamily="{StaticResource ToggleSwitchHeaderFontFamily.Win10}"
+                   FontSize="{StaticResource ToggleSwitchHeaderFontSize.Win10}"
+                   Margin="0 0 0 8"
+                   Text="Slideshow Duration" />
+        <mah:NumericUpDown Value="{Binding SlideshowDurationInSeconds}" Minimum="1" Maximum="255"
+                           HorizontalAlignment="Left" Width="120" />
+
+        <Border Style="{StaticResource Spacer}" />
+
+        <mah:ToggleSwitch Header="Update Automatically?" IsChecked="{Binding UpdateAutomatically}"
+                          OnLabel="Yes" OffLabel="No" Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
+
+        <Border Style="{StaticResource Spacer}" />
+
+        <mah:ToggleSwitch Header="Use Stable Updates Only?" IsChecked="{Binding StableUpdatesOnly}"
+                          OnLabel="Yes" OffLabel="No" Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
+
+        <StackPanel Orientation="Vertical"
+                    Visibility="{Binding UpdateAutomatically, Converter={StaticResource ConvertBoolToCollapsedVisible}}">
+          <Border Style="{StaticResource Spacer}" />
+
+          <Button Content="Check for updates..." Click="_HandleCheckForUpdatesClick" />
+        </StackPanel>
       </StackPanel>
-    </StackPanel>
-  </ScrollViewer>
+    </ScrollViewer>
+    <TextBlock HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 0 12 0"
+               FontFamily="{StaticResource ToggleSwitchHeaderFontFamily.Win10}"
+               FontSize="{StaticResource ToggleSwitchHeaderFontSize.Win10}"
+               Text="{Binding CurrentVersion, StringFormat='{}Version: {0}'}" />
+  </Grid>
 </UserControl>
