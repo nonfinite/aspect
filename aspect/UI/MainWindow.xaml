@@ -104,7 +104,7 @@
         <Grid>
           <Grid.RowDefinitions>
             <RowDefinition Height="{Binding ElementName=mWindow, Path=TitlebarHeight}" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
           </Grid.RowDefinitions>
           <ui:ImageListView x:Name="mImageListView" Grid.Row="1" />
         </Grid>
