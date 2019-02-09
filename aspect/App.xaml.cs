@@ -1,10 +1,14 @@
+using System.Threading.Tasks;
 using System.Windows;
 
 using Aspect.Properties;
+using Aspect.Services;
 using Aspect.UI;
 using Aspect.Utility;
 
 using Serilog;
+
+using Squirrel;
 
 namespace Aspect
 {

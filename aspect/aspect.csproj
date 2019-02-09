@@ -68,6 +68,7 @@
     <Compile Include="Models\SortBy.cs" />
     <Compile Include="Services\DbModels\FileRow.cs" />
     <Compile Include="Services\PersistenceService.cs" />
+    <Compile Include="Services\UpdateService.cs" />
     <Compile Include="Services\Win32\Shell32.cs" />
     <Compile Include="UI\Behaviors\UpdateSourceOnKeyUpBehavior.cs" />
     <Compile Include="UI\Converters\EnumToBoolConverter.cs" />

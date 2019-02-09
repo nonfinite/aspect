@@ -12,7 +12,10 @@ using Aspect.Utility;
 
 using Microsoft.Win32;
 
+using Optional;
 using Optional.Unsafe;
+
+using Squirrel;
 
 namespace Aspect.UI
 {
@@ -30,6 +33,7 @@ namespace Aspect.UI
         }
 
         private readonly DispatcherTimer mSlideshowTimer;
+        private readonly UpdateService mUpdateService = new UpdateService();
         private FileList mFileList;
         private byte mSlideshowSecondsRemaining;
 
@@ -81,6 +85,21 @@ namespace Aspect.UI
             }
         }
 
+        private void _HandleUpdateCompleted(Task<Option<ReleaseEntry>> task)
+        {
+            if (task.Exception != null)
+            {
+                this.Log().Error(task.Exception.Flatten(), "Automatic update failed");
+                return;
+            }
+
+            task.Result.Match(
+                release => this.Log().Information(
+                    "Automatically updated to release {Version} - {SHA1} {BaseUrl} {FileName} {FileSize}",
+                    release.Version, release.SHA1, release.BaseUrl, release.Filename, release.Filesize),
+                () => this.Log().Information("No pending updates"));
+        }
+
         private void _ResetSlideshowTimer() =>
             SlideshowSecondsRemaining = Math.Max(Settings.Default.SlideshowDurationInSeconds, (byte) 1);
 
@@ -104,6 +123,8 @@ namespace Aspect.UI
                     Application.Current.Shutdown();
                 }
             }
+
+            await mUpdateService.Update(false).ContinueWith(_HandleUpdateCompleted).DontCaptureContext();
         }
 
         public void NavBack()

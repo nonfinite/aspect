@@ -73,7 +73,7 @@ namespace Aspect.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://github.com/nonfinite/aspect/releases/latest")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://github.com/nonfinite/aspect")]
         public string GitHubUpdateUrl {
             get {
                 return ((string)(this["GitHubUpdateUrl"]));

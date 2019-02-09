@@ -1,5 +1,13 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 using Aspect.Properties;
+using Aspect.Services;
 using Aspect.Utility;
+
+using Optional;
+
+using Squirrel;
 
 namespace Aspect.UI
 {
@@ -12,6 +20,7 @@ namespace Aspect.UI
 
         private readonly Settings mSettings;
 
+        private readonly UpdateService mUpdateService = new UpdateService();
 
         public bool KeepImageOnScreen
         {
@@ -87,5 +96,8 @@ namespace Aspect.UI
                 }
             }
         }
+
+        public Task<Option<Dictionary<ReleaseEntry, string>>> CheckForUpdates() => mUpdateService.CheckForUpdates();
+        public Task<Option<ReleaseEntry>> Update() => mUpdateService.Update(true);
     }
 }
