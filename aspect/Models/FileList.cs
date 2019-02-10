@@ -34,17 +34,18 @@ namespace Aspect.Models
 
         private readonly FileData[] mFiles;
         private readonly IPersistenceService mPersistence;
-        private SortBy mSort;
 
         public FileFilter Filter { get; } = new FileFilter();
 
         public SortBy Sort
         {
-            get => mSort;
+            get => Settings.Default.SortBy;
             set
             {
-                if (Set(ref mSort, value) || View.SortDescriptions.Count == 0)
+                if (Settings.Default.SortBy != value || View.SortDescriptions.Count == 0)
                 {
+                    Settings.Default.SortBy = value;
+
                     using (View.DeferRefresh())
                     {
                         View.SortDescriptions.Clear();
@@ -75,7 +76,6 @@ namespace Aspect.Models
         }
 
         public ICollectionView View { get; }
-
 
         private bool _Filter(object obj)
         {

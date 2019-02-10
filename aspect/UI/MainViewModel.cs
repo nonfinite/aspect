@@ -34,15 +34,14 @@ namespace Aspect.UI
         private readonly DispatcherTimer mSlideshowTimer;
         private FileList mFileList;
         private byte mSlideshowSecondsRemaining;
-
         private Task mUpdateTask;
 
         public Tuple<SortBy, string>[] AvailableSortBy { get; } =
         {
+            Tuple.Create(SortBy.ModifiedDate, "Modified Date"),
             Tuple.Create(SortBy.Name, "Name"),
-            Tuple.Create(SortBy.ModifiedDate, "Modified"),
-            Tuple.Create(SortBy.Size, "Size"),
             Tuple.Create(SortBy.Random, "Random"),
+            Tuple.Create(SortBy.Size, "Size"),
         };
 
         public FileList FileList
@@ -162,8 +161,8 @@ namespace Aspect.UI
             var currentDir = Path.GetDirectoryName(currentFile);
 
             var supportedExtensions = string.Join(";", FileData.SupportedFileExtensions
-                .Select(ext => $"*{ext}")
-                .OrderBy(ext => ext));
+                                                      .Select(ext => $"*{ext}")
+                                                      .OrderBy(ext => ext));
             var ofd = new OpenFileDialog
             {
                 CheckFileExists = true,

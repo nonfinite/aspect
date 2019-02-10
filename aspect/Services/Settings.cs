@@ -4,6 +4,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Xml;
 
+using Aspect.Models;
 using Aspect.Utility;
 
 using Serilog;
@@ -25,6 +26,7 @@ namespace Aspect.Services
         private bool mKeepImageOnScreen = true;
         private bool mMaximizeOnStartup = true;
         private byte mSlideshowDurationInSeconds = 15;
+        private SortBy mSortBy = SortBy.ModifiedDate;
         private bool mUpdateAutomatically = true;
         private bool mUpdateToPreRelease = false;
 
@@ -56,6 +58,13 @@ namespace Aspect.Services
         {
             get => mSlideshowDurationInSeconds;
             set => Set(ref mSlideshowDurationInSeconds, value);
+        }
+
+        [DataMember(Name = "SortBy", IsRequired = true, EmitDefaultValue = true)]
+        public SortBy SortBy
+        {
+            get => mSortBy;
+            set => Set(ref mSortBy, value);
         }
 
         [DataMember(Name = "UpdateAutomatically", IsRequired = true, EmitDefaultValue = true)]
