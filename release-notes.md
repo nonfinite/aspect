@@ -1,5 +1,9 @@
 # PreRelease Version 0
 
+## 0.7.0
+
+* 0.7.0 - Added display of release notes and credits.
+
 ## 0.6.0
 
 * 0.6.0 - Current sort order is saved in settings.

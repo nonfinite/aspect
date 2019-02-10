@@ -148,6 +148,12 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="..\release-notes.md">
+      <Link>Properties\release-notes.md</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\credits.md">
+      <Link>Properties\credits.md</Link>
+    </EmbeddedResource>
     <None Include="App.config" />
     <None Include="External\Orc.FileAssociation\readme.md" />
   </ItemGroup>

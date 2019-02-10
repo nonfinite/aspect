@@ -1,3 +1,4 @@
+using System.IO;
 using System.Threading.Tasks;
 
 using Aspect.Services;
@@ -28,7 +29,6 @@ namespace Aspect.UI
                     }
                 }, TaskScheduler.FromCurrentSynchronizationContext());
         }
-
 
         private readonly Settings mSettings;
 
@@ -65,6 +65,17 @@ namespace Aspect.UI
                     mSettings.MaximizeOnStartup = value;
                     OnPropertyChanged();
                 }
+            }
+        }
+
+        public string ReleaseNotes
+        {
+            get
+            {
+                var releaseNotes = _GetResourceContents("Aspect.Properties.release-notes.md");
+                var credits = _GetResourceContents("Aspect.Properties.credits.md");
+
+                return $"{releaseNotes}\r\n\r\n{credits}";
             }
         }
 
@@ -106,6 +117,22 @@ namespace Aspect.UI
                     OnPropertyChanging();
                     mSettings.UpdateAutomatically = value;
                     OnPropertyChanged();
+                }
+            }
+        }
+
+        private string _GetResourceContents(string name)
+        {
+            using (var stream = typeof(App).Assembly.GetManifestResourceStream(name))
+            {
+                if (stream == null)
+                {
+                    return null;
+                }
+
+                using (var reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
                 }
             }
         }
