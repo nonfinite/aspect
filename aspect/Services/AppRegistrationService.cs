@@ -10,18 +10,19 @@ namespace Aspect.Services
 {
     public sealed class AppRegistrationService
     {
-        public AppRegistrationService()
+        public AppRegistrationService(string location)
         {
             this.Log().Information("Creating app registration service");
 
-            mInfo = new ApplicationInfo(typeof(App).Assembly);
+            var assembly = typeof(App).Assembly;
+            mInfo = new ApplicationInfo("aspect", assembly.GetName().Name, "aspect", location ?? assembly.Location);
             mInfo.SupportedExtensions.AddRange(
                 FileData.SupportedFileExtensions
                     .Select(ext => ext.TrimStart('.')));
         }
 
         private readonly ApplicationInfo mInfo;
-        private readonly IApplicationRegistrationService mRegistrationService = new ApplicationRegistrationService();
+        private readonly ApplicationRegistrationService mRegistrationService = new ApplicationRegistrationService();
 
         private void _RegisterIfMissing()
         {

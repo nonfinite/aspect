@@ -28,7 +28,7 @@ namespace Aspect.Services
         {
             Settings.Default.PropertyChanged += _HandleSettingsPropertyChanged;
 
-            mUpdateManager = new LazyEx<Task<IUpdateManager>>(async () =>
+            mUpdateManager = new LazyEx<Task<UpdateManager>>(async () =>
             {
                 var updateUrl = Settings.Default.GitHubUpdateUrl;
                 var preRelease = Settings.Default.UpdateToPreRelease;
@@ -55,7 +55,7 @@ namespace Aspect.Services
             return isInstalled;
         });
 
-        private readonly LazyEx<Task<IUpdateManager>> mUpdateManager;
+        private readonly LazyEx<Task<UpdateManager>> mUpdateManager;
 
         public static IUpdateService Instance { get; } = new UpdateService();
 
@@ -115,26 +115,35 @@ namespace Aspect.Services
                 v =>
                 {
                     this.Log().Information("Squirrel event: initial install of {Version}", v);
-                    _WithManager(_CreateShortcuts);
-                    new AppRegistrationService().Install();
+                    _WithManager(mgr =>
+                    {
+                        _CreateShortcuts(mgr);
+                        _CreateAppRegistrationService(mgr).Install();
+                    });
                 },
                 v =>
                 {
                     this.Log().Information("Squirrel event: updating to {Version}", v);
-                    _WithManager(_CreateShortcuts);
-                    new AppRegistrationService().Update();
+                    _WithManager(mgr =>
+                    {
+                        _CreateShortcuts(mgr);
+                        _CreateAppRegistrationService(mgr).Update();
+                    });
                 },
                 onAppUninstall: v =>
                 {
                     this.Log().Information("Squirrel event: uninstalling {Version}", v);
-                    _WithManager(mgr => mgr.RemoveShortcutForThisExe());
-                    new AppRegistrationService().Uninstall();
+                    _WithManager(mgr =>
+                    {
+                        mgr.RemoveShortcutForThisExe();
+                        _CreateAppRegistrationService(mgr).Uninstall();
+                    });
                 },
                 onFirstRun: () => { this.Log().Information("Squirrel event: first run"); },
                 arguments: args
             );
 
-            void _WithManager(Action<IUpdateManager> action)
+            void _WithManager(Action<UpdateManager> action)
             {
                 // The async call will deadlock when run at this early stage of the program unless we explicitly run it in a task.
                 var mgr = Task.Run(async () => await mUpdateManager.Value).Result;
@@ -187,7 +196,15 @@ namespace Aspect.Services
             }
         }
 
-        private static void _CreateShortcuts(IUpdateManager mgr) =>
+        private static AppRegistrationService _CreateAppRegistrationService(UpdateManager mgr)
+        {
+            var location = Path.Combine(
+                mgr.RootAppDirectory,
+                Path.GetFileName(Assembly.GetEntryAssembly().Location));
+            return new AppRegistrationService(location);
+        }
+
+        private static void _CreateShortcuts(UpdateManager mgr) =>
             mgr.CreateShortcutsForExecutable(
                 Path.GetFileName(Assembly.GetEntryAssembly().Location),
                 ShortcutLocation.StartMenu,
