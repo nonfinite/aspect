@@ -13,6 +13,8 @@ namespace Aspect.Models
 
         public byte Value { get; }
 
+        public override string ToString() => $"{Value} ★";
+
         public int CompareTo(Rating other) => Value.CompareTo(other.Value);
 
         public int CompareTo(object obj)
