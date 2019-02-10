@@ -4,9 +4,14 @@ using System.Windows;
 
 using Aspect.Services;
 using Aspect.UI;
+using Aspect.Utility;
 
 using Serilog;
 using Serilog.Events;
+
+using Splat;
+
+using ILogger = Splat.ILogger;
 
 namespace Aspect
 {
@@ -36,6 +41,8 @@ namespace Aspect
                     outputTemplate:
                     "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {SourceContext} => {Message:lj}{NewLine}{Exception}")
                 .CreateLogger();
+
+            Locator.CurrentMutable.RegisterConstant(new SplatLoggerProxy(), typeof(ILogger));
         }
 
         private void _HandleExit(object sender, ExitEventArgs e) => Log.CloseAndFlush();

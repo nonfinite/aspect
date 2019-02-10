@@ -116,16 +116,19 @@ namespace Aspect.Services
                 {
                     this.Log().Information("Squirrel event: initial install of {Version}", v);
                     _WithManager(_CreateShortcuts);
+                    new AppRegistrationService().Install();
                 },
                 v =>
                 {
                     this.Log().Information("Squirrel event: updating to {Version}", v);
                     _WithManager(_CreateShortcuts);
+                    new AppRegistrationService().Update();
                 },
                 onAppUninstall: v =>
                 {
                     this.Log().Information("Squirrel event: uninstalling {Version}", v);
                     _WithManager(mgr => mgr.RemoveShortcutForThisExe());
+                    new AppRegistrationService().Uninstall();
                 },
                 onFirstRun: () => { this.Log().Information("Squirrel event: first run"); },
                 arguments: args
