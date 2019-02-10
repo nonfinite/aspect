@@ -41,6 +41,9 @@
   <PropertyGroup>
     <StartupObject>Aspect.App</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Properties\icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
@@ -194,12 +197,15 @@
       <Version>1.2.1</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Properties\icon.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="PackageRelease" DependsOnTargets="Clean;Build" Condition=" '$(Configuration)' == 'Release'">
     <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
       <Output TaskParameter="Assemblies" ItemName="assemblyInfo" />
     </GetAssemblyIdentity>
     <Exec Command="&quot;$(PkgNuGet_CommandLine)\tools\nuget&quot; pack &quot;$(ProjectDir)Aspect.nuspec&quot; -Version %(assemblyInfo.Version) -Properties Configuration=Release -OutputDirectory &quot;$(TargetDir.TrimEnd('\'))&quot; -BasePath &quot;$(TargetDir.TrimEnd('\'))&quot;" />
-    <Exec Command="&quot;$(Pkgsquirrel_windows)\tools\squirrel&quot; -r &quot;$(SolutionDir)releases&quot; --releasify &quot;$(TargetDir)Aspect.$([System.Version]::Parse(%(assemblyInfo.Version)).ToString(3)).nupkg&quot;" />
+    <Exec Command="&quot;$(Pkgsquirrel_windows)\tools\squirrel&quot; -r &quot;$(SolutionDir)releases&quot; --no-msi --setupIcon &quot;$(ProjectDir)Properties\icon.ico&quot; --releasify &quot;$(TargetDir)Aspect.$([System.Version]::Parse(%(assemblyInfo.Version)).ToString(3)).nupkg&quot;" />
   </Target>
 </Project>
