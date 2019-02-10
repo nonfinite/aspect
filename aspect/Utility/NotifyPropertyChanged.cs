@@ -1,23 +1,21 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 
 namespace Aspect.Utility
 {
+    [DataContract]
     public abstract class NotifyPropertyChanged : INotifyPropertyChanged, INotifyPropertyChanging
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
         public event PropertyChangingEventHandler PropertyChanging;
 
-        protected virtual void OnPropertyChanging([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName));
-        }
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+
+        protected virtual void OnPropertyChanging([CallerMemberName] string propertyName = null) =>
+            PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName));
 
         protected virtual bool Set<TProperty>(
             ref TProperty field, TProperty value,

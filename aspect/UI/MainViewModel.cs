@@ -6,7 +6,6 @@ using System.Windows;
 using System.Windows.Threading;
 
 using Aspect.Models;
-using Aspect.Properties;
 using Aspect.Services;
 using Aspect.Utility;
 
@@ -163,8 +162,8 @@ namespace Aspect.UI
             var currentDir = Path.GetDirectoryName(currentFile);
 
             var supportedExtensions = string.Join(";", FileData.SupportedFileExtensions
-                                                      .Select(ext => $"*{ext}")
-                                                      .OrderBy(ext => ext));
+                .Select(ext => $"*{ext}")
+                .OrderBy(ext => ext));
             var ofd = new OpenFileDialog
             {
                 CheckFileExists = true,

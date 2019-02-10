@@ -8,7 +8,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 
 using Aspect.Models;
-using Aspect.Properties;
+using Aspect.Services;
 using Aspect.Services.Win32;
 using Aspect.Utility;
 

@@ -2,7 +2,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 
-using Aspect.Properties;
+using Aspect.Services;
 
 using MahApps.Metro.Controls;
 

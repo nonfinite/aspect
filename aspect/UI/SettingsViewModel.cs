@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 
-using Aspect.Properties;
 using Aspect.Services;
 using Aspect.Utility;
 
@@ -50,7 +49,6 @@ namespace Aspect.UI
                 {
                     OnPropertyChanging();
                     mSettings.KeepImageOnScreen = value;
-                    mSettings.Save();
                     OnPropertyChanged();
                 }
             }
@@ -65,7 +63,6 @@ namespace Aspect.UI
                 {
                     OnPropertyChanging();
                     mSettings.MaximizeOnStartup = value;
-                    mSettings.Save();
                     OnPropertyChanged();
                 }
             }
@@ -80,7 +77,6 @@ namespace Aspect.UI
                 {
                     OnPropertyChanging();
                     mSettings.SlideshowDurationInSeconds = value;
-                    mSettings.Save();
                     OnPropertyChanged();
                 }
             }
@@ -95,7 +91,6 @@ namespace Aspect.UI
                 {
                     OnPropertyChanging();
                     mSettings.UpdateToPreRelease = !value;
-                    mSettings.Save();
                     OnPropertyChanged();
                 }
             }
@@ -110,7 +105,6 @@ namespace Aspect.UI
                 {
                     OnPropertyChanging();
                     mSettings.UpdateAutomatically = value;
-                    mSettings.Save();
                     OnPropertyChanged();
                 }
             }

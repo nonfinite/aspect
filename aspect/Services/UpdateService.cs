@@ -12,8 +12,6 @@ using Optional;
 
 using Squirrel;
 
-using Settings = Aspect.Properties.Settings;
-
 namespace Aspect.Services
 {
     public interface IUpdateService
@@ -30,7 +28,7 @@ namespace Aspect.Services
         {
             Settings.Default.PropertyChanged += _HandleSettingsPropertyChanged;
 
-            mUpdateManager = new LazyEx<Task<IUpdateManager>>(() =>
+            mUpdateManager = new LazyEx<Task<IUpdateManager>>(async () =>
             {
                 var updateUrl = Settings.Default.GitHubUpdateUrl;
                 var preRelease = Settings.Default.UpdateToPreRelease;
@@ -39,14 +37,12 @@ namespace Aspect.Services
 
                 try
                 {
-                    return UpdateManager
-                        .GitHubUpdateManager(updateUrl, prerelease: preRelease)
-                        .ContinueWith(t => (IUpdateManager) t.Result);
+                    return await UpdateManager.GitHubUpdateManager(updateUrl, prerelease: preRelease);
                 }
                 catch (Exception ex)
                 {
                     this.Log().Error(ex, "Failed to create GitHub update manager");
-                    return Task.FromResult((IUpdateManager) null);
+                    return null;
                 }
             });
         }

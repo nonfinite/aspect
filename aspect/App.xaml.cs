@@ -2,10 +2,8 @@ using System;
 using System.IO;
 using System.Windows;
 
-using Aspect.Properties;
 using Aspect.Services;
 using Aspect.UI;
-using Aspect.Utility;
 
 using Serilog;
 using Serilog.Events;
@@ -24,7 +22,8 @@ namespace Aspect
                 logFile = Path.Combine(Path.GetDirectoryName(typeof(App).Assembly.Location) ?? "", "log.txt");
             }
 
-            if (!Enum.TryParse(Environment.GetEnvironmentVariable("ASPECT_LOG_LEVEL") ?? "", true, out LogEventLevel fileLogLevel))
+            if (!Enum.TryParse(Environment.GetEnvironmentVariable("ASPECT_LOG_LEVEL") ?? "", true,
+                out LogEventLevel fileLogLevel))
             {
                 fileLogLevel = LogEventLevel.Warning;
             }
@@ -34,7 +33,8 @@ namespace Aspect
                 .Enrich.FromLogContext()
                 .WriteTo.Trace(outputTemplate: "[{Level:u3}] {SourceContext} => {Message}{NewLine}{Exception}")
                 .WriteTo.File(logFile, fileLogLevel, rollOnFileSizeLimit: true, fileSizeLimitBytes: 20 * BYTES_PER_MB,
-                              outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {SourceContext} => {Message:lj}{NewLine}{Exception}")
+                    outputTemplate:
+                    "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {SourceContext} => {Message:lj}{NewLine}{Exception}")
                 .CreateLogger();
         }
 
@@ -43,20 +43,6 @@ namespace Aspect
         private async void _HandleStartup(object sender, StartupEventArgs e)
         {
             _ConfigureLogging();
-
-            if (Settings.Default.SettingsUpgradeRequired)
-            {
-                this.Log().Information("Upgrading settings");
-
-                Settings.Default.Upgrade();
-                Settings.Default.Reload();
-                Settings.Default.SettingsUpgradeRequired = false;
-                Settings.Default.Save();
-            }
-            else
-            {
-                this.Log().Debug("Settings do not need up be upgraded");
-            }
 
             UpdateService.Instance.HandleInstallEvents(e.Args);
 
