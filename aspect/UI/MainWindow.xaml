@@ -58,22 +58,22 @@
       </ToggleButton>
       <ui:RatingControl Rating="{Binding FileList.View.CurrentItem.Rating, Mode=TwoWay}" ToolTip="Set rating" />
       <StackPanel Orientation="Horizontal">
-        <ToggleButton ToolTip="Fit width and height"
-                      IsChecked="{Binding ElementName=mImageViewer, Path=ImageFit, Converter={StaticResource ConvertEnumToBool}, ConverterParameter={x:Static ui:ImageFit.FitAll}}">
+        <RadioButton ToolTip="Fit width and height" Style="{StaticResource RadioButtonLeft}"
+                     IsChecked="{Binding ElementName=mImageViewer, Path=ImageFit, Converter={StaticResource ConvertEnumToBool}, ConverterParameter={x:Static ui:ImageFit.FitAll}}">
           <iconPacks:PackIconModern Kind="ArrowExpand" />
-        </ToggleButton>
-        <ToggleButton ToolTip="Fit height"
-                      IsChecked="{Binding ElementName=mImageViewer, Path=ImageFit, Converter={StaticResource ConvertEnumToBool}, ConverterParameter={x:Static ui:ImageFit.FitHeight}}">
+        </RadioButton>
+        <RadioButton ToolTip="Fit height" Style="{StaticResource RadioButtonMiddle}"
+                     IsChecked="{Binding ElementName=mImageViewer, Path=ImageFit, Converter={StaticResource ConvertEnumToBool}, ConverterParameter={x:Static ui:ImageFit.FitHeight}}">
           <iconPacks:PackIconModern Kind="DimensionArrowLineHeightShort" />
-        </ToggleButton>
-        <ToggleButton ToolTip="Fit width"
-                      IsChecked="{Binding ElementName=mImageViewer, Path=ImageFit, Converter={StaticResource ConvertEnumToBool}, ConverterParameter={x:Static ui:ImageFit.FitWidth}}">
+        </RadioButton>
+        <RadioButton ToolTip="Fit width" Style="{StaticResource RadioButtonMiddle}"
+                     IsChecked="{Binding ElementName=mImageViewer, Path=ImageFit, Converter={StaticResource ConvertEnumToBool}, ConverterParameter={x:Static ui:ImageFit.FitWidth}}">
           <iconPacks:PackIconModern Kind="DimensionArrowLineWidthShort" />
-        </ToggleButton>
-        <ToggleButton ToolTip="Actual size"
-                      IsChecked="{Binding ElementName=mImageViewer, Path=ImageFit, Converter={StaticResource ConvertEnumToBool}, ConverterParameter={x:Static ui:ImageFit.FullSize}}">
+        </RadioButton>
+        <RadioButton ToolTip="Actual size" Style="{StaticResource RadioButtonRight}"
+                     IsChecked="{Binding ElementName=mImageViewer, Path=ImageFit, Converter={StaticResource ConvertEnumToBool}, ConverterParameter={x:Static ui:ImageFit.FullSize}}">
           <iconPacks:PackIconModern Kind="FullscreenBox" />
-        </ToggleButton>
+        </RadioButton>
       </StackPanel>
       <StackPanel Orientation="Horizontal">
         <Button Command="BrowseBack" ToolTip="Previous image">

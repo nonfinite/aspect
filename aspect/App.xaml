@@ -27,11 +27,17 @@
             <converters:KeyValue From="{StaticResource True}" To="{x:Static Visibility.Collapsed}" />
             <converters:KeyValue From="{StaticResource False}" To="{x:Static Visibility.Visible}" />
           </converters:ValueMapConverter>
+          <converters:ValueMapConverter x:Key="ConvertBoolToReverseBool">
+            <converters:KeyValue From="{StaticResource True}" To="{StaticResource False}" />
+            <converters:KeyValue From="{StaticResource False}" To="{StaticResource True}" />
+          </converters:ValueMapConverter>
 
           <Style TargetType="iconPacks:PackIconModern" BasedOn="{StaticResource {x:Type iconPacks:PackIconModern}}">
             <Setter Property="VerticalAlignment" Value="Center" />
           </Style>
         </ResourceDictionary>
+
+        <ResourceDictionary Source="UI/Themes/RadioButton.xaml" />
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
   </Application.Resources>

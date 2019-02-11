@@ -1,0 +1,62 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Style x:Key="RadioButtonBase" TargetType="RadioButton">
+    <Setter Property="Padding" Value="4 0" />
+    <Setter Property="Margin" Value="0 2" />
+    <Setter Property="VerticalAlignment" Value="Stretch" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="BorderBrush" Value="{StaticResource AccentColorBrush}" />
+    <Setter Property="Background" Value="{StaticResource ControlBackgroundBrush}" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="RadioButton">
+          <Border Width="{TemplateBinding Width}" Height="{TemplateBinding Height}"
+                  Padding="{TemplateBinding Padding}"
+                  BorderThickness="{TemplateBinding BorderThickness}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  Background="{TemplateBinding Background}">
+            <ContentControl x:Name="mRadioButtonContent" Content="{TemplateBinding Content}">
+              <ContentControl.Style>
+                <Style TargetType="ContentControl">
+                  <Setter Property="Opacity" Value="0.5" />
+                  <Style.Triggers>
+                    <DataTrigger
+                      Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=RadioButton}, Path=IsMouseOver}"
+                      Value="True">
+                      <Setter Property="Opacity" Value="0.75" />
+                    </DataTrigger>
+                    <DataTrigger
+                      Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=RadioButton}, Path=IsChecked}"
+                      Value="True">
+                      <Setter Property="Opacity" Value="1.0" />
+                    </DataTrigger>
+                  </Style.Triggers>
+                </Style>
+              </ContentControl.Style>
+            </ContentControl>
+          </Border>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+    <Style.Triggers>
+      <Trigger Property="IsChecked" Value="True">
+        <Setter Property="Background" Value="{StaticResource HighlightBrush}" />
+      </Trigger>
+    </Style.Triggers>
+  </Style>
+
+  <Style x:Key="RadioButtonLeft" TargetType="RadioButton" BasedOn="{StaticResource RadioButtonBase}">
+    <Setter Property="BorderThickness" Value="1 1 0 1" />
+    <Setter Property="Margin" Value="2 2 0 2" />
+  </Style>
+
+  <Style x:Key="RadioButtonMiddle" TargetType="RadioButton" BasedOn="{StaticResource RadioButtonBase}">
+    <Setter Property="BorderThickness" Value="0 1" />
+  </Style>
+
+  <Style x:Key="RadioButtonRight" TargetType="RadioButton" BasedOn="{StaticResource RadioButtonBase}">
+    <Setter Property="BorderThickness" Value="0 1 1 1" />
+    <Setter Property="Margin" Value="0 2 2 2" />
+  </Style>
+
+</ResourceDictionary>
