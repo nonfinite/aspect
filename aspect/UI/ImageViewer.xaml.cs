@@ -45,6 +45,7 @@ namespace Aspect.UI
         private Size mImageSize;
         private Matrix mMatrix;
         private Point mMouseStart = new Point(0, 0);
+        private ImageFit mRestoreToImageFit = ImageFit.FitAll;
 
         public FileData File
         {
@@ -122,6 +123,14 @@ namespace Aspect.UI
                 return;
             }
 
+            var newFit = (ImageFit) e.NewValue;
+            var oldFit = (ImageFit) e.OldValue;
+
+            if (newFit == ImageFit.Custom && oldFit != ImageFit.Custom)
+            {
+                viewer.mRestoreToImageFit = oldFit;
+            }
+
             viewer._FitImage();
         }
 
@@ -193,7 +202,7 @@ namespace Aspect.UI
 
             if (ImageFit == ImageFit.Custom)
             {
-                ImageFit = ImageFit.FitAll;
+                ImageFit = mRestoreToImageFit;
             }
             else
             {

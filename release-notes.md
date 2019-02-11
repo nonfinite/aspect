@@ -2,6 +2,7 @@
 
 ## 0.7.0
 
+* 0.7.1 - Image fit mode is restored to the previously used mode when switching images after custom move/zoom.
 * 0.7.0 - Added display of release notes and credits.
 
 ## 0.6.0
