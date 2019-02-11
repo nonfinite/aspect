@@ -1,5 +1,6 @@
 # PreRelease Version 0
 
+* 0.8.1 - Updated to respect system minimum distance to start dragging the image.
 * 0.8.0 - Improved display of image fit buttons to highlight mutually exclusive nature.
 * 0.7.1 - Image fit mode is restored to the previously used mode when switching images after custom move/zoom.
 * 0.7.0 - Added display of release notes and credits.

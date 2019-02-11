@@ -11,7 +11,8 @@
              MouseDown="_HandleMouseDown" MouseMove="_HandleMouseMove" MouseUp="_HandleMouseUp"
              MouseWheel="_HandleMouseWheel"
              Background="Transparent"
-             ClipToBounds="True">
+             ClipToBounds="True"
+             SnapsToDevicePixels="True">
   <UserControl.ContextMenu>
     <ContextMenu>
       <MenuItem Header="Properties" Click="_ShowProperties" />

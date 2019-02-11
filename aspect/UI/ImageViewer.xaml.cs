@@ -43,6 +43,8 @@ namespace Aspect.UI
         private BrushAnimator mAnimator;
         private Brush mBrush;
         private Size mImageSize;
+
+        private bool mIsDragStarted = false;
         private Matrix mMatrix;
         private Point mMouseStart = new Point(0, 0);
         private ImageFit mRestoreToImageFit = ImageFit.FitAll;
@@ -148,11 +150,17 @@ namespace Aspect.UI
             {
                 var position = e.GetPosition(input);
                 var v = position - mMouseStart;
-                mMouseStart = position;
-                mMatrix.Translate(v.X, v.Y);
-                _UpdateMatrix();
+                if (mIsDragStarted ||
+                    Math.Abs(v.X) >= SystemParameters.MinimumHorizontalDragDistance ||
+                    Math.Abs(v.Y) >= SystemParameters.MinimumVerticalDragDistance)
+                {
+                    mIsDragStarted = true;
+                    mMouseStart = position;
+                    mMatrix.Translate(v.X, v.Y);
+                    _UpdateMatrix();
 
-                ImageFit = ImageFit.Custom;
+                    ImageFit = ImageFit.Custom;
+                }
             }
         }
 
@@ -160,6 +168,7 @@ namespace Aspect.UI
         {
             var input = (IInputElement) sender;
             input.ReleaseMouseCapture();
+            mIsDragStarted = false;
         }
 
         private void _HandleMouseWheel(object sender, MouseWheelEventArgs e)
