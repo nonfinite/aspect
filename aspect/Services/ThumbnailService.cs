@@ -80,13 +80,13 @@ namespace Aspect.Services
             Log().Information("Getting {Width}x{Height} thumbnail for {FilePath}", width, height, file);
 
             var result = _GetThumbnail(file, width, height,
-                ThumbnailOptions.BiggerSizeOk | ThumbnailOptions.InMemoryOnly);
+                ThumbnailOptions.BiggerSizeOk | ThumbnailOptions.InMemoryOnly | ThumbnailOptions.ThumbnailOnly);
             if (result != null)
             {
                 return Task.FromResult(result);
             }
 
-            return Task.Run(() => _GetThumbnail(file, width, height, ThumbnailOptions.BiggerSizeOk));
+            return Task.Run(() => _GetThumbnail(file, width, height, ThumbnailOptions.BiggerSizeOk | ThumbnailOptions.ThumbnailOnly));
         }
 
         private static ILogger Log([CallerMemberName] string memberName = null) =>
