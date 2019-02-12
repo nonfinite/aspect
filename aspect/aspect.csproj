@@ -79,7 +79,12 @@
     <Compile Include="Services\Settings.cs" />
     <Compile Include="Services\ThumbnailService.cs" />
     <Compile Include="Services\UpdateService.cs" />
+    <Compile Include="Services\Win32\Gdi32.cs" />
+    <Compile Include="Services\Win32\IShellItem.cs" />
+    <Compile Include="Services\Win32\IShellItemImageFactory.cs" />
+    <Compile Include="Services\Win32\NativeSize.cs" />
     <Compile Include="Services\Win32\Shell32.cs" />
+    <Compile Include="Services\Win32\ThumbnailOptions.cs" />
     <Compile Include="UI\Behaviors\KeepCurrentItemInViewBehavior.cs" />
     <Compile Include="UI\Behaviors\UpdateSourceOnKeyUpBehavior.cs" />
     <Compile Include="UI\Converters\EnumToBoolConverter.cs" />
