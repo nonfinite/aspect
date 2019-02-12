@@ -54,8 +54,10 @@
 
     <ListBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding FileList.View}"
              IsSynchronizedWithCurrentItem="True" BorderThickness="0" Margin="0 4 0 0"
-             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-             IsVisibleChanged="_HandleImageListVisibilityChanged">
+             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+      <i:Interaction.Behaviors>
+        <behaviors:KeepCurrentItemInViewBehavior />
+      </i:Interaction.Behaviors>
       <ListBox.ItemTemplate>
         <DataTemplate DataType="models:FileData">
           <Grid Margin="0 2">

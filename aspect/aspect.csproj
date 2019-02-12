@@ -79,6 +79,7 @@
     <Compile Include="Services\Settings.cs" />
     <Compile Include="Services\UpdateService.cs" />
     <Compile Include="Services\Win32\Shell32.cs" />
+    <Compile Include="UI\Behaviors\KeepCurrentItemInViewBehavior.cs" />
     <Compile Include="UI\Behaviors\UpdateSourceOnKeyUpBehavior.cs" />
     <Compile Include="UI\Converters\EnumToBoolConverter.cs" />
     <Compile Include="UI\Converters\ParamToNullConverter.cs" />

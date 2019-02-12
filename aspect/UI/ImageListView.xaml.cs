@@ -1,4 +1,3 @@
-using System.Windows;
 using System.Windows.Controls;
 
 namespace Aspect.UI
@@ -8,17 +7,6 @@ namespace Aspect.UI
         public ImageListView()
         {
             InitializeComponent();
-        }
-
-        private void _HandleImageListVisibilityChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            var imageList = (ListBox) sender;
-
-            var item = imageList.SelectedItem;
-            if (item != null)
-            {
-                imageList.ScrollIntoView(item);
-            }
         }
 
         public bool FocusSearchBox() => mSearchTextBox.Focus();
