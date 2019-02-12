@@ -14,6 +14,11 @@ namespace Aspect.Services
     [DataContract(Name = "Settings", Namespace = "")]
     public sealed class Settings : NotifyPropertyChanged
     {
+        private Settings()
+        {
+            mCanSave = false;
+        }
+
         private static readonly Lazy<string> mFile = new Lazy<string>(() =>
         {
             var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
@@ -21,6 +26,8 @@ namespace Aspect.Services
             Directory.CreateDirectory(aspect);
             return Path.Combine(aspect, "config.xml");
         });
+
+        private bool mCanSave;
 
         private string mGitHubUpdateUrl = "https://github.com/nonfinite/aspect";
         private bool mKeepImageOnScreen = true;
@@ -85,30 +92,32 @@ namespace Aspect.Services
 
         private static Settings _Load()
         {
-            var serializer = _CreateSerializer();
+            Log.Information("Loading settings from {File}", mFile.Value);
 
-            if (!File.Exists(mFile.Value))
-            {
-                return new Settings();
-            }
+            Settings settings;
 
             try
             {
                 using (var stream = File.OpenRead(mFile.Value))
                 {
-                    return (Settings) serializer.ReadObject(stream);
+                    var serializer = _CreateSerializer();
+                    settings = (Settings) serializer.ReadObject(stream);
                 }
             }
             catch (Exception ex)
             {
                 Log.Error(ex, "Failed to deserialize settings from {File}", mFile.Value);
+                settings = new Settings();
             }
 
-            return new Settings();
+            settings.mCanSave = true;
+            return settings;
         }
 
         private void _Save()
         {
+            this.Log().Information("Saving settings to {File}", mFile.Value);
+
             var xmlSettings = new XmlWriterSettings
             {
                 Indent = true,
@@ -134,7 +143,11 @@ namespace Aspect.Services
         {
             if (base.Set(ref field, value, propertyName))
             {
-                _Save();
+                if (mCanSave)
+                {
+                    _Save();
+                }
+
                 return true;
             }
 

@@ -1,5 +1,6 @@
 # PreRelease Version 0
 
+* 0.8.5 - Updated settings to no longer attempt to save while loading.
 * 0.8.4 - Increased default width of the image list for nicer display.
 * 0.8.3 - Updated file list view to always keep the current item in view.
 * 0.8.2 - Changed icon to be more visible on dark taskbars.
