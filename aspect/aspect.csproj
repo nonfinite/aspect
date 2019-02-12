@@ -42,7 +42,7 @@
     <StartupObject>Aspect.App</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Properties\icon.ico</ApplicationIcon>
+    <ApplicationIcon>..\docs\icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -208,7 +208,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Properties\icon.ico" />
+    <Resource Include="..\docs\icon.ico">
+      <Link>Properties\icon.ico</Link>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="PackageRelease" DependsOnTargets="Clean;Build" Condition=" '$(Configuration)' == 'Release'">
