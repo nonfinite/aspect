@@ -44,6 +44,11 @@
 
         <Border Style="{StaticResource Spacer}" />
 
+        <mah:ToggleSwitch Header="Show Thumbnails In List?" IsChecked="{Binding ShowThumbnails}"
+                          OnLabel="Yes" OffLabel="No" Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
+
+        <Border Style="{StaticResource Spacer}" />
+
         <mah:ToggleSwitch Header="Update Automatically?" IsChecked="{Binding UpdateAutomatically}"
                           OnLabel="Yes" OffLabel="No" Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
 

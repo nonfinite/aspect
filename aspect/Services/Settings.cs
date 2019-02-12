@@ -25,6 +25,7 @@ namespace Aspect.Services
         private string mGitHubUpdateUrl = "https://github.com/nonfinite/aspect";
         private bool mKeepImageOnScreen = true;
         private bool mMaximizeOnStartup = true;
+        private bool mShowThumbnails;
         private byte mSlideshowDurationInSeconds = 15;
         private SortBy mSortBy = SortBy.ModifiedDate;
         private bool mUpdateAutomatically = true;
@@ -51,6 +52,13 @@ namespace Aspect.Services
         {
             get => mMaximizeOnStartup;
             set => Set(ref mMaximizeOnStartup, value);
+        }
+
+        [DataMember(Name = "ShowThumbnails", IsRequired = true, EmitDefaultValue = true)]
+        public bool ShowThumbnails
+        {
+            get => mShowThumbnails;
+            set => Set(ref mShowThumbnails, value);
         }
 
         [DataMember(Name = "SlideshowDurationInSeconds", IsRequired = true, EmitDefaultValue = true)]

@@ -23,6 +23,10 @@
           <converters:EnumToBoolConverter x:Key="ConvertEnumToBool" />
           <converters:RatingToByteConverter x:Key="ConvertRatingToByte" />
           <converters:ParamToNullConverter x:Key="ConvertParamToNull" />
+          <converters:ValueMapConverter x:Key="ConvertBoolToVisibleCollapsed">
+            <converters:KeyValue From="{StaticResource True}" To="{x:Static Visibility.Visible}" />
+            <converters:KeyValue From="{StaticResource False}" To="{x:Static Visibility.Collapsed}" />
+          </converters:ValueMapConverter>
           <converters:ValueMapConverter x:Key="ConvertBoolToCollapsedVisible">
             <converters:KeyValue From="{StaticResource True}" To="{x:Static Visibility.Collapsed}" />
             <converters:KeyValue From="{StaticResource False}" To="{x:Static Visibility.Visible}" />

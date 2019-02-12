@@ -79,6 +79,20 @@ namespace Aspect.UI
             }
         }
 
+        public bool ShowThumbnails
+        {
+            get => mSettings.ShowThumbnails;
+            set
+            {
+                if (ShowThumbnails != value)
+                {
+                    OnPropertyChanging();
+                    mSettings.ShowThumbnails = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         public byte SlideshowDurationInSeconds
         {
             get => mSettings.SlideshowDurationInSeconds;

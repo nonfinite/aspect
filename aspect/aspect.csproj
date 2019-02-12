@@ -77,6 +77,7 @@
     <Compile Include="Services\AppRegistrationService.cs" />
     <Compile Include="Services\PersistenceService.cs" />
     <Compile Include="Services\Settings.cs" />
+    <Compile Include="Services\ThumbnailService.cs" />
     <Compile Include="Services\UpdateService.cs" />
     <Compile Include="Services\Win32\Shell32.cs" />
     <Compile Include="UI\Behaviors\KeepCurrentItemInViewBehavior.cs" />
@@ -98,6 +99,10 @@
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\SettingsViewModel.cs" />
+    <Compile Include="UI\ThumbnailImage.xaml.cs">
+      <DependentUpon>ThumbnailImage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Utility\DoubleEx.cs" />
     <Compile Include="Utility\LazyEx.cs" />
     <Compile Include="Utility\LogEx.cs" />
     <Compile Include="Utility\MathEx.cs" />
@@ -134,6 +139,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Themes\RadioButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\ThumbnailImage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
