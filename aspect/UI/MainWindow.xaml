@@ -91,7 +91,7 @@
   <mah:MetroWindow.Flyouts>
     <mah:FlyoutsControl>
       <mah:Flyout x:Name="mImageListFlyout"
-                  Header="Images" Position="Right" Width="300"
+                  Header="Images" Position="Right" Width="394"
                   TitleVisibility="Collapsed" CloseButtonVisibility="Collapsed"
                   IsPinned="False" ExternalCloseButton="Left"
                   IsOpen="{Binding ElementName=mListToggleButton, Path=IsChecked, Mode=TwoWay}">

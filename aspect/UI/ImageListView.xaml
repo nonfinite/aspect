@@ -60,7 +60,7 @@
       </i:Interaction.Behaviors>
       <ListBox.ItemTemplate>
         <DataTemplate DataType="models:FileData">
-          <Grid Margin="0 2">
+          <Grid Margin="2">
             <Grid.RowDefinitions>
               <RowDefinition Height="Auto" />
               <RowDefinition Height="Auto" />
