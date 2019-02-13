@@ -100,7 +100,8 @@
                   Header="Images" Position="Right" Width="394"
                   TitleVisibility="Collapsed" CloseButtonVisibility="Collapsed"
                   IsPinned="False" ExternalCloseButton="Left"
-                  IsOpen="{Binding ElementName=mListToggleButton, Path=IsChecked, Mode=TwoWay}">
+                  IsOpen="{Binding ElementName=mListToggleButton, Path=IsChecked, Mode=TwoWay}"
+                  Background="Transparent">
         <mah:Flyout.InputBindings>
           <KeyBinding Key="Escape" Command="Close" />
         </mah:Flyout.InputBindings>
@@ -112,7 +113,8 @@
             <RowDefinition Height="{Binding ElementName=mWindow, Path=TitlebarHeight}" />
             <RowDefinition Height="*" />
           </Grid.RowDefinitions>
-          <ui:ImageListView x:Name="mImageListView" Grid.Row="1" />
+          <ui:ImageListView x:Name="mImageListView" Grid.Row="1"
+                            Background="{StaticResource FlyoutBackgroundBrush}" />
         </Grid>
       </mah:Flyout>
       <mah:Flyout Position="Left" IsPinned="False" ExternalCloseButton="Left"
