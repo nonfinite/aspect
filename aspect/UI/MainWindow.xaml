@@ -41,7 +41,7 @@
     <mah:WindowCommands>
       <iconPacks:PackIconModern Kind="Warning" Margin="4 0"
                                 ToolTip="Ratings are disabled because the local database could not be written."
-                                Visibility="{Binding FileList.IsPersistenceEnabled, Converter={StaticResource ConvertBoolToCollapsedVisible}}" />
+                                Visibility="{Binding FileList.IsPersistenceEnabled, Converter={StaticResource ConvertBoolToCollapsedVisible}, FallbackValue=Collapsed}" />
       <Button Content="Open" Command="Open" ToolTip="Open new file/directory" />
       <ToggleButton IsChecked="{Binding IsSlideshowRunning, Mode=TwoWay}">
         <ToggleButton.ToolTip>
