@@ -7,6 +7,7 @@
                  xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                  xmlns:ui="clr-namespace:Aspect.UI"
                  xmlns:converters="clr-namespace:Aspect.UI.Converters"
+                 xmlns:behaviors="clr-namespace:Aspect.UI.Behaviors"
                  mc:Ignorable="d"
                  d:DataContext="{d:DesignInstance ui:MainViewModel}"
                  Title="{Binding FileList.View.CurrentItem, TargetNullValue=aspect}"
@@ -38,6 +39,9 @@
   </mah:MetroWindow.LeftWindowCommands>
   <mah:MetroWindow.RightWindowCommands>
     <mah:WindowCommands>
+      <iconPacks:PackIconModern Kind="Warning" Margin="4 0"
+                                ToolTip="Ratings are disabled because the local database could not be written."
+                                Visibility="{Binding FileList.IsPersistenceEnabled, Converter={StaticResource ConvertBoolToCollapsedVisible}, FallbackValue=Collapsed}" />
       <Button Content="Open" Command="Open" ToolTip="Open new file/directory" />
       <ToggleButton IsChecked="{Binding IsSlideshowRunning, Mode=TwoWay}">
         <ToggleButton.ToolTip>
@@ -56,7 +60,9 @@
           <iconPacks:PackIconModern Kind="Timer" VerticalAlignment="Center" />
         </StackPanel>
       </ToggleButton>
-      <ui:RatingControl Rating="{Binding FileList.View.CurrentItem.Rating, Mode=TwoWay}" ToolTip="Set rating" />
+      <ui:RatingControl Rating="{Binding FileList.View.CurrentItem.Rating, Mode=TwoWay}" ToolTip="Set rating"
+                        IsEnabled="{Binding FileList.IsPersistenceEnabled}"
+                        Visibility="{Binding FileList.IsPersistenceEnabled, Converter={StaticResource ConvertBoolToVisibleCollapsed}}" />
       <StackPanel Orientation="Horizontal">
         <RadioButton ToolTip="Fit width and height" Style="{StaticResource RadioButtonLeft}"
                      IsChecked="{Binding ElementName=mImageViewer, Path=ImageFit, Converter={StaticResource ConvertEnumToBool}, ConverterParameter={x:Static ui:ImageFit.FitAll}}">
@@ -94,7 +100,8 @@
                   Header="Images" Position="Right" Width="394"
                   TitleVisibility="Collapsed" CloseButtonVisibility="Collapsed"
                   IsPinned="False" ExternalCloseButton="Left"
-                  IsOpen="{Binding ElementName=mListToggleButton, Path=IsChecked, Mode=TwoWay}">
+                  IsOpen="{Binding ElementName=mListToggleButton, Path=IsChecked, Mode=TwoWay}"
+                  Background="Transparent">
         <mah:Flyout.InputBindings>
           <KeyBinding Key="Escape" Command="Close" />
         </mah:Flyout.InputBindings>
@@ -106,7 +113,8 @@
             <RowDefinition Height="{Binding ElementName=mWindow, Path=TitlebarHeight}" />
             <RowDefinition Height="*" />
           </Grid.RowDefinitions>
-          <ui:ImageListView x:Name="mImageListView" Grid.Row="1" />
+          <ui:ImageListView x:Name="mImageListView" Grid.Row="1"
+                            Background="{StaticResource FlyoutBackgroundBrush}" />
         </Grid>
       </mah:Flyout>
       <mah:Flyout Position="Left" IsPinned="False" ExternalCloseButton="Left"

@@ -4,7 +4,8 @@
              xmlns:converters="clr-namespace:Aspect.UI.Converters"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
-             Startup="_HandleStartup" Exit="_HandleExit">
+             Startup="_HandleStartup" Exit="_HandleExit"
+             DispatcherUnhandledException="_HandleDispatcherException">
   <Application.Resources>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>

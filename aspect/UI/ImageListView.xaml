@@ -52,7 +52,9 @@
     </TextBox>
 
     <local:RatingControl Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
-                         Rating="{Binding FileList.Filter.Rating, Mode=TwoWay}" />
+                         Rating="{Binding FileList.Filter.Rating, Mode=TwoWay}"
+                         IsEnabled="{Binding FileList.IsPersistenceEnabled}"
+                         Visibility="{Binding FileList.IsPersistenceEnabled, Converter={StaticResource ConvertBoolToVisibleCollapsed}}" />
 
     <ListBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding FileList.View}"
              IsSynchronizedWithCurrentItem="True" BorderThickness="0" Margin="0 4 0 0"

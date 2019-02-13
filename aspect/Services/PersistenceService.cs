@@ -20,6 +20,8 @@ namespace Aspect.Services
 {
     public interface IPersistenceService
     {
+        bool IsEnabled { get; }
+
         Task InitializeFiles(IEnumerable<FileData> files);
 
         Task UpdateRating(FileData file);
@@ -33,7 +35,6 @@ namespace Aspect.Services
         }
 
         private readonly string mConnectionString;
-
 
         public async Task InitializeFiles(IEnumerable<FileData> files)
         {
@@ -51,6 +52,9 @@ namespace Aspect.Services
                 }
             }
         }
+
+
+        public bool IsEnabled => true;
 
         public async Task UpdateRating(FileData file)
         {
@@ -81,34 +85,52 @@ DO UPDATE SET rating = @rating", new
             return Task.Run(new Func<DatabaseUpgradeResult>(upgradeEngine.PerformUpgrade));
         }
 
-        public static async Task<PersistenceService> Create(string directory)
+        public static async Task<IPersistenceService> Create(string directory)
         {
-            var dbFile = new FileInfo(Path.Combine(directory, ".aspect.sqlite"));
-            if (!dbFile.Exists)
+            try
             {
-                SQLiteConnection.CreateFile(dbFile.FullName);
-                dbFile.Attributes = FileAttributes.NotContentIndexed | FileAttributes.Hidden;
+                var dbFile = new FileInfo(Path.Combine(directory, ".aspect.sqlite"));
+                if (!dbFile.Exists)
+                {
+                    SQLiteConnection.CreateFile(dbFile.FullName);
+                    dbFile.Attributes = FileAttributes.NotContentIndexed | FileAttributes.Hidden;
+                }
+
+                var connectionString = new SQLiteConnectionStringBuilder
+                {
+                    DataSource = dbFile.FullName,
+                    DateTimeFormat = SQLiteDateFormats.UnixEpoch,
+                    BinaryGUID = true,
+                    DateTimeKind = DateTimeKind.Utc,
+                    ReadOnly = false
+                }.ToString();
+
+                var persistence = new PersistenceService(connectionString);
+                var results = await persistence._Initialize().DontCaptureContext();
+
+                if (!results.Successful)
+                {
+                    // TODO: handle this more elegantly
+                    throw new Exception($"Failed to migrate database: {dbFile.FullName}", results.Error);
+                }
+
+                return persistence;
             }
-
-            var connectionString = new SQLiteConnectionStringBuilder
+            catch (Exception ex)
             {
-                DataSource = dbFile.FullName,
-                DateTimeFormat = SQLiteDateFormats.UnixEpoch,
-                BinaryGUID = true,
-                DateTimeKind = DateTimeKind.Utc,
-                ReadOnly = false
-            }.ToString();
-
-            var persistence = new PersistenceService(connectionString);
-            var results = await persistence._Initialize().DontCaptureContext();
-
-            if (!results.Successful)
-            {
-                // TODO: handle this more elegantly
-                throw new Exception($"Failed to migrate database: {dbFile.FullName}", results.Error);
+                LogEx.For(typeof(PersistenceService))
+                    .Error(ex, "Failed to initialize SQLite persistence service.");
+                return new NoOpPersistenceService();
             }
-
-            return persistence;
         }
+    }
+
+    public sealed class NoOpPersistenceService : IPersistenceService
+    {
+        public Task InitializeFiles(IEnumerable<FileData> files) => Task.CompletedTask;
+
+        public bool IsEnabled => false;
+
+        public Task UpdateRating(FileData file) => Task.CompletedTask;
     }
 }

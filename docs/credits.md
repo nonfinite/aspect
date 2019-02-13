@@ -11,4 +11,3 @@ The following 3rd party libraries are used by this application under the referen
 * [Serilog](https://github.com/serilog/serilog) - [Apache License 2.0](https://github.com/serilog/serilog/blob/dev/LICENSE)
 * [Squirrel.Windows](https://github.com/squirrel/Squirrel.Windows) - [MIT License](https://github.com/Squirrel/Squirrel.Windows/blob/master/COPYING)
 * [SQLite](https://system.data.sqlite.org/index.html/doc/trunk/www/index.wiki) - [Public Domain](https://www.sqlite.org/copyright.html)
-* [XamlAnimatedGif](https://github.com/XamlAnimatedGif/XamlAnimatedGif) - [Apache License 2.0](https://github.com/XamlAnimatedGif/XamlAnimatedGif/blob/master/LICENSE.txt)

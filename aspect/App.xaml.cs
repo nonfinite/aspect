@@ -1,10 +1,14 @@
 using System;
 using System.IO;
 using System.Windows;
+using System.Windows.Threading;
 
 using Aspect.Services;
 using Aspect.UI;
 using Aspect.Utility;
+
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 
 using Serilog;
 using Serilog.Events;
@@ -43,6 +47,20 @@ namespace Aspect
                 .CreateLogger();
 
             Locator.CurrentMutable.RegisterConstant(new SplatLoggerProxy(), typeof(ILogger));
+        }
+
+        private void _HandleDispatcherException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            LogEx.Log(this).Error(e.Exception, "Unhandled dispatcher exception");
+
+            if (MainWindow is MetroWindow window)
+            {
+                window.ShowModalMessageExternal(
+                    "Error", $"{e.Exception.Message}\r\n\r\n{e.Exception}");
+            }
+
+            e.Handled = true;
+            Shutdown(e.Exception.GetHashCode());
         }
 
         private void _HandleExit(object sender, ExitEventArgs e) => Log.CloseAndFlush();
