@@ -216,6 +216,6 @@
       <Output TaskParameter="Assemblies" ItemName="assemblyInfo" />
     </GetAssemblyIdentity>
     <Exec Command="&quot;$(PkgNuGet_CommandLine)\tools\nuget&quot; pack &quot;$(ProjectDir)Aspect.nuspec&quot; -Version %(assemblyInfo.Version) -Properties Configuration=Release -OutputDirectory &quot;$(TargetDir.TrimEnd('\'))&quot; -BasePath &quot;$(TargetDir.TrimEnd('\'))&quot;" />
-    <Exec Command="&quot;$(Pkgsquirrel_windows)\tools\squirrel&quot; -r &quot;$(SolutionDir)releases&quot; --no-msi --setupIcon &quot;$(ProjectDir)Properties\icon.ico&quot; --releasify &quot;$(TargetDir)Aspect.$([System.Version]::Parse(%(assemblyInfo.Version)).ToString(3)).nupkg&quot;" />
+    <Exec Command="&quot;$(Pkgsquirrel_windows)\tools\squirrel&quot; -r &quot;$(SolutionDir)releases&quot; --no-msi --setupIcon &quot;$(ProjectDir)..\docs\icon.ico&quot; --releasify &quot;$(TargetDir)Aspect.$([System.Version]::Parse(%(assemblyInfo.Version)).ToString(3)).nupkg&quot;" />
   </Target>
 </Project>
