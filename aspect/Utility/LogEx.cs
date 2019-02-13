@@ -9,6 +9,9 @@ namespace Aspect.Utility
 {
     public static class LogEx
     {
+        public static ILogger For(Type t, [CallerMemberName] string memberName = null) =>
+            Serilog.Log.ForContext(new ClassEnricher(t, memberName));
+
         public static ILogger Log<T>(this T _, [CallerMemberName] string memberName = null) =>
             Serilog.Log.ForContext(new ClassEnricher(typeof(T), memberName));
 

@@ -1,5 +1,6 @@
 # PreRelease Version 0
 
+* 0.8.6 - Disabled rating control when SQLite database can't be loaded.
 * 0.8.5 - Updated settings to no longer attempt to save while loading.
 * 0.8.4 - Increased default width of the image list for nicer display.
 * 0.8.3 - Updated file list view to always keep the current item in view.

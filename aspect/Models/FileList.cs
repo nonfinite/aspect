@@ -37,6 +37,8 @@ namespace Aspect.Models
 
         public FileFilter Filter { get; } = new FileFilter();
 
+        public bool IsPersistenceEnabled => mPersistence.IsEnabled;
+
         public SortBy Sort
         {
             get => Settings.Default.SortBy;
