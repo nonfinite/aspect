@@ -4,15 +4,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 
 using Aspect.Models;
 using Aspect.Services;
 using Aspect.Services.Win32;
 using Aspect.Utility;
-
-using XamlAnimatedGif;
 
 namespace Aspect.UI
 {
@@ -40,12 +37,13 @@ namespace Aspect.UI
             "File", typeof(FileData), typeof(ImageViewer),
             new PropertyMetadata(default(FileData), _HandleFileChanged));
 
-        private BrushAnimator mAnimator;
         private Brush mBrush;
         private Size mImageSize;
 
         private bool mIsDragStarted = false;
         private Matrix mMatrix;
+
+        private MediaElement mMediaElement;
         private Point mMouseStart = new Point(0, 0);
         private ImageFit mRestoreToImageFit = ImageFit.FitAll;
 
@@ -136,6 +134,21 @@ namespace Aspect.UI
             viewer._FitImage();
         }
 
+        private void _HandleMediaEnded(object sender, RoutedEventArgs e)
+        {
+            var element = ((MediaElement) sender);
+            element.Position = TimeSpan.FromSeconds(1);
+            element.Play();
+        }
+
+        private void _HandleMediaOpened(object sender, RoutedEventArgs e)
+        {
+            var elem = (MediaElement) sender;
+            var tag = (Tuple<TaskCompletionSource<Tuple<Brush, MediaElement, Size>>, Size>) elem.Tag;
+            tag.Item1.SetResult(new Tuple<Brush, MediaElement, Size>(
+                new VisualBrush(elem), elem, tag.Item2));
+        }
+
         private void _HandleMouseDown(object sender, MouseButtonEventArgs e)
         {
             var input = (IInputElement) sender;
@@ -193,19 +206,28 @@ namespace Aspect.UI
             if (file == null)
             {
                 mBrush = null;
-                mAnimator?.Dispose();
-                mAnimator = null;
+                mMediaElement = null;
                 return;
             }
 
             mLoadingBar.Visibility = Visibility.Visible;
 
             var result = await _Load(file);
-            mAnimator?.Dispose();
-            mAnimator = result.Item2;
+            var oldMediaElement = mMediaElement;
+
             mBrush = result.Item1;
+            mMediaElement = result.Item2;
             mImageSize = result.Item3;
-            mAnimator?.Play();
+
+            if (oldMediaElement != null)
+            {
+                oldMediaElement.MediaOpened -= _HandleMediaOpened;
+                oldMediaElement.MediaEnded -= _HandleMediaEnded;
+                oldMediaElement.Stop();
+                oldMediaElement.Source = null;
+                mMediaElementHolder.Children.Remove(oldMediaElement);
+                GC.Collect();
+            }
 
             mLoadingBar.Visibility = Visibility.Collapsed;
 
@@ -219,20 +241,30 @@ namespace Aspect.UI
             }
         }
 
-        private async Task<Tuple<Brush, BrushAnimator, Size>> _Load(FileData file)
+        private Task<Tuple<Brush, MediaElement, Size>> _Load(FileData file)
         {
-            try
+            if (file.IsAnimated)
             {
-                var animator = await BrushAnimator.CreateAsync(file.Uri, RepeatBehavior.Forever);
-                return new Tuple<Brush, BrushAnimator, Size>(animator.Brush, animator, file.Dimensions);
+                var dimensions = file.Dimensions;
+                var element = new MediaElement
+                {
+                    Stretch = Stretch.Uniform,
+                    LoadedBehavior = MediaState.Manual
+                };
+                mMediaElementHolder.Children.Add(element);
+                var tcs = new TaskCompletionSource<Tuple<Brush, MediaElement, Size>>();
+                element.Tag = Tuple.Create(tcs, dimensions);
+                element.MediaOpened += _HandleMediaOpened;
+                element.MediaEnded += _HandleMediaEnded;
+                element.Source = file.Uri;
+                element.Play();
+                return tcs.Task;
             }
-            catch
-            {
-                var image = new BitmapImage(file.Uri);
-                var brush = new ImageBrush(image);
-                return new Tuple<Brush, BrushAnimator, Size>(
-                    brush, null, new Size(image.PixelWidth, image.PixelHeight));
-            }
+
+            var image = new BitmapImage(file.Uri);
+            var brush = new ImageBrush(image);
+            return Task.FromResult(new Tuple<Brush, MediaElement, Size>(
+                brush, null, new Size(image.PixelWidth, image.PixelHeight)));
         }
 
         private double _LockBounds(double low, double high, double boundLow, double boundHigh, double current)

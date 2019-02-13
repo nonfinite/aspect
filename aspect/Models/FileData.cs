@@ -19,11 +19,8 @@ namespace Aspect.Models
             ModifiedInstant = modifiedInstant;
             Size = size;
 
-            mDimensions = new Lazy<Size>(() =>
-            {
-                var decoder = BitmapDecoder.Create(Uri, BitmapCreateOptions.DelayCreation, BitmapCacheOption.OnDemand);
-                return new Size(decoder.Frames[0].PixelWidth, decoder.Frames[0].PixelHeight);
-            });
+            mIsAnimated = new Lazy<bool>(_GetIsAnimated);
+            mDimensions = new Lazy<Size>(_GetDimensions);
         }
 
         public static readonly HashSet<string> SupportedFileExtensions = new HashSet<string>(new[]
@@ -36,12 +33,12 @@ namespace Aspect.Models
         }, StringComparer.OrdinalIgnoreCase);
 
         private readonly Lazy<Size> mDimensions;
-
+        private readonly Lazy<bool> mIsAnimated;
         private long mRandomKey;
-
         private Rating? mRating;
 
         public Size Dimensions => mDimensions.Value;
+        public bool IsAnimated => mIsAnimated.Value;
         public DateTime ModifiedInstant { get; }
         public string Name { get; }
 
@@ -60,6 +57,24 @@ namespace Aspect.Models
         public FileSize Size { get; }
 
         public Uri Uri { get; }
+
+        private Size _GetDimensions()
+        {
+            var decoder = BitmapDecoder.Create(Uri, BitmapCreateOptions.DelayCreation, BitmapCacheOption.OnDemand);
+            return new Size(decoder.Frames[0].PixelWidth, decoder.Frames[0].PixelHeight);
+        }
+
+        private bool _GetIsAnimated()
+        {
+            var ext = Path.GetExtension(Uri.LocalPath);
+            if (".gif".Equals(ext, StringComparison.OrdinalIgnoreCase))
+            {
+                var decoder = new GifBitmapDecoder(Uri, BitmapCreateOptions.None, BitmapCacheOption.None);
+                return decoder.Frames.Count > 1;
+            }
+
+            return false;
+        }
 
         private static Uri _PathToUri(string path) => new Uri(Path.GetFullPath(path));
 
