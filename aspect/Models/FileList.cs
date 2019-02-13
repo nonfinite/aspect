@@ -22,7 +22,7 @@ namespace Aspect.Models
 
             View = CollectionViewSource.GetDefaultView(mFiles);
             View.Filter = _Filter;
-            View.SortDescriptions.Add(new SortDescription(nameof(FileData.Name), ListSortDirection.Ascending));
+            _ApplySort(Sort);
 
             Filter.PropertyChanged += _HandleFilterChanged;
 
@@ -48,36 +48,41 @@ namespace Aspect.Models
                 {
                     Settings.Default.SortBy = value;
 
-                    using (View.DeferRefresh())
-                    {
-                        View.SortDescriptions.Clear();
-                        string sortProperty;
-                        switch (value)
-                        {
-                            case SortBy.Name:
-                                sortProperty = nameof(FileData.Name);
-                                break;
-                            case SortBy.ModifiedDate:
-                                sortProperty = nameof(FileData.ModifiedInstant);
-                                break;
-                            case SortBy.Size:
-                                sortProperty = nameof(FileData.Size);
-                                break;
-                            case SortBy.Random:
-                                sortProperty = nameof(FileData.RandomKey);
-                                _ResetRandomKeys();
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException(nameof(value), value, null);
-                        }
-
-                        View.SortDescriptions.Add(new SortDescription(sortProperty, ListSortDirection.Ascending));
-                    }
+                    _ApplySort(value);
                 }
             }
         }
 
         public ICollectionView View { get; }
+
+        private void _ApplySort(SortBy value)
+        {
+            using (View.DeferRefresh())
+            {
+                View.SortDescriptions.Clear();
+                string sortProperty;
+                switch (value)
+                {
+                    case SortBy.Name:
+                        sortProperty = nameof(FileData.Name);
+                        break;
+                    case SortBy.ModifiedDate:
+                        sortProperty = nameof(FileData.ModifiedInstant);
+                        break;
+                    case SortBy.Size:
+                        sortProperty = nameof(FileData.Size);
+                        break;
+                    case SortBy.Random:
+                        sortProperty = nameof(FileData.RandomKey);
+                        _ResetRandomKeys();
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(value), value, null);
+                }
+
+                View.SortDescriptions.Add(new SortDescription(sortProperty, ListSortDirection.Ascending));
+            }
+        }
 
         private bool _Filter(object obj)
         {
