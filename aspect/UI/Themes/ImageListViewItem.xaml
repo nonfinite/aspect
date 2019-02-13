@@ -1,0 +1,42 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Aspect.UI"
+                    xmlns:services="clr-namespace:Aspect.Services"
+                    xmlns:models="clr-namespace:Aspect.Models">
+  <DataTemplate x:Key="ImageListViewItemTemplate"  DataType="models:FileData">
+    <Grid Margin="2">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
+      <local:ThumbnailImage Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" FilePath="{Binding Uri}"
+                            Width="32" Height="32" VerticalAlignment="Center" Margin="0 0 2 0"
+                            Visibility="{Binding Source={x:Static services:Settings.Default}, Path=ShowThumbnails, Converter={StaticResource ConvertBoolToVisibleCollapsed}}" />
+
+      <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Name}"
+                 TextTrimming="CharacterEllipsis"
+                 FontSize="{StaticResource NormalFontSize}"
+                 FontFamily="{StaticResource ContentFontFamily}" />
+      <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Rating}" HorizontalAlignment="Right"
+                 FontSize="{StaticResource NormalFontSize}"
+                 FontFamily="{StaticResource ContentFontFamily}" />
+
+      <TextBlock Grid.Row="1" Grid.Column="1" FontStyle="Italic" Margin="8 0 0 0"
+                 FontSize="{StaticResource ContentFontSize}"
+                 FontFamily="{StaticResource ContentFontFamily}">
+        <TextBlock Text="Last modified: " />
+        <TextBlock Text="{Binding ModifiedInstant, StringFormat=d}" />
+        <TextBlock Text="{Binding ModifiedInstant, StringFormat=t}" />
+      </TextBlock>
+      <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding Size}"
+                 FontSize="{StaticResource ContentFontSize}"
+                 FontFamily="{StaticResource ContentFontFamily}"
+                 HorizontalAlignment="Right" />
+    </Grid>
+  </DataTemplate>
+</ResourceDictionary>

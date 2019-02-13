@@ -43,6 +43,7 @@
         </ResourceDictionary>
 
         <ResourceDictionary Source="UI/Themes/RadioButton.xaml" />
+        <ResourceDictionary Source="UI/Themes/ImageListViewItem.xaml" />
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
   </Application.Resources>
