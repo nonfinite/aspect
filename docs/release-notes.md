@@ -1,3 +1,7 @@
+# Version 1
+
+* 1.0.0 - Initial release version.
+
 # PreRelease Version 0
 
 * 0.9.3 - Persistence warning is now hidden by default, so it doesn't flash on screen while the file list is loading.
