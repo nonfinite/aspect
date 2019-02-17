@@ -9,7 +9,8 @@
              d:DesignHeight="450" d:DesignWidth="800">
   <Grid>
     <Image x:Name="mImage" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform" />
-    <mah:ProgressRing x:Name="mProgress" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                      Padding="8" />
+    <mah:ProgressRing x:Name="mProgress" Padding="8"
+                      Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}, Path=ActualWidth}"
+                      Height="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}, Path=ActualHeight}" />
   </Grid>
 </UserControl>
