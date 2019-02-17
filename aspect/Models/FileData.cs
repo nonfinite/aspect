@@ -30,6 +30,7 @@ namespace Aspect.Models
             ".jpg",
             ".jpeg",
             ".gif",
+            ".webp",
         }, StringComparer.OrdinalIgnoreCase);
 
         private readonly Lazy<Size> mDimensions;
