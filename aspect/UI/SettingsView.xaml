@@ -47,21 +47,35 @@
         <mah:ToggleSwitch Header="Show Thumbnails In List?" IsChecked="{Binding ShowThumbnails}"
                           OnLabel="Yes" OffLabel="No" Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
 
-        <Border Style="{StaticResource Spacer}" />
-
-        <mah:ToggleSwitch Header="Update Automatically?" IsChecked="{Binding UpdateAutomatically}"
-                          OnLabel="Yes" OffLabel="No" Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
-
-        <Border Style="{StaticResource Spacer}" />
-
-        <mah:ToggleSwitch Header="Use Stable Updates Only?" IsChecked="{Binding StableUpdatesOnly}"
-                          OnLabel="Yes" OffLabel="No" Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
-
         <StackPanel Orientation="Vertical"
-                    Visibility="{Binding UpdateAutomatically, Converter={StaticResource ConvertBoolToCollapsedVisible}}">
+                    Visibility="{Binding IsUpdatingSupported, Converter={StaticResource ConvertBoolToVisibleCollapsed}}">
           <Border Style="{StaticResource Spacer}" />
 
-          <Button Content="Check for updates..." Click="_HandleCheckForUpdatesClick" />
+          <mah:ToggleSwitch Header="Update Automatically?" IsChecked="{Binding UpdateAutomatically}"
+                            OnLabel="Yes" OffLabel="No"
+                            Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
+          <TextBlock
+            Margin="8 4 0 0" FontStyle="Italic"
+            Visibility="{Binding UpdateAutomatically, Converter={StaticResource ConvertBoolToVisibleCollapsed}}">
+            <Run Text="Last checked for updates at " />
+            <Run Text="{Binding Settings.LastUpdateCheck.LocalDateTime, StringFormat=g, Mode=OneWay}" />
+            <LineBreak />
+            <Run Text="Next check will happen after " />
+            <Run Text="{Binding Settings.NextUpdateCheck.LocalDateTime, StringFormat=g, Mode=OneWay}" />
+          </TextBlock>
+
+          <Border Style="{StaticResource Spacer}" />
+
+          <mah:ToggleSwitch Header="Use Stable Updates Only?" IsChecked="{Binding StableUpdatesOnly}"
+                            OnLabel="Yes" OffLabel="No"
+                            Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
+
+          <StackPanel Orientation="Vertical"
+                      Visibility="{Binding UpdateAutomatically, Converter={StaticResource ConvertBoolToCollapsedVisible}}">
+            <Border Style="{StaticResource Spacer}" />
+
+            <Button Content="Check for updates..." Click="_HandleCheckForUpdatesClick" />
+          </StackPanel>
         </StackPanel>
       </StackPanel>
     </ScrollViewer>

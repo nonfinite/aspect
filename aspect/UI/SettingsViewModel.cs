@@ -14,7 +14,7 @@ namespace Aspect.UI
     {
         public SettingsViewModel()
         {
-            mSettings = Settings.Default;
+            Settings = Settings.Default;
             UpdateService.Instance.GetCurrentVersion()
                 .ContinueWith(task =>
                 {
@@ -28,11 +28,14 @@ namespace Aspect.UI
                         CurrentVersion = task.Result.ToString();
                     }
                 }, TaskScheduler.FromCurrentSynchronizationContext());
+            UpdateService.Instance.IsUpdatingSupported.ContinueWith(
+                task => IsUpdatingSupported = task.Exception == null && task.Result,
+                TaskScheduler.FromCurrentSynchronizationContext());
         }
 
-        private readonly Settings mSettings;
-
         private string mCurrentVersion = "...loading...";
+        private bool mIsUpdatingSupported;
+
 
         public string CurrentVersion
         {
@@ -40,15 +43,21 @@ namespace Aspect.UI
             private set => Set(ref mCurrentVersion, value);
         }
 
+        public bool IsUpdatingSupported
+        {
+            get => mIsUpdatingSupported;
+            private set => Set(ref mIsUpdatingSupported, value);
+        }
+
         public bool KeepImageOnScreen
         {
-            get => mSettings.KeepImageOnScreen;
+            get => Settings.KeepImageOnScreen;
             set
             {
                 if (KeepImageOnScreen != value)
                 {
                     OnPropertyChanging();
-                    mSettings.KeepImageOnScreen = value;
+                    Settings.KeepImageOnScreen = value;
                     OnPropertyChanged();
                 }
             }
@@ -56,13 +65,13 @@ namespace Aspect.UI
 
         public bool MaximizeOnStartup
         {
-            get => mSettings.MaximizeOnStartup;
+            get => Settings.MaximizeOnStartup;
             set
             {
                 if (MaximizeOnStartup != value)
                 {
                     OnPropertyChanging();
-                    mSettings.MaximizeOnStartup = value;
+                    Settings.MaximizeOnStartup = value;
                     OnPropertyChanged();
                 }
             }
@@ -79,15 +88,17 @@ namespace Aspect.UI
             }
         }
 
+        public Settings Settings { get; }
+
         public bool ShowThumbnails
         {
-            get => mSettings.ShowThumbnails;
+            get => Settings.ShowThumbnails;
             set
             {
                 if (ShowThumbnails != value)
                 {
                     OnPropertyChanging();
-                    mSettings.ShowThumbnails = value;
+                    Settings.ShowThumbnails = value;
                     OnPropertyChanged();
                 }
             }
@@ -95,13 +106,13 @@ namespace Aspect.UI
 
         public byte SlideshowDurationInSeconds
         {
-            get => mSettings.SlideshowDurationInSeconds;
+            get => Settings.SlideshowDurationInSeconds;
             set
             {
                 if (SlideshowDurationInSeconds != value)
                 {
                     OnPropertyChanging();
-                    mSettings.SlideshowDurationInSeconds = value;
+                    Settings.SlideshowDurationInSeconds = value;
                     OnPropertyChanged();
                 }
             }
@@ -109,13 +120,13 @@ namespace Aspect.UI
 
         public bool StableUpdatesOnly
         {
-            get => !mSettings.UpdateToPreRelease;
+            get => !Settings.UpdateToPreRelease;
             set
             {
                 if (StableUpdatesOnly != value)
                 {
                     OnPropertyChanging();
-                    mSettings.UpdateToPreRelease = !value;
+                    Settings.UpdateToPreRelease = !value;
                     OnPropertyChanged();
                 }
             }
@@ -123,13 +134,13 @@ namespace Aspect.UI
 
         public bool UpdateAutomatically
         {
-            get => mSettings.UpdateAutomatically;
+            get => Settings.UpdateAutomatically;
             set
             {
                 if (UpdateAutomatically != value)
                 {
                     OnPropertyChanging();
-                    mSettings.UpdateAutomatically = value;
+                    Settings.UpdateAutomatically = value;
                     OnPropertyChanged();
                 }
             }

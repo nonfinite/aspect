@@ -16,6 +16,7 @@ namespace Aspect.Services
 {
     public interface IUpdateService
     {
+        Task<bool> IsUpdatingSupported { get; }
         Task<Option<ReleaseEntry>> CheckForUpdates();
         Task<SemanticVersion> GetCurrentVersion();
         void HandleInstallEvents(string[] args);
@@ -24,12 +25,17 @@ namespace Aspect.Services
 
     public sealed class UpdateService : IUpdateService
     {
-        public UpdateService()
+        private UpdateService()
         {
             Settings.Default.PropertyChanged += _HandleSettingsPropertyChanged;
 
             mUpdateManager = new LazyEx<Task<UpdateManager>>(async () =>
             {
+#if NOSQUIRREL
+                return null;
+#pragma warning disable 162
+#endif
+
                 var updateUrl = Settings.Default.GitHubUpdateUrl;
                 var preRelease = Settings.Default.UpdateToPreRelease;
 
@@ -44,6 +50,9 @@ namespace Aspect.Services
                     this.Log().Error(ex, "Failed to create GitHub update manager");
                     return null;
                 }
+#if NOSQUIRREL
+#pragma warning restore 162
+#endif
             });
         }
 
@@ -159,6 +168,9 @@ namespace Aspect.Services
             }
         }
 
+        public Task<bool> IsUpdatingSupported => mUpdateManager.Value
+            .ContinueWith(t => t.Exception == null && t.Result != null);
+
         async Task<Option<ReleaseEntry>> IUpdateService.Update(bool forceUpdate)
         {
             if (!mIsUpdateable.Value)
@@ -167,9 +179,20 @@ namespace Aspect.Services
                 return Option.None<ReleaseEntry>();
             }
 
-            if (!forceUpdate && !Settings.Default.UpdateAutomatically)
+            if (forceUpdate)
+            {
+                this.Log().Information("Forcing update check/apply");
+            }
+            else if (!Settings.Default.UpdateAutomatically)
             {
                 this.Log().Information("Not updating app as it is not configured for automatic updates");
+                return Option.None<ReleaseEntry>();
+            }
+            else if (DateTimeOffset.Now < Settings.Default.NextUpdateCheck)
+            {
+                this.Log().Information(
+                    "Skipping update as {TimeBetweenUpdateChecks} has not elapsed since {LastUpdateCheck}",
+                    Settings.Default.TimeBetweenUpdateChecks, Settings.Default.LastUpdateCheck);
                 return Option.None<ReleaseEntry>();
             }
 
@@ -191,6 +214,8 @@ namespace Aspect.Services
                 {
                     this.Log().Information("No new version detected");
                 }
+
+                Settings.Default.LastUpdateCheck = DateTimeOffset.UtcNow;
 
                 return results.SomeNotNull();
             }

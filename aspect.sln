@@ -22,14 +22,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{BDDFB2A0-C
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug (No Updates)|Any CPU = Debug (No Updates)|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D876F28D-B8BD-4BBE-BCBE-EFBAFA80BD96}.Debug (No Updates)|Any CPU.ActiveCfg = Debug (No Updates)|Any CPU
+		{D876F28D-B8BD-4BBE-BCBE-EFBAFA80BD96}.Debug (No Updates)|Any CPU.Build.0 = Debug (No Updates)|Any CPU
 		{D876F28D-B8BD-4BBE-BCBE-EFBAFA80BD96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D876F28D-B8BD-4BBE-BCBE-EFBAFA80BD96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D876F28D-B8BD-4BBE-BCBE-EFBAFA80BD96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D876F28D-B8BD-4BBE-BCBE-EFBAFA80BD96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8889506-E2F9-4D7D-9EDC-EFF3672223E2}.Debug (No Updates)|Any CPU.ActiveCfg = Debug (No Updates)|Any CPU
+		{B8889506-E2F9-4D7D-9EDC-EFF3672223E2}.Debug (No Updates)|Any CPU.Build.0 = Debug (No Updates)|Any CPU
 		{B8889506-E2F9-4D7D-9EDC-EFF3672223E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B8889506-E2F9-4D7D-9EDC-EFF3672223E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8889506-E2F9-4D7D-9EDC-EFF3672223E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
