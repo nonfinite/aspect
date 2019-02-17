@@ -179,9 +179,20 @@ namespace Aspect.Services
                 return Option.None<ReleaseEntry>();
             }
 
-            if (!forceUpdate && !Settings.Default.UpdateAutomatically)
+            if (forceUpdate)
+            {
+                this.Log().Information("Forcing update check/apply");
+            }
+            else if (!Settings.Default.UpdateAutomatically)
             {
                 this.Log().Information("Not updating app as it is not configured for automatic updates");
+                return Option.None<ReleaseEntry>();
+            }
+            else if (DateTimeOffset.Now < Settings.Default.NextUpdateCheck)
+            {
+                this.Log().Information(
+                    "Skipping update as {TimeBetweenUpdateChecks} has not elapsed since {LastUpdateCheck}",
+                    Settings.Default.TimeBetweenUpdateChecks, Settings.Default.LastUpdateCheck);
                 return Option.None<ReleaseEntry>();
             }
 
@@ -203,6 +214,8 @@ namespace Aspect.Services
                 {
                     this.Log().Information("No new version detected");
                 }
+
+                Settings.Default.LastUpdateCheck = DateTimeOffset.UtcNow;
 
                 return results.SomeNotNull();
             }

@@ -1,5 +1,6 @@
 # Version 1
 
+* 1.1.0 - Limited update checks to once per day.
 * 1.0.0 - Initial release version.
 
 # PreRelease Version 0

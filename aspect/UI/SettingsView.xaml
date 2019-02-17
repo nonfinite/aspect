@@ -49,6 +49,15 @@
           <mah:ToggleSwitch Header="Update Automatically?" IsChecked="{Binding UpdateAutomatically}"
                             OnLabel="Yes" OffLabel="No"
                             Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
+          <TextBlock
+            Margin="8 4 0 0" FontStyle="Italic"
+            Visibility="{Binding UpdateAutomatically, Converter={StaticResource ConvertBoolToVisibleCollapsed}}">
+            <Run Text="Last checked for updates at " />
+            <Run Text="{Binding Settings.LastUpdateCheck.LocalDateTime, StringFormat=g, Mode=OneWay}" />
+            <LineBreak />
+            <Run Text="Next check will happen after " />
+            <Run Text="{Binding Settings.NextUpdateCheck.LocalDateTime, StringFormat=g, Mode=OneWay}" />
+          </TextBlock>
 
           <Border Style="{StaticResource Spacer}" />
 

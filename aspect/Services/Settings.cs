@@ -17,6 +17,7 @@ namespace Aspect.Services
         private Settings()
         {
             mCanSave = false;
+            _SetDefaults();
         }
 
         private static readonly Lazy<string> mFile = new Lazy<string>(() =>
@@ -28,60 +29,77 @@ namespace Aspect.Services
         });
 
         private bool mCanSave;
-
-        private string mGitHubUpdateUrl = "https://github.com/nonfinite/aspect";
-        private bool mKeepImageOnScreen = true;
-        private bool mMaximizeOnStartup = true;
-        private byte mSlideshowDurationInSeconds = 15;
-        private SortBy mSortBy = SortBy.ModifiedDate;
-        private bool mUpdateAutomatically = true;
-        private bool mUpdateToPreRelease = false;
+        private string mGitHubUpdateUrl;
+        private bool mKeepImageOnScreen;
+        private DateTimeOffset mLastUpdateCheck;
+        private bool mMaximizeOnStartup;
+        private byte mSlideshowDurationInSeconds;
+        private SortBy mSortBy;
+        private TimeSpan mTimeBetweenUpdateChecks;
+        private bool mUpdateAutomatically;
+        private bool mUpdateToPreRelease;
 
         public static Settings Default { get; } = _Load();
 
-        [DataMember(Name = "GitHubUpdateUrl", IsRequired = true, EmitDefaultValue = true)]
+        [DataMember(Name = "GitHubUpdateUrl", IsRequired = false, EmitDefaultValue = true)]
         public string GitHubUpdateUrl
         {
             get => mGitHubUpdateUrl;
             set => Set(ref mGitHubUpdateUrl, value);
         }
 
-        [DataMember(Name = "KeepImageOnScreen", IsRequired = true, EmitDefaultValue = true)]
+        [DataMember(Name = "KeepImageOnScreen", IsRequired = false, EmitDefaultValue = true)]
         public bool KeepImageOnScreen
         {
             get => mKeepImageOnScreen;
             set => Set(ref mKeepImageOnScreen, value);
         }
 
-        [DataMember(Name = "MaximizeOnStartup", IsRequired = true, EmitDefaultValue = true)]
+        [DataMember(Name = "LastUpdateCheck", IsRequired = false, EmitDefaultValue = true)]
+        public DateTimeOffset LastUpdateCheck
+        {
+            get => mLastUpdateCheck;
+            set => Set(ref mLastUpdateCheck, value);
+        }
+
+        [DataMember(Name = "MaximizeOnStartup", IsRequired = false, EmitDefaultValue = true)]
         public bool MaximizeOnStartup
         {
             get => mMaximizeOnStartup;
             set => Set(ref mMaximizeOnStartup, value);
         }
 
-        [DataMember(Name = "SlideshowDurationInSeconds", IsRequired = true, EmitDefaultValue = true)]
+        [IgnoreDataMember] public DateTimeOffset NextUpdateCheck => LastUpdateCheck.Add(TimeBetweenUpdateChecks);
+
+        [DataMember(Name = "SlideshowDurationInSeconds", IsRequired = false, EmitDefaultValue = true)]
         public byte SlideshowDurationInSeconds
         {
             get => mSlideshowDurationInSeconds;
             set => Set(ref mSlideshowDurationInSeconds, value);
         }
 
-        [DataMember(Name = "SortBy", IsRequired = true, EmitDefaultValue = true)]
+        [DataMember(Name = "SortBy", IsRequired = false, EmitDefaultValue = true)]
         public SortBy SortBy
         {
             get => mSortBy;
             set => Set(ref mSortBy, value);
         }
 
-        [DataMember(Name = "UpdateAutomatically", IsRequired = true, EmitDefaultValue = true)]
+        [DataMember(Name = "TimeBetweenUpdateChecks", IsRequired = false, EmitDefaultValue = true)]
+        public TimeSpan TimeBetweenUpdateChecks
+        {
+            get => mTimeBetweenUpdateChecks;
+            set => Set(ref mTimeBetweenUpdateChecks, value);
+        }
+
+        [DataMember(Name = "UpdateAutomatically", IsRequired = false, EmitDefaultValue = true)]
         public bool UpdateAutomatically
         {
             get => mUpdateAutomatically;
             set => Set(ref mUpdateAutomatically, value);
         }
 
-        [DataMember(Name = "UpdateToPreRelease", IsRequired = true, EmitDefaultValue = true)]
+        [DataMember(Name = "UpdateToPreRelease", IsRequired = false, EmitDefaultValue = true)]
         public bool UpdateToPreRelease
         {
             get => mUpdateToPreRelease;
@@ -108,6 +126,7 @@ namespace Aspect.Services
             {
                 Log.Error(ex, "Failed to deserialize settings from {File}", mFile.Value);
                 settings = new Settings();
+                settings._Save();
             }
 
             settings.mCanSave = true;
@@ -138,6 +157,22 @@ namespace Aspect.Services
                 this.Log().Error(ex, "Failed to save settings to {File}", mFile.Value);
             }
         }
+
+        private void _SetDefaults()
+        {
+            mGitHubUpdateUrl = "https://github.com/nonfinite/aspect";
+            mKeepImageOnScreen = true;
+            mLastUpdateCheck = DateTimeOffset.MinValue;
+            mMaximizeOnStartup = true;
+            mSlideshowDurationInSeconds = 15;
+            mSortBy = SortBy.ModifiedDate;
+            mTimeBetweenUpdateChecks = TimeSpan.FromDays(1);
+            mUpdateAutomatically = true;
+            mUpdateToPreRelease = false;
+        }
+
+        [OnDeserializing]
+        internal void OnDeserializing(StreamingContext context) => _SetDefaults();
 
         protected override bool Set<TProperty>(ref TProperty field, TProperty value, string propertyName = null)
         {
