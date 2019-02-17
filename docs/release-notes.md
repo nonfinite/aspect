@@ -1,5 +1,6 @@
 # Version 1
 
+* 1.2.0 - Added option to display thumbnails in the image list.
 * 1.1.0 - Limited update checks to once per day.
 * 1.0.0 - Initial release version.
 

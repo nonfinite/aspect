@@ -172,6 +172,7 @@ namespace Aspect.Services
             mKeepImageOnScreen = true;
             mLastUpdateCheck = DateTimeOffset.MinValue;
             mMaximizeOnStartup = true;
+            mShowThumbnails = false;
             mSlideshowDurationInSeconds = 15;
             mSortBy = SortBy.ModifiedDate;
             mTimeBetweenUpdateChecks = TimeSpan.FromDays(1);
