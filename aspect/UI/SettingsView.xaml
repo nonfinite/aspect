@@ -42,21 +42,26 @@
         <mah:NumericUpDown Value="{Binding SlideshowDurationInSeconds}" Minimum="1" Maximum="255"
                            HorizontalAlignment="Left" Width="120" />
 
-        <Border Style="{StaticResource Spacer}" />
-
-        <mah:ToggleSwitch Header="Update Automatically?" IsChecked="{Binding UpdateAutomatically}"
-                          OnLabel="Yes" OffLabel="No" Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
-
-        <Border Style="{StaticResource Spacer}" />
-
-        <mah:ToggleSwitch Header="Use Stable Updates Only?" IsChecked="{Binding StableUpdatesOnly}"
-                          OnLabel="Yes" OffLabel="No" Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
-
         <StackPanel Orientation="Vertical"
-                    Visibility="{Binding UpdateAutomatically, Converter={StaticResource ConvertBoolToCollapsedVisible}}">
+                    Visibility="{Binding IsUpdatingSupported, Converter={StaticResource ConvertBoolToVisibleCollapsed}}">
           <Border Style="{StaticResource Spacer}" />
 
-          <Button Content="Check for updates..." Click="_HandleCheckForUpdatesClick" />
+          <mah:ToggleSwitch Header="Update Automatically?" IsChecked="{Binding UpdateAutomatically}"
+                            OnLabel="Yes" OffLabel="No"
+                            Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
+
+          <Border Style="{StaticResource Spacer}" />
+
+          <mah:ToggleSwitch Header="Use Stable Updates Only?" IsChecked="{Binding StableUpdatesOnly}"
+                            OnLabel="Yes" OffLabel="No"
+                            Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
+
+          <StackPanel Orientation="Vertical"
+                      Visibility="{Binding UpdateAutomatically, Converter={StaticResource ConvertBoolToCollapsedVisible}}">
+            <Border Style="{StaticResource Spacer}" />
+
+            <Button Content="Check for updates..." Click="_HandleCheckForUpdatesClick" />
+          </StackPanel>
         </StackPanel>
       </StackPanel>
     </ScrollViewer>

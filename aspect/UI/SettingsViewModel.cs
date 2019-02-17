@@ -28,16 +28,26 @@ namespace Aspect.UI
                         CurrentVersion = task.Result.ToString();
                     }
                 }, TaskScheduler.FromCurrentSynchronizationContext());
+            UpdateService.Instance.IsUpdatingSupported.ContinueWith(
+                task => IsUpdatingSupported = task.Exception == null && task.Result,
+                TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private readonly Settings mSettings;
 
         private string mCurrentVersion = "...loading...";
+        private bool mIsUpdatingSupported;
 
         public string CurrentVersion
         {
             get => mCurrentVersion;
             private set => Set(ref mCurrentVersion, value);
+        }
+
+        public bool IsUpdatingSupported
+        {
+            get => mIsUpdatingSupported;
+            private set => Set(ref mIsUpdatingSupported, value);
         }
 
         public bool KeepImageOnScreen
