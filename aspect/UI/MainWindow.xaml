@@ -148,8 +148,8 @@
     </Grid.RowDefinitions>
     <ui:ImageViewer Grid.Row="0" x:Name="mImageViewer" File="{Binding FileList.View.CurrentItem}"
                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-    <ui:MediaControlsView Grid.Row="1" HorizontalAlignment="Center"
-                          DataContext="{Binding ElementName=mImageViewer, Path=MediaControls}"
+    <ui:MediaControlsView Grid.Row="1" HorizontalAlignment="Stretch" MaxWidth="500"
+                          DataContext="{Binding ElementName=mImageViewer, Path=MediaControls.Controls}"
                           Visibility="{Binding ElementName=mImageViewer, Path=MediaControls, Converter={StaticResource ConvertNullToCollapsed}}" />
   </Grid>
 </mah:MetroWindow>

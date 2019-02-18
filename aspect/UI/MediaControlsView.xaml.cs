@@ -1,6 +1,8 @@
 using System.Windows;
 using System.Windows.Controls;
 
+using Aspect.Services.Gif;
+
 namespace Aspect.UI
 {
     public partial class MediaControlsView : UserControl
@@ -10,15 +12,15 @@ namespace Aspect.UI
             InitializeComponent();
         }
 
-        public MediaElementControls Controls => DataContext as MediaElementControls;
+        public IFrameController Controls => DataContext as IFrameController;
 
-        private void _NextFrame(object sender, RoutedEventArgs e) => Controls.Controls.NextFrame();
+        private void _NextFrame(object sender, RoutedEventArgs e) => Controls.NextFrame();
 
-        private void _PrevFrame(object sender, RoutedEventArgs e) => Controls.Controls.PrevFrame();
+        private void _PrevFrame(object sender, RoutedEventArgs e) => Controls.PrevFrame();
 
         private void _TogglePlayPause(object sender, RoutedEventArgs e)
         {
-            var controls = Controls.Controls;
+            var controls = Controls;
 
             if (controls.IsPlaying)
             {
