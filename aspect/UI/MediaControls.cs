@@ -1,39 +1,46 @@
-using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
 
+using Aspect.Models;
 using Aspect.Utility;
+
+using WpfAnimatedGif;
 
 namespace Aspect.UI
 {
     public sealed class MediaElementControls : NotifyPropertyChanged
     {
-        public MediaElementControls(Uri source)
+        public MediaElementControls(FileData file)
         {
             mLoadedTask = new TaskCompletionSource<MediaElementControls>();
 
-            mElement = new MediaElement
+            mDimensions = file.Dimensions;
+            mImage = new Image
             {
                 Stretch = Stretch.Uniform,
-                LoadedBehavior = MediaState.Manual,
-                ScrubbingEnabled = true,
+                Width = file.Dimensions.Width,
+                Height = file.Dimensions.Height,
             };
-            mElement.MediaEnded += _HandleMediaEnded;
-            mElement.MediaOpened += _HandleMediaOpened;
-            mElement.Source = source;
+            mImage.DpiChanged += _HandleDpiChanged;
+            ImageBehavior.AddAnimationLoadedHandler(mImage, _HandleAnimationLoaded);
+            ImageBehavior.SetAutoStart(mImage, false);
+            ImageBehavior.SetRepeatBehavior(mImage, RepeatBehavior.Forever);
+            ImageBehavior.SetAnimatedSource(mImage, new BitmapImage(file.Uri));
 
-            Brush = new VisualBrush(mElement);
-
-            Play();
+            Brush = new VisualBrush(mImage);
         }
 
-        private readonly MediaElement mElement;
+        private readonly Size mDimensions;
+        private readonly Image mImage;
         private readonly TaskCompletionSource<MediaElementControls> mLoadedTask;
+        private ImageAnimationController mController;
         private bool mIsPlaying;
         public Brush Brush { get; }
-        public UIElement Element => mElement;
+        public UIElement Element => mImage;
 
         public bool IsPlaying
         {
@@ -43,26 +50,37 @@ namespace Aspect.UI
 
         public Task<MediaElementControls> LoadedTask => mLoadedTask.Task;
 
-        private void _HandleMediaEnded(object sender, RoutedEventArgs e)
+        private void _HandleAnimationLoaded(object sender, RoutedEventArgs e)
         {
-            mElement.Position = new TimeSpan(0, 0, 1);
+            mController = ImageBehavior.GetAnimationController(mImage);
+            mLoadedTask.SetResult(this);
             Play();
         }
 
-        private void _HandleMediaOpened(object sender, RoutedEventArgs e) => mLoadedTask.SetResult(this);
+        private void _HandleDpiChanged(object sender, DpiChangedEventArgs e)
+        {
+            mImage.Width = mDimensions.Width / e.NewDpi.DpiScaleX;
+            mImage.Height = mDimensions.Height / e.NewDpi.DpiScaleY;
+        }
 
-        public void Dispose() => mElement.MediaEnded -= _HandleMediaEnded;
+        public void Dispose() => ImageBehavior.RemoveAnimationLoadedHandler(mImage, _HandleAnimationLoaded);
 
         public void Pause()
         {
-            mElement.Pause();
-            IsPlaying = false;
+            if (IsPlaying && mController != null)
+            {
+                mController.Pause();
+                IsPlaying = false;
+            }
         }
 
         public void Play()
         {
-            mElement.Play();
-            IsPlaying = true;
+            if (!IsPlaying && mController != null)
+            {
+                mController.Play();
+                IsPlaying = true;
+            }
         }
     }
 }

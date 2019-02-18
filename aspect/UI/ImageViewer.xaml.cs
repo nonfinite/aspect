@@ -238,7 +238,7 @@ namespace Aspect.UI
             if (file.IsAnimated)
             {
                 var dimensions = file.Dimensions;
-                var controls = new MediaElementControls(file.Uri);
+                var controls = new MediaElementControls(file);
                 mMediaElementHolder.Children.Add(controls.Element);
                 return controls.LoadedTask
                     .ContinueWith(t =>
