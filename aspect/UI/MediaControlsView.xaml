@@ -11,13 +11,13 @@
     <Button Click="_PrevFrame" Style="{StaticResource MetroWindowButtonStyle}">
       <iconPacks:PackIconModern Kind="ControlRewindVariant" />
     </Button>
-    <Button Click="_TogglePlayPause" Style="{StaticResource MahApps.Metro.Styles.MetroCircleButtonStyle}" Height="32"
-            Width="32">
+    <Button Click="_TogglePlayPause" Style="{StaticResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+            Height="32" Width="32">
       <Grid>
         <iconPacks:PackIconModern Kind="ControlPlay"
-                                  Visibility="{Binding IsPlaying, Converter={StaticResource ConvertBoolToCollapsedVisible}}" />
+                                  Visibility="{Binding Controls.IsPlaying, Converter={StaticResource ConvertBoolToCollapsedVisible}}" />
         <iconPacks:PackIconModern Kind="ControlPause"
-                                  Visibility="{Binding IsPlaying, Converter={StaticResource ConvertBoolToVisibleCollapsed}}" />
+                                  Visibility="{Binding Controls.IsPlaying, Converter={StaticResource ConvertBoolToVisibleCollapsed}}" />
       </Grid>
     </Button>
     <Button Click="_NextFrame" Style="{StaticResource MetroWindowButtonStyle}">

@@ -86,6 +86,8 @@
     <Compile Include="Models\SortBy.cs" />
     <Compile Include="Services\DbModels\FileRow.cs" />
     <Compile Include="Services\AppRegistrationService.cs" />
+    <Compile Include="Services\Gif\IFrameController.cs" />
+    <Compile Include="Services\Gif\ImageAnimationControllerWrapper.cs" />
     <Compile Include="Services\PersistenceService.cs" />
     <Compile Include="Services\Settings.cs" />
     <Compile Include="Services\ThumbnailService.cs" />
@@ -102,6 +104,7 @@
     <Compile Include="UI\Converters\ParamToNullConverter.cs" />
     <Compile Include="UI\Converters\RatingToByteConverter.cs" />
     <Compile Include="UI\Converters\ValueMapConverter.cs" />
+    <Compile Include="Services\Gif\FrameController.cs" />
     <Compile Include="UI\ImageListView.xaml.cs">
       <DependentUpon>ImageListView.xaml</DependentUpon>
     </Compile>

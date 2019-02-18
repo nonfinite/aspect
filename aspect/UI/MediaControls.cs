@@ -4,9 +4,9 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
-using System.Windows.Threading;
 
 using Aspect.Models;
+using Aspect.Services.Gif;
 using Aspect.Utility;
 
 using WpfAnimatedGif;
@@ -38,24 +38,23 @@ namespace Aspect.UI
         private readonly Size mDimensions;
         private readonly Image mImage;
         private readonly TaskCompletionSource<MediaElementControls> mLoadedTask;
-        private ImageAnimationController mController;
-        private bool mIsPlaying;
+        private IFrameController mControls;
         public Brush Brush { get; }
-        public UIElement Element => mImage;
 
-        public bool IsPlaying
+        public IFrameController Controls
         {
-            get => mIsPlaying;
-            set => Set(ref mIsPlaying, value);
+            get => mControls;
+            private set => Set(ref mControls, value);
         }
 
+        public UIElement Element => mImage;
         public Task<MediaElementControls> LoadedTask => mLoadedTask.Task;
 
         private void _HandleAnimationLoaded(object sender, RoutedEventArgs e)
         {
-            mController = ImageBehavior.GetAnimationController(mImage);
+            Controls = FrameController.Create(ImageBehavior.GetAnimationController(mImage), mImage.Dispatcher);
             mLoadedTask.SetResult(this);
-            Play();
+            Controls.Play();
         }
 
         private void _HandleDpiChanged(object sender, DpiChangedEventArgs e)
@@ -65,52 +64,5 @@ namespace Aspect.UI
         }
 
         public void Dispose() => ImageBehavior.RemoveAnimationLoadedHandler(mImage, _HandleAnimationLoaded);
-
-        public void NextFrame()
-        {
-            if (mController != null)
-            {
-                Pause();
-                mImage.Dispatcher.Invoke(() =>
-                {
-                    var index = (mController.CurrentFrame + 1) % mController.FrameCount;
-                    mController.GotoFrame(index);
-                }, DispatcherPriority.Input);
-            }
-        }
-
-        public void Pause()
-        {
-            if (IsPlaying && mController != null)
-            {
-                mController.Pause();
-                IsPlaying = false;
-            }
-        }
-
-        public void Play()
-        {
-            if (!IsPlaying && mController != null)
-            {
-                mController.Play();
-                IsPlaying = true;
-            }
-        }
-
-        public void PrevFrame()
-        {
-            if (mController != null)
-            {
-                Pause();
-                mImage.Dispatcher.Invoke(() =>
-                {
-                    var index = mController.CurrentFrame == 0
-                        ? mController.FrameCount
-                        : mController.CurrentFrame;
-
-                    mController.GotoFrame(index - 1);
-                }, DispatcherPriority.Input);
-            }
-        }
     }
 }

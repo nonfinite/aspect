@@ -12,17 +12,13 @@ namespace Aspect.UI
 
         public MediaElementControls Controls => DataContext as MediaElementControls;
 
-        private void _NextFrame(object sender, RoutedEventArgs e) => Controls.NextFrame();
+        private void _NextFrame(object sender, RoutedEventArgs e) => Controls.Controls.NextFrame();
 
-        private void _PrevFrame(object sender, RoutedEventArgs e) => Controls.PrevFrame();
+        private void _PrevFrame(object sender, RoutedEventArgs e) => Controls.Controls.PrevFrame();
 
         private void _TogglePlayPause(object sender, RoutedEventArgs e)
         {
-            var controls = Controls;
-            if (controls == null)
-            {
-                return;
-            }
+            var controls = Controls.Controls;
 
             if (controls.IsPlaying)
             {
