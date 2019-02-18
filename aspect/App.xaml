@@ -36,6 +36,9 @@
             <converters:KeyValue From="{StaticResource True}" To="{StaticResource False}" />
             <converters:KeyValue From="{StaticResource False}" To="{StaticResource True}" />
           </converters:ValueMapConverter>
+          <converters:ValueMapConverter x:Key="ConvertNullToCollapsed" ElseTo="{x:Static Visibility.Visible}">
+            <converters:KeyValue From="{x:Null}" To="{x:Static Visibility.Collapsed}" />
+          </converters:ValueMapConverter>
 
           <Style TargetType="iconPacks:PackIconModern" BasedOn="{StaticResource {x:Type iconPacks:PackIconModern}}">
             <Setter Property="VerticalAlignment" Value="Center" />

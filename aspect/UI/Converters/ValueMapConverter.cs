@@ -31,6 +31,8 @@ namespace Aspect.UI.Converters
     [ContentProperty(nameof(Items))]
     public sealed class ValueMapConverter : IValueConverter
     {
+        public object ElseFrom { get; set; }
+        public object ElseTo { get; set; }
         public List<KeyValue> Items { get; set; } = new List<KeyValue>();
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -43,7 +45,7 @@ namespace Aspect.UI.Converters
                 }
             }
 
-            return null;
+            return ElseTo;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -56,7 +58,7 @@ namespace Aspect.UI.Converters
                 }
             }
 
-            return null;
+            return ElseFrom;
         }
     }
 }

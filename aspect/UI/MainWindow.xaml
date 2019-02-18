@@ -141,6 +141,15 @@
       </mah:Flyout>
     </mah:FlyoutsControl>
   </mah:MetroWindow.Flyouts>
-  <ui:ImageViewer x:Name="mImageViewer" File="{Binding FileList.View.CurrentItem}"
-                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+    <ui:ImageViewer Grid.Row="0" x:Name="mImageViewer" File="{Binding FileList.View.CurrentItem}"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+    <ui:MediaControlsView Grid.Row="1" HorizontalAlignment="Center"
+                          DataContext="{Binding ElementName=mImageViewer, Path=MediaControls}"
+                          Visibility="{Binding ElementName=mImageViewer, Path=MediaControls, Converter={StaticResource ConvertNullToCollapsed}}" />
+  </Grid>
 </mah:MetroWindow>

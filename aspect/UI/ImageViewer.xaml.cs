@@ -29,6 +29,10 @@ namespace Aspect.UI
             InitializeComponent();
         }
 
+        public static readonly DependencyProperty MediaControlsProperty = DependencyProperty.Register(
+            "MediaControls", typeof(MediaElementControls), typeof(ImageViewer),
+            new PropertyMetadata(default(MediaElementControls), _HandleMediaControlsChanged));
+
         public static readonly DependencyProperty ImageFitProperty = DependencyProperty.Register(
             "ImageFit", typeof(ImageFit), typeof(ImageViewer),
             new PropertyMetadata(default(ImageFit), _HandleImageFitChanged));
@@ -39,11 +43,8 @@ namespace Aspect.UI
 
         private Brush mBrush;
         private Size mImageSize;
-
         private bool mIsDragStarted = false;
         private Matrix mMatrix;
-
-        private MediaElement mMediaElement;
         private Point mMouseStart = new Point(0, 0);
         private ImageFit mRestoreToImageFit = ImageFit.FitAll;
 
@@ -57,6 +58,12 @@ namespace Aspect.UI
         {
             get => (ImageFit) GetValue(ImageFitProperty);
             set => SetValue(ImageFitProperty, value);
+        }
+
+        public MediaElementControls MediaControls
+        {
+            get => (MediaElementControls) GetValue(MediaControlsProperty);
+            set => SetValue(MediaControlsProperty, value);
         }
 
         private void _FitImage()
@@ -134,19 +141,15 @@ namespace Aspect.UI
             viewer._FitImage();
         }
 
-        private void _HandleMediaEnded(object sender, RoutedEventArgs e)
+        private static void _HandleMediaControlsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var element = ((MediaElement) sender);
-            element.Position = TimeSpan.FromSeconds(1);
-            element.Play();
-        }
-
-        private void _HandleMediaOpened(object sender, RoutedEventArgs e)
-        {
-            var elem = (MediaElement) sender;
-            var tag = (Tuple<TaskCompletionSource<Tuple<Brush, MediaElement, Size>>, Size>) elem.Tag;
-            tag.Item1.SetResult(new Tuple<Brush, MediaElement, Size>(
-                new VisualBrush(elem), elem, tag.Item2));
+            if (e.OldValue is MediaElementControls controls)
+            {
+                var viewer = (ImageViewer) d;
+                viewer.mMediaElementHolder.Children.Remove(controls.Element);
+                controls.Dispose();
+                GC.Collect();
+            }
         }
 
         private void _HandleMouseDown(object sender, MouseButtonEventArgs e)
@@ -206,28 +209,17 @@ namespace Aspect.UI
             if (file == null)
             {
                 mBrush = null;
-                mMediaElement = null;
+                MediaControls = null;
                 return;
             }
 
             mLoadingBar.Visibility = Visibility.Visible;
 
             var result = await _Load(file);
-            var oldMediaElement = mMediaElement;
 
             mBrush = result.Item1;
-            mMediaElement = result.Item2;
+            MediaControls = result.Item2;
             mImageSize = result.Item3;
-
-            if (oldMediaElement != null)
-            {
-                oldMediaElement.MediaOpened -= _HandleMediaOpened;
-                oldMediaElement.MediaEnded -= _HandleMediaEnded;
-                oldMediaElement.Stop();
-                oldMediaElement.Source = null;
-                mMediaElementHolder.Children.Remove(oldMediaElement);
-                GC.Collect();
-            }
 
             mLoadingBar.Visibility = Visibility.Collapsed;
 
@@ -241,29 +233,21 @@ namespace Aspect.UI
             }
         }
 
-        private Task<Tuple<Brush, MediaElement, Size>> _Load(FileData file)
+        private Task<Tuple<Brush, MediaElementControls, Size>> _Load(FileData file)
         {
             if (file.IsAnimated)
             {
                 var dimensions = file.Dimensions;
-                var element = new MediaElement
-                {
-                    Stretch = Stretch.Uniform,
-                    LoadedBehavior = MediaState.Manual
-                };
-                mMediaElementHolder.Children.Add(element);
-                var tcs = new TaskCompletionSource<Tuple<Brush, MediaElement, Size>>();
-                element.Tag = Tuple.Create(tcs, dimensions);
-                element.MediaOpened += _HandleMediaOpened;
-                element.MediaEnded += _HandleMediaEnded;
-                element.Source = file.Uri;
-                element.Play();
-                return tcs.Task;
+                var controls = new MediaElementControls(file.Uri);
+                mMediaElementHolder.Children.Add(controls.Element);
+                return controls.LoadedTask
+                    .ContinueWith(t =>
+                        new Tuple<Brush, MediaElementControls, Size>(t.Result.Brush, t.Result, dimensions));
             }
 
             var image = new BitmapImage(file.Uri);
             var brush = new ImageBrush(image);
-            return Task.FromResult(new Tuple<Brush, MediaElement, Size>(
+            return Task.FromResult(new Tuple<Brush, MediaElementControls, Size>(
                 brush, null, new Size(image.PixelWidth, image.PixelHeight)));
         }
 
