@@ -18,6 +18,8 @@ namespace Aspect.UI
 
         private void _PrevFrame(object sender, RoutedEventArgs e) => Controls.PrevFrame();
 
+        private void _Restart(object sender, RoutedEventArgs e) => Controls.Rewind();
+
         private void _TogglePlayPause(object sender, RoutedEventArgs e)
         {
             var controls = Controls;

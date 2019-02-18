@@ -35,20 +35,17 @@ namespace Aspect.Services.Gif
 
         public override void NextFrame()
         {
-            if (mController != null)
+            Pause();
+            mDispatcher.Invoke(() =>
             {
-                Pause();
-                mDispatcher.Invoke(() =>
-                {
-                    var index = (mController.CurrentFrame + 1) % mController.FrameCount;
-                    mController.GotoFrame(index);
-                }, DispatcherPriority.Input);
-            }
+                var index = (mController.CurrentFrame + 1) % mController.FrameCount;
+                mController.GotoFrame(index);
+            }, DispatcherPriority.Input);
         }
 
         public override void Pause()
         {
-            if (IsPlaying && mController != null)
+            if (IsPlaying)
             {
                 mController.Pause();
                 IsPlaying = false;
@@ -57,7 +54,7 @@ namespace Aspect.Services.Gif
 
         public override void Play()
         {
-            if (!IsPlaying && mController != null)
+            if (!IsPlaying)
             {
                 mController.Play();
                 IsPlaying = true;
@@ -66,18 +63,21 @@ namespace Aspect.Services.Gif
 
         public override void PrevFrame()
         {
-            if (mController != null)
+            Pause();
+            mDispatcher.Invoke(() =>
             {
-                Pause();
-                mDispatcher.Invoke(() =>
-                {
-                    var index = mController.CurrentFrame == 0
-                        ? mController.FrameCount
-                        : mController.CurrentFrame;
+                var index = mController.CurrentFrame == 0
+                    ? mController.FrameCount
+                    : mController.CurrentFrame;
 
-                    mController.GotoFrame(index - 1);
-                }, DispatcherPriority.Input);
-            }
+                mController.GotoFrame(index - 1);
+            }, DispatcherPriority.Input);
+        }
+
+        public override void Rewind()
+        {
+            Pause();
+            mDispatcher.Invoke(() => { mController.GotoFrame(0); }, DispatcherPriority.Input);
         }
 
         private void _HandleCurrentFrameChanged(object sender, EventArgs e) => OnPropertyChanged(nameof(CurrentFrame));

@@ -10,13 +10,17 @@
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="Auto" />
       <ColumnDefinition Width="Auto" />
+      <ColumnDefinition Width="Auto" />
       <ColumnDefinition Width="*" />
       <ColumnDefinition Width="Auto" />
     </Grid.ColumnDefinitions>
-    <Button Grid.Column="0" Click="_PrevFrame" Style="{StaticResource MetroWindowButtonStyle}">
+    <Button Grid.Column="0" Click="_Restart" Style="{StaticResource MetroWindowButtonStyle}">
+      <iconPacks:PackIconModern Kind="ControlRewind" />
+    </Button>
+    <Button Grid.Column="1" Click="_PrevFrame" Style="{StaticResource MetroWindowButtonStyle}">
       <iconPacks:PackIconModern Kind="ControlRewindVariant" />
     </Button>
-    <Button Grid.Column="1" Click="_TogglePlayPause"
+    <Button Grid.Column="2" Click="_TogglePlayPause"
             Style="{StaticResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
             Height="28" Width="28" Margin="2">
       <Grid>
@@ -26,11 +30,11 @@
                                   Visibility="{Binding IsPlaying, Converter={StaticResource ConvertBoolToVisibleCollapsed}}" />
       </Grid>
     </Button>
-    <Slider Grid.Column="2" Minimum="0" Maximum="{Binding MaxFrameNumber}"
+    <Slider Grid.Column="3" Minimum="0" Maximum="{Binding MaxFrameNumber}"
             TickPlacement="None" TickFrequency="1" IsSnapToTickEnabled="True"
             Value="{Binding CurrentFrame, Mode=TwoWay}" Margin="2 0"
-            Style="{StaticResource MahApps.Metro.Styles.Slider.Win10}"/>
-    <Button Grid.Column="3" Click="_NextFrame" Style="{StaticResource MetroWindowButtonStyle}">
+            Style="{StaticResource MahApps.Metro.Styles.Slider.Win10}" />
+    <Button Grid.Column="4" Click="_NextFrame" Style="{StaticResource MetroWindowButtonStyle}">
       <iconPacks:PackIconModern Kind="ControlFastforwardVariant" />
     </Button>
   </Grid>

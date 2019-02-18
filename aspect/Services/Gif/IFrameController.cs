@@ -11,5 +11,6 @@ namespace Aspect.Services.Gif
         void Pause();
         void Play();
         void PrevFrame();
+        void Rewind();
     }
 }

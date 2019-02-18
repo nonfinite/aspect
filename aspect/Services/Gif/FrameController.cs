@@ -33,6 +33,8 @@ namespace Aspect.Services.Gif
 
         public virtual void PrevFrame() => this.Log().Warning("NoOp");
 
+        public virtual void Rewind() => this.Log().Warning("NoOp");
+
         public static IFrameController Create(ImageAnimationController controller, Dispatcher dispatcher)
         {
             if (controller != null)
