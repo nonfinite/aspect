@@ -26,8 +26,10 @@
                                   Visibility="{Binding IsPlaying, Converter={StaticResource ConvertBoolToVisibleCollapsed}}" />
       </Grid>
     </Button>
-    <Slider Grid.Column="2" Minimum="0" Maximum="{Binding FrameCount}"
-            Value="{Binding CurrentFrame, Mode=OneWay}" Margin="2 0" />
+    <Slider Grid.Column="2" Minimum="0" Maximum="{Binding MaxFrameNumber}"
+            TickPlacement="None" TickFrequency="1" IsSnapToTickEnabled="True"
+            Value="{Binding CurrentFrame, Mode=TwoWay}" Margin="2 0"
+            Style="{StaticResource MahApps.Metro.Styles.Slider.Win10}"/>
     <Button Grid.Column="3" Click="_NextFrame" Style="{StaticResource MetroWindowButtonStyle}">
       <iconPacks:PackIconModern Kind="ControlFastforwardVariant" />
     </Button>

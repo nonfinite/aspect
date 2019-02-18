@@ -17,8 +17,21 @@ namespace Aspect.Services.Gif
         private readonly ImageAnimationController mController;
         private readonly Dispatcher mDispatcher;
 
-        public override int CurrentFrame => mController.CurrentFrame;
-        public override int FrameCount => mController.FrameCount;
+        public override int CurrentFrame
+        {
+            get => mController.CurrentFrame;
+            set
+            {
+                if (value != CurrentFrame)
+                {
+                    OnPropertyChanging();
+                    mController.GotoFrame(value % mController.FrameCount);
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public override int MaxFrameNumber => mController.FrameCount - 1;
 
         public override void NextFrame()
         {

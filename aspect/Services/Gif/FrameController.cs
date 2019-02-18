@@ -9,14 +9,20 @@ namespace Aspect.Services.Gif
     public class FrameController : NotifyPropertyChanged, IFrameController
     {
         private bool mIsPlaying;
-        public virtual int CurrentFrame => 0;
-        public virtual int FrameCount => 0;
+
+        public virtual int CurrentFrame
+        {
+            get => 0;
+            set { }
+        }
 
         public bool IsPlaying
         {
             get => mIsPlaying;
             protected set => Set(ref mIsPlaying, value);
         }
+
+        public virtual int MaxFrameNumber => 0;
 
 
         public virtual void NextFrame() => this.Log().Warning("NoOp");

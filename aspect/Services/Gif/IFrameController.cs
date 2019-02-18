@@ -4,9 +4,9 @@ namespace Aspect.Services.Gif
 {
     public interface IFrameController : INotifyPropertyChanged
     {
-        int CurrentFrame { get; }
-        int FrameCount { get; }
+        int CurrentFrame { get; set; }
         bool IsPlaying { get; }
+        int MaxFrameNumber { get; }
         void NextFrame();
         void Pause();
         void Play();
