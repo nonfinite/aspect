@@ -8,6 +8,9 @@
              mc:Ignorable="d" d:DataContext="{d:DesignInstance local:MediaElementControls}"
              d:DesignHeight="450" d:DesignWidth="800">
   <StackPanel Orientation="Horizontal">
+    <Button Click="_PrevFrame" Style="{StaticResource MetroWindowButtonStyle}">
+      <iconPacks:PackIconModern Kind="ControlRewindVariant" />
+    </Button>
     <Button Click="_TogglePlayPause" Style="{StaticResource MahApps.Metro.Styles.MetroCircleButtonStyle}" Height="32"
             Width="32">
       <Grid>
@@ -16,6 +19,9 @@
         <iconPacks:PackIconModern Kind="ControlPause"
                                   Visibility="{Binding IsPlaying, Converter={StaticResource ConvertBoolToVisibleCollapsed}}" />
       </Grid>
+    </Button>
+    <Button Click="_NextFrame" Style="{StaticResource MetroWindowButtonStyle}">
+      <iconPacks:PackIconModern Kind="ControlFastforwardVariant" />
     </Button>
   </StackPanel>
 </UserControl>

@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 using Aspect.Models;
 using Aspect.Utility;
@@ -65,6 +66,19 @@ namespace Aspect.UI
 
         public void Dispose() => ImageBehavior.RemoveAnimationLoadedHandler(mImage, _HandleAnimationLoaded);
 
+        public void NextFrame()
+        {
+            if (mController != null)
+            {
+                Pause();
+                mImage.Dispatcher.Invoke(() =>
+                {
+                    var index = (mController.CurrentFrame + 1) % mController.FrameCount;
+                    mController.GotoFrame(index);
+                }, DispatcherPriority.Input);
+            }
+        }
+
         public void Pause()
         {
             if (IsPlaying && mController != null)
@@ -80,6 +94,22 @@ namespace Aspect.UI
             {
                 mController.Play();
                 IsPlaying = true;
+            }
+        }
+
+        public void PrevFrame()
+        {
+            if (mController != null)
+            {
+                Pause();
+                mImage.Dispatcher.Invoke(() =>
+                {
+                    var index = mController.CurrentFrame == 0
+                        ? mController.FrameCount
+                        : mController.CurrentFrame;
+
+                    mController.GotoFrame(index - 1);
+                }, DispatcherPriority.Input);
             }
         }
     }
