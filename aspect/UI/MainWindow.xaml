@@ -7,7 +7,7 @@
                  xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                  xmlns:ui="clr-namespace:Aspect.UI"
                  xmlns:converters="clr-namespace:Aspect.UI.Converters"
-                 xmlns:behaviors="clr-namespace:Aspect.UI.Behaviors"
+                 xmlns:services="clr-namespace:Aspect.Services"
                  mc:Ignorable="d"
                  d:DataContext="{d:DesignInstance ui:MainViewModel}"
                  Title="{Binding FileList.View.CurrentItem, TargetNullValue=aspect}"
@@ -42,6 +42,11 @@
       <iconPacks:PackIconModern Kind="Warning" Margin="4 0"
                                 ToolTip="Ratings are disabled because the local database could not be written."
                                 Visibility="{Binding FileList.IsPersistenceEnabled, Converter={StaticResource ConvertBoolToCollapsedVisible}, FallbackValue=Collapsed}" />
+      <ToggleButton IsChecked="{Binding Source={x:Static services:Settings.Default}, Path=ShowMediaControls}"
+                    Visibility="{Binding ElementName=mImageViewer, Path=MediaControls, Converter={StaticResource ConvertNullToCollapsed}}"
+                    ToolTip="Toggle media controls">
+        <iconPacks:PackIconModern Kind="ControlEject" />
+      </ToggleButton>
       <Button Content="Open" Command="Open" ToolTip="Open new file/directory" />
       <ToggleButton IsChecked="{Binding IsSlideshowRunning, Mode=TwoWay}">
         <ToggleButton.ToolTip>
@@ -146,10 +151,23 @@
       <RowDefinition Height="*" />
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
-    <ui:ImageViewer Grid.Row="0" x:Name="mImageViewer" File="{Binding FileList.View.CurrentItem}"
+    <ui:ImageViewer Grid.Row="0" Grid.RowSpan="2" x:Name="mImageViewer" File="{Binding FileList.View.CurrentItem}"
                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-    <ui:MediaControlsView Grid.Row="1" HorizontalAlignment="Stretch" MaxWidth="500"
-                          DataContext="{Binding ElementName=mImageViewer, Path=MediaControls.Controls}"
-                          Visibility="{Binding ElementName=mImageViewer, Path=MediaControls, Converter={StaticResource ConvertNullToCollapsed}}" />
+    <Border Grid.Row="1" HorizontalAlignment="Stretch">
+      <Border.Background>
+        <SolidColorBrush Color="{StaticResource WhiteColor}" Opacity="0.5" />
+      </Border.Background>
+      <ui:MediaControlsView HorizontalAlignment="Stretch" MaxWidth="500"
+                            DataContext="{Binding ElementName=mImageViewer, Path=MediaControls.Controls}">
+        <ui:MediaControlsView.Visibility>
+          <MultiBinding Converter="{StaticResource ConvertMultiVisibleAll}">
+            <Binding ElementName="mImageViewer" Path="MediaControls"
+                     Converter="{StaticResource ConvertNullToCollapsed}" />
+            <Binding Source="{x:Static services:Settings.Default}" Path="ShowMediaControls"
+                     Converter="{StaticResource ConvertBoolToVisibleCollapsed}" />
+          </MultiBinding>
+        </ui:MediaControlsView.Visibility>
+      </ui:MediaControlsView>
+    </Border>
   </Grid>
 </mah:MetroWindow>

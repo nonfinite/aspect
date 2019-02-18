@@ -39,6 +39,7 @@
           <converters:ValueMapConverter x:Key="ConvertNullToCollapsed" ElseTo="{x:Static Visibility.Visible}">
             <converters:KeyValue From="{x:Null}" To="{x:Static Visibility.Collapsed}" />
           </converters:ValueMapConverter>
+          <converters:AllVisibleMultiConverter x:Key="ConvertMultiVisibleAll" />
 
           <Style TargetType="iconPacks:PackIconModern" BasedOn="{StaticResource {x:Type iconPacks:PackIconModern}}">
             <Setter Property="VerticalAlignment" Value="Center" />

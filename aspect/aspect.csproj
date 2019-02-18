@@ -101,6 +101,7 @@
     <Compile Include="UI\Behaviors\KeepCurrentItemInViewBehavior.cs" />
     <Compile Include="UI\Behaviors\UpdateSourceOnKeyUpBehavior.cs" />
     <Compile Include="UI\Converters\EnumToBoolConverter.cs" />
+    <Compile Include="UI\Converters\AllVisibleMultiConverter.cs" />
     <Compile Include="UI\Converters\ParamToNullConverter.cs" />
     <Compile Include="UI\Converters\RatingToByteConverter.cs" />
     <Compile Include="UI\Converters\ValueMapConverter.cs" />
