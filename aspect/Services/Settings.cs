@@ -33,12 +33,14 @@ namespace Aspect.Services
         private bool mKeepImageOnScreen;
         private DateTimeOffset mLastUpdateCheck;
         private bool mMaximizeOnStartup;
+        private bool mShowMediaControls;
         private bool mShowThumbnails;
         private byte mSlideshowDurationInSeconds;
         private SortBy mSortBy;
         private TimeSpan mTimeBetweenUpdateChecks;
         private bool mUpdateAutomatically;
         private bool mUpdateToPreRelease;
+
 
         public static Settings Default { get; } = _Load();
 
@@ -71,6 +73,13 @@ namespace Aspect.Services
         }
 
         [IgnoreDataMember] public DateTimeOffset NextUpdateCheck => LastUpdateCheck.Add(TimeBetweenUpdateChecks);
+
+        [DataMember(Name = "ShowMediaControls", IsRequired = false, EmitDefaultValue = true)]
+        public bool ShowMediaControls
+        {
+            get => mShowMediaControls;
+            set => Set(ref mShowMediaControls, value);
+        }
 
         [DataMember(Name = "ShowThumbnails", IsRequired = false, EmitDefaultValue = true)]
         public bool ShowThumbnails
@@ -172,6 +181,7 @@ namespace Aspect.Services
             mKeepImageOnScreen = true;
             mLastUpdateCheck = DateTimeOffset.MinValue;
             mMaximizeOnStartup = true;
+            mShowMediaControls = true;
             mShowThumbnails = false;
             mSlideshowDurationInSeconds = 15;
             mSortBy = SortBy.ModifiedDate;

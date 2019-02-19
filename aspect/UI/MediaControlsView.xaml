@@ -1,0 +1,41 @@
+<UserControl x:Class="Aspect.UI.MediaControlsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:gif="clr-namespace:Aspect.Services.Gif"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance gif:FrameController}">
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="Auto" />
+      <ColumnDefinition Width="Auto" />
+      <ColumnDefinition Width="Auto" />
+      <ColumnDefinition Width="*" />
+      <ColumnDefinition Width="Auto" />
+    </Grid.ColumnDefinitions>
+    <Button Grid.Column="0" Click="_Restart" Style="{StaticResource MetroWindowButtonStyle}">
+      <iconPacks:PackIconModern Kind="ControlRewind" />
+    </Button>
+    <Button Grid.Column="1" Click="_PrevFrame" Style="{StaticResource MetroWindowButtonStyle}">
+      <iconPacks:PackIconModern Kind="ControlRewindVariant" />
+    </Button>
+    <Button Grid.Column="2" Click="_TogglePlayPause"
+            Style="{StaticResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+            Height="28" Width="28" Margin="2">
+      <Grid>
+        <iconPacks:PackIconModern Kind="ControlPlay"
+                                  Visibility="{Binding IsPlaying, Converter={StaticResource ConvertBoolToCollapsedVisible}}" />
+        <iconPacks:PackIconModern Kind="ControlPause"
+                                  Visibility="{Binding IsPlaying, Converter={StaticResource ConvertBoolToVisibleCollapsed}}" />
+      </Grid>
+    </Button>
+    <Slider Grid.Column="3" Minimum="0" Maximum="{Binding MaxFrameNumber}"
+            TickPlacement="None" TickFrequency="1" IsSnapToTickEnabled="True"
+            Value="{Binding CurrentFrame, Mode=TwoWay}" Margin="2 0"
+            Style="{StaticResource MahApps.Metro.Styles.Slider.Win10}" />
+    <Button Grid.Column="4" Click="_NextFrame" Style="{StaticResource MetroWindowButtonStyle}">
+      <iconPacks:PackIconModern Kind="ControlFastforwardVariant" />
+    </Button>
+  </Grid>
+</UserControl>

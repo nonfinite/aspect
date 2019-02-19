@@ -86,6 +86,8 @@
     <Compile Include="Models\SortBy.cs" />
     <Compile Include="Services\DbModels\FileRow.cs" />
     <Compile Include="Services\AppRegistrationService.cs" />
+    <Compile Include="Services\Gif\IFrameController.cs" />
+    <Compile Include="Services\Gif\ImageAnimationControllerWrapper.cs" />
     <Compile Include="Services\PersistenceService.cs" />
     <Compile Include="Services\Settings.cs" />
     <Compile Include="Services\ThumbnailService.cs" />
@@ -99,14 +101,20 @@
     <Compile Include="UI\Behaviors\KeepCurrentItemInViewBehavior.cs" />
     <Compile Include="UI\Behaviors\UpdateSourceOnKeyUpBehavior.cs" />
     <Compile Include="UI\Converters\EnumToBoolConverter.cs" />
+    <Compile Include="UI\Converters\AllVisibleMultiConverter.cs" />
     <Compile Include="UI\Converters\ParamToNullConverter.cs" />
     <Compile Include="UI\Converters\RatingToByteConverter.cs" />
     <Compile Include="UI\Converters\ValueMapConverter.cs" />
+    <Compile Include="Services\Gif\FrameController.cs" />
     <Compile Include="UI\ImageListView.xaml.cs">
       <DependentUpon>ImageListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\ImageViewer.xaml.cs">
       <DependentUpon>ImageViewer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\MediaControls.cs" />
+    <Compile Include="UI\MediaControlsView.xaml.cs">
+      <DependentUpon>MediaControlsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\RatingControl.xaml.cs">
       <DependentUpon>RatingControl.xaml</DependentUpon>
@@ -126,6 +134,10 @@
     <Compile Include="Utility\SplatLoggerProxy.cs" />
     <Compile Include="Utility\TaskEx.cs" />
     <Page Include="UI\ImageListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\MediaControlsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -232,6 +244,9 @@
     </PackageReference>
     <PackageReference Include="System.Data.SQLite.Core">
       <Version>1.0.109.2</Version>
+    </PackageReference>
+    <PackageReference Include="WpfAnimatedGif">
+      <Version>1.4.18</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
