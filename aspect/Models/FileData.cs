@@ -39,6 +39,7 @@ namespace Aspect.Models
         private Rating? mRating;
 
         public Size Dimensions => mDimensions.Value;
+        public long? Id { get; set; }
         public bool IsAnimated => mIsAnimated.Value;
         public DateTime ModifiedInstant { get; }
         public string Name { get; }

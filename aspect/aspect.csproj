@@ -86,10 +86,13 @@
     <Compile Include="Models\SortBy.cs" />
     <Compile Include="Services\DbModels\FileRow.cs" />
     <Compile Include="Services\AppRegistrationService.cs" />
+    <Compile Include="Services\DbModels\FileTagRow.cs" />
+    <Compile Include="Services\DbModels\TagRow.cs" />
     <Compile Include="Services\Gif\IFrameController.cs" />
     <Compile Include="Services\Gif\ImageAnimationControllerWrapper.cs" />
     <Compile Include="Services\PersistenceService.cs" />
     <Compile Include="Services\Settings.cs" />
+    <Compile Include="Services\TagService.cs" />
     <Compile Include="Services\ThumbnailService.cs" />
     <Compile Include="Services\UpdateService.cs" />
     <Compile Include="Services\Win32\Gdi32.cs" />
