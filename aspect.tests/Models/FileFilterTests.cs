@@ -1,6 +1,7 @@
 using System;
 
 using Aspect.Models;
+using Aspect.Services;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -9,24 +10,27 @@ namespace Aspect.Tests.Models
     [TestClass]
     public sealed class FileFilterTests
     {
+        private FileFilter _CreateFilter() =>
+            new FileFilter(TagService.Create(new NoOpPersistenceService()).Result, new NoOpPersistenceService());
+
         [TestMethod]
         public void RatingFilter()
         {
-            var filter = new FileFilter();
+            var filter = _CreateFilter();
 
-            Assert.IsTrue(filter.IsMatch(_WithRating(null)));
-            Assert.IsTrue(filter.IsMatch(_WithRating(1)));
-            Assert.IsTrue(filter.IsMatch(_WithRating(5)));
+            Assert.IsTrue(filter.IsMatch(_WithRating(null)).Result);
+            Assert.IsTrue(filter.IsMatch(_WithRating(1)).Result);
+            Assert.IsTrue(filter.IsMatch(_WithRating(5)).Result);
 
             filter.Rating = new Rating(1);
-            Assert.IsFalse(filter.IsMatch(_WithRating(null)));
-            Assert.IsTrue(filter.IsMatch(_WithRating(1)));
-            Assert.IsTrue(filter.IsMatch(_WithRating(5)));
+            Assert.IsFalse(filter.IsMatch(_WithRating(null)).Result);
+            Assert.IsTrue(filter.IsMatch(_WithRating(1)).Result);
+            Assert.IsTrue(filter.IsMatch(_WithRating(5)).Result);
 
             filter.Rating = new Rating(2);
-            Assert.IsFalse(filter.IsMatch(_WithRating(null)));
-            Assert.IsFalse(filter.IsMatch(_WithRating(1)));
-            Assert.IsTrue(filter.IsMatch(_WithRating(5)));
+            Assert.IsFalse(filter.IsMatch(_WithRating(null)).Result);
+            Assert.IsFalse(filter.IsMatch(_WithRating(1)).Result);
+            Assert.IsTrue(filter.IsMatch(_WithRating(5)).Result);
 
             FileData _WithRating(byte? rating)
             {
@@ -58,10 +62,8 @@ namespace Aspect.Tests.Models
         [DataRow("*mid*", "amia", false)]
         public void TextFilter(string text, string filename, bool isMatch)
         {
-            var filter = new FileFilter
-            {
-                Text = text
-            };
+            var filter = _CreateFilter();
+            filter.Text = text;
             var file = new FileData("C:\\path\\" + filename, DateTime.Now, new FileSize(0));
             Assert.AreEqual(isMatch, filter.IsMatch(file));
         }

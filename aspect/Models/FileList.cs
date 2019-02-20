@@ -21,22 +21,23 @@ namespace Aspect.Models
             mPersistence = persistence;
             TagService = tagService;
 
-            View = CollectionViewSource.GetDefaultView(mFiles);
-            View.Filter = _Filter;
-            _ApplySort(Sort);
-
+            Filter = new FileFilter(tagService, persistence);
             Filter.PropertyChanged += _HandleFilterChanged;
 
             foreach (var file in files)
             {
                 file.PropertyChanged += _HandleFileChanged;
             }
+
+            View = CollectionViewSource.GetDefaultView(mFiles);
+            View.Filter = _Filter;
+            _ApplySort(Sort);
         }
 
         private readonly FileData[] mFiles;
         private readonly IPersistenceService mPersistence;
 
-        public FileFilter Filter { get; } = new FileFilter();
+        public FileFilter Filter { get; }
 
         public bool IsPersistenceEnabled => mPersistence.IsEnabled;
 
@@ -94,7 +95,7 @@ namespace Aspect.Models
                 return false;
             }
 
-            return Filter.IsMatch(file);
+            return Filter.IsMatch(file).Result;
         }
 
         private void _HandleFileChanged(object sender, PropertyChangedEventArgs e)

@@ -11,6 +11,7 @@ namespace Aspect.Services
     {
         bool IsEnabled { get; }
         Task AddTagToFile(FileData file, string tag);
+        Task<long[]> GetFilesMatchingTag(string tag);
         Task<string[]> GetTagsForFile(FileData file);
         Task RemoveTagFromFile(FileData file, string tag);
     }
@@ -34,6 +35,16 @@ namespace Aspect.Services
         {
             var tagId = await _GetTagId(tag);
             await mPersistence.AddTagToFile(file, tagId);
+        }
+
+        public Task<long[]> GetFilesMatchingTag(string tag)
+        {
+            if (!mTagIds.TryGetValue(tag, out var tagId))
+            {
+                return Task.FromResult(new long[0]);
+            }
+
+            return mPersistence.GetFilesWithTag(tagId);
         }
 
         public Task<string[]> GetTagsForFile(FileData file) => mPersistence.GetTagsForFile(file);

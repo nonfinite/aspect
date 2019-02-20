@@ -29,6 +29,7 @@ namespace Aspect.Services
         Task<TagRow[]> GetAllTags();
 
         Task<long> GetFileId(FileData file);
+        Task<long[]> GetFilesWithTag(long tagId);
 
         Task<string[]> GetTagsForFile(FileData file);
 
@@ -96,6 +97,17 @@ SELECT id FROM File WHERE name = @name", new FileRow
                 });
                 file.Id = id;
                 return id;
+            }
+        }
+
+        public async Task<long[]> GetFilesWithTag(long tagId)
+        {
+            using (var connection = _Connect())
+            {
+                var ids = await connection.QueryAsync<long>(
+                    @"SELECT file_id FROM FileTag WHERE tag_id = @TagId",
+                    new {TagId = tagId});
+                return ids.ToArray();
             }
         }
 
@@ -221,11 +233,14 @@ DO UPDATE SET rating = @rating", new
     public sealed class NoOpPersistenceService : IPersistenceService
     {
         public Task AddTagToFile(FileData file, long tagId) => Task.CompletedTask;
+
         public Task<long> CreateTag(string name) => Task.FromResult(0L);
 
         public Task<TagRow[]> GetAllTags() => Task.FromResult(new TagRow[0]);
 
         public Task<long> GetFileId(FileData file) => Task.FromResult(0L);
+
+        public Task<long[]> GetFilesWithTag(long tagId) => Task.FromResult(new long[0]);
 
         public Task<string[]> GetTagsForFile(FileData file) => Task.FromResult(new string[0]);
 
