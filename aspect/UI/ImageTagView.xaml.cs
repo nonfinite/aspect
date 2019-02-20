@@ -1,7 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Threading;
 
 namespace Aspect.UI
 {
@@ -14,26 +13,27 @@ namespace Aspect.UI
 
         public ImageTagViewModel ViewModel => DataContext as ImageTagViewModel;
 
+        private void _FocusOnVisible(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (sender is IInputElement input)
+            {
+                Keyboard.Focus(input);
+            }
+        }
+
         private void _HandleDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (IsVisible)
             {
-                _Refresh();
+                ViewModel?.Refresh();
             }
         }
 
-        private async void _HandleTagTextKeyUp(object sender, KeyEventArgs e)
+        private void _HandleTagTextKeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                var textBox = (TextBox) sender;
-                var tag = textBox.Text;
-                var vm = ViewModel;
-                if (vm != null)
-                {
-                    await vm.AddTag(tag);
-                    textBox.Clear();
-                }
+                ViewModel?.AddTagCommand.Execute();
             }
         }
 
@@ -41,14 +41,8 @@ namespace Aspect.UI
         {
             if (IsVisible)
             {
-                _Refresh();
+                ViewModel?.Refresh();
             }
-        }
-
-        private void _Refresh()
-        {
-            ViewModel?.Refresh();
-            Dispatcher.Invoke(mAddBox.Focus, DispatcherPriority.Input);
         }
     }
 }

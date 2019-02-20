@@ -100,7 +100,7 @@ namespace Aspect.UI
 
         private void _HandleCurrentFileChanged(object sender, EventArgs e)
         {
-            if (FileList?.View.CurrentItem is FileData file)
+            if (FileList?.View.CurrentItem is FileData file && FileList.TagService.IsEnabled)
             {
                 CurrentItemTagViewModel = new ImageTagViewModel(file, FileList.TagService);
             }

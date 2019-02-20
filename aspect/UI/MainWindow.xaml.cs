@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Threading;
 
@@ -30,6 +31,8 @@ namespace Aspect.UI
             }
         }
 
+        private void _CloseTagView(object sender, ExecutedRoutedEventArgs e) => mTagToggleButton.IsChecked = false;
+
         private void _HandleBrowseBack(object sender, ExecutedRoutedEventArgs e) => ViewModel.NavBack();
 
         private void _HandleBrowseForward(object sender, ExecutedRoutedEventArgs e) => ViewModel.NavForward();
@@ -55,6 +58,14 @@ namespace Aspect.UI
                     mImageListFlyout.IsOpenChanged -= _FocusOnOpen;
                     Dispatcher.Invoke(mImageListView.FocusSearchBox, DispatcherPriority.Input);
                 }
+            }
+        }
+
+        private void _Toggle(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (sender is ToggleButton toggle && toggle.IsChecked.HasValue)
+            {
+                toggle.IsChecked = !toggle.IsChecked.Value;
             }
         }
     }

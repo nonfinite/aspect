@@ -29,13 +29,18 @@
     <KeyBinding Key="F" Modifiers="Control" Command="Search" />
     <KeyBinding Key="E" Modifiers="Control" Command="Search" />
     <KeyBinding Key="O" Modifiers="Control" Command="Open" />
+    <KeyBinding Key="T" Modifiers="Control" Command="Open" CommandTarget="{Binding ElementName=mTagToggleButton}" />
   </mah:MetroWindow.InputBindings>
   <mah:MetroWindow.LeftWindowCommands>
     <mah:WindowCommands>
       <ToggleButton x:Name="mSettingsToggleButton" ToolTip="Open settings">
         <iconPacks:PackIconModern Kind="Settings" />
       </ToggleButton>
-      <ToggleButton x:Name="mTagToggleButton" ToolTip="Tags">
+      <ToggleButton x:Name="mTagToggleButton" ToolTip="Tags"
+                    Visibility="{Binding CurrentItemTagViewModel, Converter={StaticResource ConvertNullToCollapsed}}">
+        <ToggleButton.CommandBindings>
+          <CommandBinding Command="Open" Executed="_Toggle" />
+        </ToggleButton.CommandBindings>
         <iconPacks:PackIconModern Kind="SocialTwitterHashtag" />
       </ToggleButton>
     </mah:WindowCommands>
@@ -150,17 +155,29 @@
     </mah:FlyoutsControl>
   </mah:MetroWindow.Flyouts>
   <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="Auto" />
+      <ColumnDefinition Width="*" />
+    </Grid.ColumnDefinitions>
     <Grid.RowDefinitions>
       <RowDefinition Height="*" />
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
-    <ui:ImageViewer Grid.Row="0" Grid.RowSpan="2" x:Name="mImageViewer" File="{Binding FileList.View.CurrentItem}"
+    <ui:ImageViewer Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" x:Name="mImageViewer"
+                    File="{Binding FileList.View.CurrentItem}"
                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-    <ui:ImageTagView Grid.Row="0" Width="300" HorizontalAlignment="Left"
+    <ui:ImageTagView Grid.Row="0" Grid.Column="0" Width="300" HorizontalAlignment="Left"
                      Background="{StaticResource FlyoutBackgroundBrush}"
                      Visibility="{Binding ElementName=mTagToggleButton, Path=IsChecked, Converter={StaticResource ConvertBoolToVisibleCollapsed}}"
-                     DataContext="{Binding CurrentItemTagViewModel}" />
-    <Border Grid.Row="1" HorizontalAlignment="Stretch">
+                     DataContext="{Binding CurrentItemTagViewModel}">
+      <ui:ImageTagView.CommandBindings>
+        <CommandBinding Command="Close" Executed="_CloseTagView" />
+      </ui:ImageTagView.CommandBindings>
+      <ui:ImageTagView.InputBindings>
+        <KeyBinding Key="Escape" Command="Close" />
+      </ui:ImageTagView.InputBindings>
+    </ui:ImageTagView>
+    <Border Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch">
       <Border.Background>
         <SolidColorBrush Color="{StaticResource WhiteColor}" Opacity="0.5" />
       </Border.Background>

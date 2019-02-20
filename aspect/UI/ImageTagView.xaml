@@ -22,9 +22,16 @@
       <RowDefinition Height="Auto" />
       <RowDefinition Height="*" />
     </Grid.RowDefinitions>
-    <TextBox x:Name="mAddBox" Grid.Row="0" Margin="4" KeyUp="_HandleTagTextKeyUp" />
-    <ScrollViewer Grid.Row="1" Margin="4" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-      <ItemsControl ItemsSource="{Binding Source={StaticResource Tags}}">
+    <TextBox Grid.Row="0" Margin="4" KeyUp="_HandleTagTextKeyUp" IsVisibleChanged="_FocusOnVisible"
+             Text="{Binding NewTag, UpdateSourceTrigger=PropertyChanged}" />
+    <Button Grid.Row="0" Style="{StaticResource ChromelessButtonStyle}" HorizontalAlignment="Right"
+            Command="{Binding AddTagCommand}" Margin="4 4 8 4">
+      <iconPacks:PackIconModern Kind="Add" Height="{StaticResource ContentFontSize}"
+                                Width="{StaticResource ContentFontSize}" />
+    </Button>
+    <ScrollViewer Grid.Row="1" Margin="4" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto"
+                  IsTabStop="False">
+      <ItemsControl ItemsSource="{Binding Source={StaticResource Tags}}" IsTabStop="False">
         <ItemsControl.ItemTemplate>
           <DataTemplate>
             <Border>

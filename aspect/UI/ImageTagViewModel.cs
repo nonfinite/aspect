@@ -1,29 +1,52 @@
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
 using Aspect.Models;
 using Aspect.Services;
 using Aspect.UI.Commands;
+using Aspect.Utility;
 
 namespace Aspect.UI
 {
-    public sealed class ImageTagViewModel
+    public sealed class ImageTagViewModel : NotifyPropertyChanged
     {
         public ImageTagViewModel(FileData file, ITagService tagService)
         {
             mFile = file;
             mTagService = tagService;
 
+            AddTagCommand = new DelegateCommand(_AddTag, () => !string.IsNullOrWhiteSpace(NewTag));
             DeleteTagCommand = new DelegateCommand<string>(_DeleteTag);
         }
 
         private readonly FileData mFile;
         private readonly ITagService mTagService;
 
-        public ICommand DeleteTagCommand { get; }
+        private string mNewTag;
+
+        public DelegateCommand AddTagCommand { get; }
+
+        public DelegateCommand<string> DeleteTagCommand { get; }
+
+        public string NewTag
+        {
+            get => mNewTag;
+            set
+            {
+                if (Set(ref mNewTag, value))
+                {
+                    AddTagCommand.RaiseCanExecuteChanged();
+                }
+            }
+        }
 
         public ObservableCollection<string> Tags { get; } = new ObservableCollection<string>();
+
+        private async void _AddTag()
+        {
+            await AddTag(NewTag);
+            NewTag = "";
+        }
 
         private async void _DeleteTag(string tag)
         {
