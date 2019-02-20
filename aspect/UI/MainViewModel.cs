@@ -32,6 +32,8 @@ namespace Aspect.UI
         }
 
         private readonly DispatcherTimer mSlideshowTimer;
+
+        private ImageTagViewModel mCurrentItemTagViewModel;
         private FileList mFileList;
         private byte mSlideshowSecondsRemaining;
         private Task mUpdateTask;
@@ -44,11 +46,37 @@ namespace Aspect.UI
             Tuple.Create(SortBy.Size, "Size"),
         };
 
+        public ImageTagViewModel CurrentItemTagViewModel
+        {
+            get => mCurrentItemTagViewModel;
+            private set => Set(ref mCurrentItemTagViewModel, value);
+        }
+
         public FileList FileList
         {
             get => mFileList;
-            private set => Set(ref mFileList, value);
+            private set
+            {
+                if (mFileList != value)
+                {
+                    if (mFileList != null)
+                    {
+                        mFileList.View.CurrentChanged -= _HandleCurrentFileChanged;
+                    }
+
+                    mFileList = value;
+                    OnPropertyChanged();
+
+                    if (value != null)
+                    {
+                        value.View.CurrentChanged += _HandleCurrentFileChanged;
+                    }
+
+                    _HandleCurrentFileChanged(FileList, EventArgs.Empty);
+                }
+            }
         }
+
 
         public bool IsSlideshowRunning
         {
@@ -57,7 +85,6 @@ namespace Aspect.UI
             {
                 if (IsSlideshowRunning != value)
                 {
-                    OnPropertyChanging();
                     _ResetSlideshowTimer();
                     mSlideshowTimer.IsEnabled = value;
                     OnPropertyChanged();
@@ -69,6 +96,18 @@ namespace Aspect.UI
         {
             get => mSlideshowSecondsRemaining;
             private set => Set(ref mSlideshowSecondsRemaining, value);
+        }
+
+        private void _HandleCurrentFileChanged(object sender, EventArgs e)
+        {
+            if (FileList?.View.CurrentItem is FileData file)
+            {
+                CurrentItemTagViewModel = new ImageTagViewModel(file, FileList.TagService);
+            }
+            else
+            {
+                CurrentItemTagViewModel = null;
+            }
         }
 
         private void _HandleSlideshowTick(object sender, EventArgs e)
@@ -161,8 +200,8 @@ namespace Aspect.UI
             var currentDir = Path.GetDirectoryName(currentFile);
 
             var supportedExtensions = string.Join(";", FileData.SupportedFileExtensions
-                                                      .Select(ext => $"*{ext}")
-                                                      .OrderBy(ext => ext));
+                .Select(ext => $"*{ext}")
+                .OrderBy(ext => ext));
             var ofd = new OpenFileDialog
             {
                 CheckFileExists = true,

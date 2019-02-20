@@ -15,11 +15,11 @@ namespace Aspect.Models
 {
     public sealed class FileList : NotifyPropertyChanged
     {
-        private FileList(FileData[] files, IPersistenceService persistence, ITagService tags)
+        private FileList(FileData[] files, IPersistenceService persistence, ITagService tagService)
         {
             mFiles = files;
             mPersistence = persistence;
-            mTags = tags;
+            TagService = tagService;
 
             View = CollectionViewSource.GetDefaultView(mFiles);
             View.Filter = _Filter;
@@ -35,7 +35,6 @@ namespace Aspect.Models
 
         private readonly FileData[] mFiles;
         private readonly IPersistenceService mPersistence;
-        private readonly ITagService mTags;
 
         public FileFilter Filter { get; } = new FileFilter();
 
@@ -54,6 +53,8 @@ namespace Aspect.Models
                 }
             }
         }
+
+        public ITagService TagService { get; }
 
         public ICollectionView View { get; }
 
@@ -134,7 +135,7 @@ namespace Aspect.Models
 
             var persistence = await PersistenceService.Create(directoryPath).DontCaptureContext();
             await persistence.InitializeFiles(files).DontCaptureContext();
-            var tags = await TagService.Create(persistence);
+            var tags = await Services.TagService.Create(persistence);
 
             return Option.Some(new FileList(files.ToArray(), persistence, tags));
         }

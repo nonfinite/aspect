@@ -35,6 +35,9 @@
       <ToggleButton x:Name="mSettingsToggleButton" ToolTip="Open settings">
         <iconPacks:PackIconModern Kind="Settings" />
       </ToggleButton>
+      <ToggleButton x:Name="mTagToggleButton" ToolTip="Tags">
+        <iconPacks:PackIconModern Kind="SocialTwitterHashtag" />
+      </ToggleButton>
     </mah:WindowCommands>
   </mah:MetroWindow.LeftWindowCommands>
   <mah:MetroWindow.RightWindowCommands>
@@ -153,6 +156,10 @@
     </Grid.RowDefinitions>
     <ui:ImageViewer Grid.Row="0" Grid.RowSpan="2" x:Name="mImageViewer" File="{Binding FileList.View.CurrentItem}"
                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+    <ui:ImageTagView Grid.Row="0" Width="300" HorizontalAlignment="Left"
+                     Background="{StaticResource FlyoutBackgroundBrush}"
+                     Visibility="{Binding ElementName=mTagToggleButton, Path=IsChecked, Converter={StaticResource ConvertBoolToVisibleCollapsed}}"
+                     DataContext="{Binding CurrentItemTagViewModel}" />
     <Border Grid.Row="1" HorizontalAlignment="Stretch">
       <Border.Background>
         <SolidColorBrush Color="{StaticResource WhiteColor}" Opacity="0.5" />

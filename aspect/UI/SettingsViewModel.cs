@@ -56,7 +56,6 @@ namespace Aspect.UI
             {
                 if (KeepImageOnScreen != value)
                 {
-                    OnPropertyChanging();
                     Settings.KeepImageOnScreen = value;
                     OnPropertyChanged();
                 }
@@ -70,7 +69,6 @@ namespace Aspect.UI
             {
                 if (MaximizeOnStartup != value)
                 {
-                    OnPropertyChanging();
                     Settings.MaximizeOnStartup = value;
                     OnPropertyChanged();
                 }
@@ -97,7 +95,6 @@ namespace Aspect.UI
             {
                 if (ShowThumbnails != value)
                 {
-                    OnPropertyChanging();
                     Settings.ShowThumbnails = value;
                     OnPropertyChanged();
                 }
@@ -111,7 +108,6 @@ namespace Aspect.UI
             {
                 if (SlideshowDurationInSeconds != value)
                 {
-                    OnPropertyChanging();
                     Settings.SlideshowDurationInSeconds = value;
                     OnPropertyChanged();
                 }
@@ -125,7 +121,6 @@ namespace Aspect.UI
             {
                 if (StableUpdatesOnly != value)
                 {
-                    OnPropertyChanging();
                     Settings.UpdateToPreRelease = !value;
                     OnPropertyChanged();
                 }
@@ -139,7 +134,6 @@ namespace Aspect.UI
             {
                 if (UpdateAutomatically != value)
                 {
-                    OnPropertyChanging();
                     Settings.UpdateAutomatically = value;
                     OnPropertyChanged();
                 }

@@ -24,7 +24,6 @@ namespace Aspect.Services.Gif
             {
                 if (value != CurrentFrame)
                 {
-                    OnPropertyChanging();
                     mController.GotoFrame(value % mController.FrameCount);
                     OnPropertyChanged();
                 }
