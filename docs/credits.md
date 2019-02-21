@@ -12,3 +12,4 @@ The following 3rd party libraries are used by this application under the referen
 * [Squirrel.Windows](https://github.com/squirrel/Squirrel.Windows) - [MIT License](https://github.com/Squirrel/Squirrel.Windows/blob/master/COPYING)
 * [SQLite](https://system.data.sqlite.org/index.html/doc/trunk/www/index.wiki) - [Public Domain](https://www.sqlite.org/copyright.html)
 * [WPFAnimatedGif](https://github.com/XamlAnimatedGif/WpfAnimatedGif) - [Apache License 2.0](https://github.com/XamlAnimatedGif/WpfAnimatedGif/blob/master/LICENSE.txt)
+* [WPFTextBoxAutoComplete](https://github.com/Nimgoble/WPFTextBoxAutoComplete) - [MIT License](https://github.com/Nimgoble/WPFTextBoxAutoComplete/blob/master/License.txt)

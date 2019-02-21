@@ -17,6 +17,8 @@ namespace Aspect.UI
 
             AddTagCommand = new DelegateCommand(_AddTag, () => !string.IsNullOrWhiteSpace(NewTag));
             DeleteTagCommand = new DelegateCommand<string>(_DeleteTag);
+
+            AvailableTags = new ObservableCollection<string>();
         }
 
         private readonly FileData mFile;
@@ -25,6 +27,8 @@ namespace Aspect.UI
         private string mNewTag;
 
         public DelegateCommand AddTagCommand { get; }
+
+        public ObservableCollection<string> AvailableTags { get; }
 
         public DelegateCommand<string> DeleteTagCommand { get; }
 
@@ -52,6 +56,7 @@ namespace Aspect.UI
         {
             if (Tags.Remove(tag))
             {
+                AvailableTags.Add(tag);
                 await mTagService.RemoveTagFromFile(mFile, tag);
             }
         }
@@ -66,17 +71,25 @@ namespace Aspect.UI
             if (!Tags.Contains(tag))
             {
                 Tags.Add(tag);
+                AvailableTags.Remove(tag);
                 await mTagService.AddTagToFile(mFile, tag);
             }
         }
 
         public async Task Refresh()
         {
+            AvailableTags.Clear();
+            foreach (var tag in mTagService.KnownTags)
+            {
+                AvailableTags.Add(tag);
+            }
+
             Tags.Clear();
             var tags = await mTagService.GetTagsForFile(mFile);
             foreach (var tag in tags)
             {
                 Tags.Add(tag);
+                AvailableTags.Remove(tag);
             }
         }
     }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Aspect.Models;
@@ -10,6 +11,7 @@ namespace Aspect.Services
     public interface ITagService
     {
         bool IsEnabled { get; }
+        string[] KnownTags { get; }
         Task AddTagToFile(FileData file, string tag);
         Task<long[]> GetFilesMatchingTag(string tag);
         Task<string[]> GetTagsForFile(FileData file);
@@ -50,6 +52,8 @@ namespace Aspect.Services
         public Task<string[]> GetTagsForFile(FileData file) => mPersistence.GetTagsForFile(file);
 
         public bool IsEnabled => mPersistence.IsEnabled;
+
+        public string[] KnownTags => mTagIds.Keys.ToArray();
 
         public async Task RemoveTagFromFile(FileData file, string tag)
         {

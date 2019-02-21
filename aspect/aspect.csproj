@@ -106,7 +106,6 @@
     <Compile Include="UI\Commands\DelegateCommand.cs" />
     <Compile Include="UI\Converters\EnumToBoolConverter.cs" />
     <Compile Include="UI\Converters\AllVisibleMultiConverter.cs" />
-    <Compile Include="UI\Converters\ImageTagViewModelFactory.cs" />
     <Compile Include="UI\Converters\ParamToNullConverter.cs" />
     <Compile Include="UI\Converters\RatingToByteConverter.cs" />
     <Compile Include="UI\Converters\ValueMapConverter.cs" />
@@ -260,6 +259,9 @@
     </PackageReference>
     <PackageReference Include="WpfAnimatedGif">
       <Version>1.4.18</Version>
+    </PackageReference>
+    <PackageReference Include="WPFTextBoxAutoComplete">
+      <Version>1.0.5</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

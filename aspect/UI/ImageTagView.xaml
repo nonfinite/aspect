@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Aspect.UI"
              xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:tbac="clr-namespace:WPFTextBoxAutoComplete;assembly=WPFTextBoxAutoComplete"
              mc:Ignorable="d" d:DataContext="{d:DesignInstance local:ImageTagViewModel}"
              d:DesignHeight="450" d:DesignWidth="800"
              DataContextChanged="_HandleDataContextChanged"
@@ -23,7 +24,9 @@
       <RowDefinition Height="*" />
     </Grid.RowDefinitions>
     <TextBox Grid.Row="0" Margin="4" KeyUp="_HandleTagTextKeyUp" IsVisibleChanged="_FocusOnVisible"
-             Text="{Binding NewTag, UpdateSourceTrigger=PropertyChanged}" />
+             Text="{Binding NewTag, UpdateSourceTrigger=PropertyChanged}"
+             tbac:AutoCompleteBehavior.AutoCompleteItemsSource="{Binding AvailableTags}"
+             tbac:AutoCompleteBehavior.AutoCompleteStringComparison="OrdinalIgnoreCase" />
     <Button Grid.Row="0" Style="{StaticResource ChromelessButtonStyle}" HorizontalAlignment="Right"
             Command="{Binding AddTagCommand}" Margin="4 4 8 4">
       <iconPacks:PackIconModern Kind="Add" Height="{StaticResource ContentFontSize}"
