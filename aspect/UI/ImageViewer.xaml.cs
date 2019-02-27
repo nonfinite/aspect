@@ -235,9 +235,9 @@ namespace Aspect.UI
 
         private Task<Tuple<Brush, MediaElementControls, Size>> _Load(FileData file)
         {
-            if (file.IsAnimated)
+            if (file.Metadata.IsAnimated)
             {
-                var dimensions = file.Dimensions;
+                var dimensions = file.Metadata.Dimensions;
                 var controls = new MediaElementControls(file);
                 mMediaElementHolder.Children.Add(controls.Element);
                 return controls.LoadedTask

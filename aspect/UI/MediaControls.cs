@@ -19,12 +19,12 @@ namespace Aspect.UI
         {
             mLoadedTask = new TaskCompletionSource<MediaElementControls>();
 
-            mDimensions = file.Dimensions;
+            mDimensions = file.Metadata.Dimensions;
             mImage = new Image
             {
                 Stretch = Stretch.Uniform,
-                Width = file.Dimensions.Width,
-                Height = file.Dimensions.Height,
+                Width = file.Metadata.Dimensions.Width,
+                Height = file.Metadata.Dimensions.Height,
             };
             mImage.DpiChanged += _HandleDpiChanged;
             ImageBehavior.AddAnimationLoadedHandler(mImage, _HandleAnimationLoaded);
