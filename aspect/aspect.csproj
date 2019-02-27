@@ -82,6 +82,8 @@
     <Compile Include="Models\FileFilter.cs" />
     <Compile Include="Models\FileList.cs" />
     <Compile Include="Models\FileSize.cs" />
+    <Compile Include="Models\ImageMetadata.cs" />
+    <Compile Include="Models\ImageOrientation.cs" />
     <Compile Include="Models\Rating.cs" />
     <Compile Include="Models\SortBy.cs" />
     <Compile Include="Services\DbModels\FileRow.cs" />
@@ -127,6 +129,7 @@
       <DependentUpon>ThumbnailImage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utility\DoubleEx.cs" />
+    <Compile Include="Utility\ImageMetadataEx.cs" />
     <Compile Include="Utility\LazyEx.cs" />
     <Compile Include="Utility\LogEx.cs" />
     <Compile Include="Utility\MathEx.cs" />

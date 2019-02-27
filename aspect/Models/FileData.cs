@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Windows;
-using System.Windows.Media.Imaging;
 
 using Aspect.Utility;
 
@@ -19,8 +17,7 @@ namespace Aspect.Models
             ModifiedInstant = modifiedInstant;
             Size = size;
 
-            mIsAnimated = new Lazy<bool>(_GetIsAnimated);
-            mDimensions = new Lazy<Size>(_GetDimensions);
+            mMetadata = new Lazy<ImageMetadata>(() => new ImageMetadata(Uri));
         }
 
         public static readonly HashSet<string> SupportedFileExtensions = new HashSet<string>(new[]
@@ -33,13 +30,11 @@ namespace Aspect.Models
             ".webp",
         }, StringComparer.OrdinalIgnoreCase);
 
-        private readonly Lazy<Size> mDimensions;
-        private readonly Lazy<bool> mIsAnimated;
+        private readonly Lazy<ImageMetadata> mMetadata;
+
         private long mRandomKey;
         private Rating? mRating;
-
-        public Size Dimensions => mDimensions.Value;
-        public bool IsAnimated => mIsAnimated.Value;
+        public ImageMetadata Metadata => mMetadata.Value;
         public DateTime ModifiedInstant { get; }
         public string Name { get; }
 
@@ -58,24 +53,6 @@ namespace Aspect.Models
         public FileSize Size { get; }
 
         public Uri Uri { get; }
-
-        private Size _GetDimensions()
-        {
-            var decoder = BitmapDecoder.Create(Uri, BitmapCreateOptions.DelayCreation, BitmapCacheOption.OnDemand);
-            return new Size(decoder.Frames[0].PixelWidth, decoder.Frames[0].PixelHeight);
-        }
-
-        private bool _GetIsAnimated()
-        {
-            var ext = Path.GetExtension(Uri.LocalPath);
-            if (".gif".Equals(ext, StringComparison.OrdinalIgnoreCase))
-            {
-                var decoder = new GifBitmapDecoder(Uri, BitmapCreateOptions.None, BitmapCacheOption.None);
-                return decoder.Frames.Count > 1;
-            }
-
-            return false;
-        }
 
         private static Uri _PathToUri(string path) => new Uri(Path.GetFullPath(path));
 

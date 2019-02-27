@@ -1,5 +1,6 @@
 # Version 1
 
+* 1.5.0 - Images display correctly with exif rotation.
 * 1.4.0 - Added playback controls to animated gifs.
 * 1.3.1 - Fixed display of progress spinner while loading thumbnails to be completely visible.
 * 1.3.0 - Added support for webp images.

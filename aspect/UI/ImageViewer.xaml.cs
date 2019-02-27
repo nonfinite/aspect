@@ -66,6 +66,33 @@ namespace Aspect.UI
             set => SetValue(MediaControlsProperty, value);
         }
 
+        private Size _ApplyOrientation(FileData file, Brush brush, Size size)
+        {
+            switch (file.Metadata.Orientation)
+            {
+                case ImageOrientation.Rotate90:
+                    brush.RelativeTransform = new RotateTransform(90, 0.5, 0.5);
+                    size = new Size(size.Height, size.Width);
+                    break;
+                case ImageOrientation.Rotate180:
+                    brush.RelativeTransform = new RotateTransform(180, 0.5, 0.5);
+                    break;
+                case ImageOrientation.Rotate270:
+                    brush.RelativeTransform = new RotateTransform(270, 0.5, 0.5);
+                    size = new Size(size.Height, size.Width);
+                    break;
+                case ImageOrientation.Normal:
+                    break;
+                default:
+                    this.Log().Warning(
+                        "Unsupported {Orientation} for {File}",
+                        file.Metadata.Orientation, file.Uri);
+                    break;
+            }
+
+            return size;
+        }
+
         private void _FitImage()
         {
             var fit = ImageFit;
@@ -235,9 +262,9 @@ namespace Aspect.UI
 
         private Task<Tuple<Brush, MediaElementControls, Size>> _Load(FileData file)
         {
-            if (file.IsAnimated)
+            if (file.Metadata.IsAnimated)
             {
-                var dimensions = file.Dimensions;
+                var dimensions = file.Metadata.Dimensions;
                 var controls = new MediaElementControls(file);
                 mMediaElementHolder.Children.Add(controls.Element);
                 return controls.LoadedTask
@@ -247,8 +274,11 @@ namespace Aspect.UI
 
             var image = new BitmapImage(file.Uri);
             var brush = new ImageBrush(image);
-            return Task.FromResult(new Tuple<Brush, MediaElementControls, Size>(
-                brush, null, new Size(image.PixelWidth, image.PixelHeight)));
+            var size = new Size(image.PixelWidth, image.PixelHeight);
+
+            size = _ApplyOrientation(file, brush, size);
+
+            return Task.FromResult(new Tuple<Brush, MediaElementControls, Size>(brush, null, size));
         }
 
         private double _LockBounds(double low, double high, double boundLow, double boundHigh, double current)
