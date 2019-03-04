@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Threading;
 
+using Aspect.Models;
 using Aspect.Services;
 using Aspect.UI;
 using Aspect.Utility;
@@ -37,6 +38,8 @@ namespace Aspect
                 fileLogLevel = LogEventLevel.Warning;
             }
 
+            InMemoryLog.Instance.LevelSwitch.MinimumLevel = fileLogLevel;
+
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
                 .Enrich.FromLogContext()
@@ -44,6 +47,7 @@ namespace Aspect
                 .WriteTo.File(logFile, fileLogLevel, rollOnFileSizeLimit: true, fileSizeLimitBytes: 20 * BYTES_PER_MB,
                     outputTemplate:
                     "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {SourceContext} => {Message:lj}{NewLine}{Exception}")
+                .WriteTo.Sink(InMemoryLog.Instance, levelSwitch: InMemoryLog.Instance.LevelSwitch)
                 .CreateLogger();
 
             Locator.CurrentMutable.RegisterConstant(new SplatLoggerProxy(), typeof(ILogger));

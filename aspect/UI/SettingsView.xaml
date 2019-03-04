@@ -77,6 +77,11 @@
             <Button Content="Check for updates..." Click="_HandleCheckForUpdatesClick" />
           </StackPanel>
         </StackPanel>
+
+        <Border Style="{StaticResource Spacer}" />
+
+        <Button Content="View Logs..." Command="NavigateJournal"
+                CommandTarget="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" />
       </StackPanel>
     </ScrollViewer>
     <ScrollViewer Grid.Row="0" Grid.Column="2"

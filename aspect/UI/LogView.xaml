@@ -1,0 +1,68 @@
+<mah:MetroWindow x:Class="Aspect.UI.LogView"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:local="clr-namespace:Aspect.UI"
+                 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:events="clr-namespace:Serilog.Events;assembly=Serilog"
+                 xmlns:parsing="clr-namespace:Serilog.Parsing;assembly=Serilog"
+                 xmlns:converters="clr-namespace:Aspect.UI.Converters"
+                 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                 xmlns:behaviors="clr-namespace:Aspect.UI.Behaviors"
+                 mc:Ignorable="d"
+                 Title="Logs" Width="600" Height="300">
+  <mah:MetroWindow.DataContext>
+    <local:LogViewModel />
+  </mah:MetroWindow.DataContext>
+  <Grid>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+      <ItemsControl ItemsSource="{Binding Path=Events}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate DataType="events:LogEvent">
+            <Grid Margin="4 2">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="Level" />
+                <ColumnDefinition Width="8" />
+                <ColumnDefinition Width="*" />
+              </Grid.ColumnDefinitions>
+              <TextBlock Grid.Column="0" Text="{Binding Level}" />
+
+              <ItemsControl Grid.Column="2" ItemsSource="{Binding Path=MessageTemplate.Tokens}">
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" />
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.Resources>
+                  <converters:PropertyTokenToStringConverter x:Key="ConvertPropertyTokenToString" />
+                  <DataTemplate DataType="{x:Type parsing:TextToken}">
+                    <TextBlock Text="{Binding Text}" />
+                  </DataTemplate>
+                  <DataTemplate DataType="{x:Type parsing:PropertyToken}">
+                    <TextBlock Foreground="{StaticResource AccentColorBrush3}">
+                      <i:Interaction.Behaviors>
+                        <behaviors:RemoveEmptyRunBehavior />
+                      </i:Interaction.Behaviors>
+                      <Run Text="{Binding PropertyName, Mode=OneWay, StringFormat='{}[{0}: '}" />
+                      <Run Foreground="{StaticResource AccentColorBrush}">
+                        <Run.Text>
+                          <MultiBinding Converter="{StaticResource ConvertPropertyTokenToString}">
+                            <Binding Path="." />
+                            <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=ItemsControl}"
+                                     Path="DataContext" />
+                          </MultiBinding>
+                        </Run.Text>
+                      </Run>
+                      <Run Text="]" />
+                    </TextBlock>
+                  </DataTemplate>
+                </ItemsControl.Resources>
+              </ItemsControl>
+            </Grid>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+  </Grid>
+</mah:MetroWindow>

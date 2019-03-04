@@ -22,6 +22,7 @@
     <CommandBinding Command="BrowseForward" Executed="_HandleBrowseForward" />
     <CommandBinding Command="Open" Executed="_HandleOpen" />
     <CommandBinding Command="Search" Executed="_HandleSearch" />
+    <CommandBinding Command="NavigateJournal" Executed="_HandleNavigateJournal" />
   </mah:MetroWindow.CommandBindings>
   <mah:MetroWindow.InputBindings>
     <KeyBinding Key="Right" Command="BrowseForward" />
@@ -29,6 +30,7 @@
     <KeyBinding Key="F" Modifiers="Control" Command="Search" />
     <KeyBinding Key="E" Modifiers="Control" Command="Search" />
     <KeyBinding Key="O" Modifiers="Control" Command="Open" />
+    <KeyBinding Key="L" Modifiers="Control+Shift" Command="NavigateJournal" />
   </mah:MetroWindow.InputBindings>
   <mah:MetroWindow.LeftWindowCommands>
     <mah:WindowCommands>

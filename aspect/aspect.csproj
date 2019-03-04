@@ -84,6 +84,7 @@
     <Compile Include="Models\FileSize.cs" />
     <Compile Include="Models\ImageMetadata.cs" />
     <Compile Include="Models\ImageOrientation.cs" />
+    <Compile Include="Models\InMemoryLog.cs" />
     <Compile Include="Models\Rating.cs" />
     <Compile Include="Models\SortBy.cs" />
     <Compile Include="Services\DbModels\FileRow.cs" />
@@ -101,10 +102,12 @@
     <Compile Include="Services\Win32\Shell32.cs" />
     <Compile Include="Services\Win32\ThumbnailOptions.cs" />
     <Compile Include="UI\Behaviors\KeepCurrentItemInViewBehavior.cs" />
+    <Compile Include="UI\Behaviors\RemoveEmptyRunBehavior.cs" />
     <Compile Include="UI\Behaviors\UpdateSourceOnKeyUpBehavior.cs" />
     <Compile Include="UI\Converters\EnumToBoolConverter.cs" />
     <Compile Include="UI\Converters\AllVisibleMultiConverter.cs" />
     <Compile Include="UI\Converters\ParamToNullConverter.cs" />
+    <Compile Include="UI\Converters\PropertyTokenToStringConverter.cs" />
     <Compile Include="UI\Converters\RatingToByteConverter.cs" />
     <Compile Include="UI\Converters\ValueMapConverter.cs" />
     <Compile Include="Services\Gif\FrameController.cs" />
@@ -114,6 +117,10 @@
     <Compile Include="UI\ImageViewer.xaml.cs">
       <DependentUpon>ImageViewer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\LogView.xaml.cs">
+      <DependentUpon>LogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\LogViewModel.cs" />
     <Compile Include="UI\MediaControls.cs" />
     <Compile Include="UI\MediaControlsView.xaml.cs">
       <DependentUpon>MediaControlsView.xaml</DependentUpon>
@@ -137,6 +144,10 @@
     <Compile Include="Utility\SplatLoggerProxy.cs" />
     <Compile Include="Utility\TaskEx.cs" />
     <Page Include="UI\ImageListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\LogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

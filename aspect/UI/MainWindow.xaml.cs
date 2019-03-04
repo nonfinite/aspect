@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -33,6 +34,24 @@ namespace Aspect.UI
         private void _HandleBrowseBack(object sender, ExecutedRoutedEventArgs e) => ViewModel.NavBack();
 
         private void _HandleBrowseForward(object sender, ExecutedRoutedEventArgs e) => ViewModel.NavForward();
+
+        private void _HandleNavigateJournal(object sender, ExecutedRoutedEventArgs e)
+        {
+            var logView = OwnedWindows.OfType<LogView>().FirstOrDefault();
+
+            if (logView == null)
+            {
+                logView = new LogView {Owner = this};
+                logView.Show();
+            }
+
+            if (logView.WindowState == WindowState.Minimized)
+            {
+                logView.WindowState = WindowState.Normal;
+            }
+
+            logView.Activate();
+        }
 
         private async void _HandleOpen(object sender, RoutedEventArgs e) => await ViewModel.Open();
 
