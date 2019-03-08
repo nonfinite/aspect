@@ -21,6 +21,8 @@ namespace Aspect
 {
     public partial class App : Application
     {
+        public static event DispatcherUnhandledExceptionEventHandler FirstChanceDispatcherException;
+
         private static void _ConfigureLogging()
         {
             const long BYTES_PER_MB = 1024 * 1024;
@@ -51,7 +53,16 @@ namespace Aspect
 
         private void _HandleDispatcherException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            LogEx.Log(this).Error(e.Exception, "Unhandled dispatcher exception");
+            var log = LogEx.Log(this);
+            log.Error(e.Exception, "Unhandled dispatcher exception");
+
+            FirstChanceDispatcherException?.Invoke(this, e);
+
+            if (e.Handled)
+            {
+                log.Information("Exception handled by first chance handler");
+                return;
+            }
 
             if (MainWindow is MetroWindow window)
             {
