@@ -10,5 +10,6 @@
     <MenuItem Header="File" Click="_CopyFile" />
     <MenuItem Header="Path" Click="_CopyPath" />
   </MenuItem>
+  <MenuItem Header="Open Containing Folder" Click="_OpenContainingFolder" />
   <MenuItem Header="Properties" Click="_ShowProperties" />
 </ContextMenu>
