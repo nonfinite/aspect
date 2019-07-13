@@ -11,29 +11,33 @@
       </Grid.RowDefinitions>
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="Auto" />
         <ColumnDefinition Width="*" />
         <ColumnDefinition Width="Auto" />
       </Grid.ColumnDefinitions>
-      <local:ThumbnailImage Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" FilePath="{Binding Uri}"
+      <local:ThumbnailImage Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" FilePath="{Binding Uri}"
                             Width="44" Height="44" VerticalAlignment="Center" Margin="0 0 4 0"
                             Visibility="{Binding Source={x:Static services:Settings.Default}, Path=ShowThumbnails, Converter={StaticResource ConvertBoolToVisibleCollapsed}}" />
 
-      <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Name}"
+      <CheckBox Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" IsChecked="{Binding IsSelected}"
+                Visibility="{Binding Source={x:Static services:Settings.Default}, Path=MultiImageSelection, Converter={StaticResource ConvertBoolToVisibleCollapsed}}" />
+
+      <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Name}"
                  TextTrimming="CharacterEllipsis"
                  FontSize="18" FontFamily="{StaticResource ContentFontFamily}"
                  VerticalAlignment="Center" />
-      <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Rating}" HorizontalAlignment="Right"
+      <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding Rating}" HorizontalAlignment="Right"
                  FontSize="18" FontFamily="{StaticResource ContentFontFamily}"
                  VerticalAlignment="Center" />
 
-      <TextBlock Grid.Row="1" Grid.Column="1" FontStyle="Italic" Margin="8 0 0 0"
+      <TextBlock Grid.Row="1" Grid.Column="2" FontStyle="Italic" Margin="8 0 0 0"
                  FontSize="16" FontFamily="{StaticResource ContentFontFamily}"
                  VerticalAlignment="Center">
         <TextBlock Text="Last modified: " />
         <TextBlock Text="{Binding ModifiedInstant, StringFormat=d}" />
         <TextBlock Text="{Binding ModifiedInstant, StringFormat=t}" />
       </TextBlock>
-      <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding Size}"
+      <TextBlock Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Text="{Binding Size}"
                  FontSize="16"
                  FontFamily="{StaticResource ContentFontFamily}"
                  HorizontalAlignment="Right" VerticalAlignment="Center" />
