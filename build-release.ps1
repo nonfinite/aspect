@@ -1,6 +1,6 @@
 Push-Location $PSScriptRoot
 
-msbuild /restore /p:Configuration=Release /t:aspect:PackageRelease
+msbuild /restore /p:Configuration=Release "/p:Platform=Any CPU" /t:aspect:PackageRelease
 
 Push-Location (Join-Path $PSScriptRoot "releases")
 
