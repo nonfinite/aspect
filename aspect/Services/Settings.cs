@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Xml;
@@ -33,6 +34,7 @@ namespace Aspect.Services
         private bool mKeepImageOnScreen;
         private DateTimeOffset mLastUpdateCheck;
         private bool mMaximizeOnStartup;
+        private bool mMultiImageSelection;
         private bool mShowMediaControls;
         private bool mShowThumbnails;
         private byte mSlideshowDurationInSeconds;
@@ -40,7 +42,6 @@ namespace Aspect.Services
         private TimeSpan mTimeBetweenUpdateChecks;
         private bool mUpdateAutomatically;
         private bool mUpdateToPreRelease;
-
 
         public static Settings Default { get; } = _Load();
 
@@ -70,6 +71,13 @@ namespace Aspect.Services
         {
             get => mMaximizeOnStartup;
             set => Set(ref mMaximizeOnStartup, value);
+        }
+
+        [DataMember(Name = "MultiImageSelection", IsRequired = false, EmitDefaultValue = true)]
+        public bool MultiImageSelection
+        {
+            get => mMultiImageSelection;
+            set => Set(ref mMultiImageSelection, value);
         }
 
         [IgnoreDataMember] public DateTimeOffset NextUpdateCheck => LastUpdateCheck.Add(TimeBetweenUpdateChecks);
@@ -188,12 +196,13 @@ namespace Aspect.Services
             mTimeBetweenUpdateChecks = TimeSpan.FromDays(1);
             mUpdateAutomatically = true;
             mUpdateToPreRelease = false;
+            mMultiImageSelection = false;
         }
 
         [OnDeserializing]
         internal void OnDeserializing(StreamingContext context) => _SetDefaults();
 
-        protected override bool Set<TProperty>(ref TProperty field, TProperty value, string propertyName = null)
+        protected override bool Set<TProperty>(ref TProperty field, TProperty value, [CallerMemberName] string propertyName = null)
         {
             if (base.Set(ref field, value, propertyName))
             {

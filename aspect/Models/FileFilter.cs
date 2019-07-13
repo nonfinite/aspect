@@ -1,6 +1,7 @@
 using System;
 using System.Text.RegularExpressions;
 
+using Aspect.Services;
 using Aspect.Utility;
 
 namespace Aspect.Models
@@ -10,17 +11,30 @@ namespace Aspect.Models
         public FileFilter()
         {
             mTextRegex = new LazyEx<Regex>(_CreateTextRegex);
+            Settings.Default.PropertyChanged += (sender, args) =>
+            {
+                if (args.PropertyName == nameof(Settings.MultiImageSelection) && !Settings.Default.MultiImageSelection)
+                {
+                    ShowOnlyCheckedItems = false;
+                }
+            };
         }
 
         private readonly LazyEx<Regex> mTextRegex;
         private Rating? mRating;
-
+        private bool mShowOnlyCheckedItems;
         private string mText;
 
         public Rating? Rating
         {
             get => mRating;
             set => Set(ref mRating, value);
+        }
+
+        public bool ShowOnlyCheckedItems
+        {
+            get => mShowOnlyCheckedItems;
+            set => Set(ref mShowOnlyCheckedItems, value);
         }
 
         public string Text
@@ -50,6 +64,11 @@ namespace Aspect.Models
         public bool IsMatch(FileData file)
         {
             if (file == null)
+            {
+                return false;
+            }
+
+            if (ShowOnlyCheckedItems && !file.IsSelected)
             {
                 return false;
             }

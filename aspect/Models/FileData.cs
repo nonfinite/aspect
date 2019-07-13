@@ -31,9 +31,16 @@ namespace Aspect.Models
         }, StringComparer.OrdinalIgnoreCase);
 
         private readonly Lazy<ImageMetadata> mMetadata;
-
+        private bool mIsSelected;
         private long mRandomKey;
         private Rating? mRating;
+
+        public bool IsSelected
+        {
+            get => mIsSelected;
+            set => Set(ref mIsSelected, value);
+        }
+
         public ImageMetadata Metadata => mMetadata.Value;
         public DateTime ModifiedInstant { get; }
         public string Name { get; }

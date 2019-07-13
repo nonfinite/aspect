@@ -47,6 +47,12 @@
         <mah:ToggleSwitch Header="Show Thumbnails In List?" IsChecked="{Binding ShowThumbnails}"
                           OnLabel="Yes" OffLabel="No" Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
 
+        <Border Style="{StaticResource Spacer}" />
+
+        <mah:ToggleSwitch Header="Enable Multi-Image Selection?" IsChecked="{Binding Settings.MultiImageSelection}"
+                          OnLabel="Enabled" OffLabel="Disabled"
+                          Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
+
         <StackPanel Orientation="Vertical"
                     Visibility="{Binding IsUpdatingSupported, Converter={StaticResource ConvertBoolToVisibleCollapsed}}">
           <Border Style="{StaticResource Spacer}" />

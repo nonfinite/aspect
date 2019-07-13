@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -104,6 +105,27 @@ namespace Aspect.UI
         private void _ResetSlideshowTimer() =>
             SlideshowSecondsRemaining = Math.Max(Settings.Default.SlideshowDurationInSeconds, (byte) 1);
 
+        public void CopySelectedFiles()
+        {
+            var files = new StringCollection();
+            foreach (var item in FileList.View)
+            {
+                if (item is FileData file && file.IsSelected)
+                {
+                    files.Add(file.Uri.LocalPath);
+                }
+            }
+
+            if (files.Count > 0)
+            {
+                Clipboard.SetFileDropList(files);
+            }
+            else
+            {
+                Clipboard.Clear();
+            }
+        }
+
         public async Task Initialize(string[] args)
         {
             foreach (var path in args)
@@ -161,8 +183,8 @@ namespace Aspect.UI
             var currentDir = Path.GetDirectoryName(currentFile);
 
             var supportedExtensions = string.Join(";", FileData.SupportedFileExtensions
-                                                      .Select(ext => $"*{ext}")
-                                                      .OrderBy(ext => ext));
+                .Select(ext => $"*{ext}")
+                .OrderBy(ext => ext));
             var ofd = new OpenFileDialog
             {
                 CheckFileExists = true,
