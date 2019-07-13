@@ -1,3 +1,4 @@
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Aspect.UI
@@ -7,6 +8,14 @@ namespace Aspect.UI
         public ImageListView()
         {
             InitializeComponent();
+        }
+
+        private void _CopySelectedFiles(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is MainViewModel vm)
+            {
+                vm.CopySelectedFiles();
+            }
         }
 
         public bool FocusSearchBox() => mSearchTextBox.Focus();

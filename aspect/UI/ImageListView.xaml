@@ -57,9 +57,16 @@
                          Visibility="{Binding FileList.IsPersistenceEnabled, Converter={StaticResource ConvertBoolToVisibleCollapsed}}" />
 
     <CheckBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Content="Show only checked items?"
-              Margin="7 8 0 0" FontFamily="{StaticResource ToggleSwitchFontFamily.Win10}" FontSize="{StaticResource ToggleSwitchFontSize.Win10}"
+              Margin="7 8 0 0" FontFamily="{StaticResource ToggleSwitchFontFamily.Win10}"
+              FontSize="{StaticResource ToggleSwitchFontSize.Win10}"
               IsChecked="{Binding FileList.Filter.ShowOnlyCheckedItems, Mode=TwoWay}"
               Visibility="{Binding Source={x:Static services:Settings.Default}, Path=MultiImageSelection, Converter={StaticResource ConvertBoolToVisibleCollapsed}}" />
+    <Button Grid.Row="4" Grid.Column="1" Style="{StaticResource ChromelessButtonStyle}" Margin="0 8 4 0"
+            HorizontalAlignment="Right" VerticalAlignment="Center" ToolTip="Copy selected files to clipboard"
+            Visibility="{Binding Source={x:Static services:Settings.Default}, Path=MultiImageSelection, Converter={StaticResource ConvertBoolToVisibleCollapsed}}"
+            Click="_CopySelectedFiles">
+      <iconPacks:PackIconModern Kind="PageCopy" />
+    </Button>
 
     <ListBox Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding FileList.View}"
              IsSynchronizedWithCurrentItem="True" BorderThickness="0" Margin="0 4 0 0"
