@@ -8,7 +8,6 @@ using System.Windows.Media.Imaging;
 
 using Aspect.Models;
 using Aspect.Services;
-using Aspect.Services.Win32;
 using Aspect.Utility;
 
 namespace Aspect.UI
@@ -233,6 +232,8 @@ namespace Aspect.UI
         {
             this.Log().Information("Loading {Uri}", file?.Uri);
 
+            mContextMenu.File = file;
+
             if (file == null)
             {
                 mBrush = null;
@@ -313,15 +314,6 @@ namespace Aspect.UI
             }
 
             return current;
-        }
-
-        private void _ShowProperties(object sender, RoutedEventArgs e)
-        {
-            var filePath = File?.Uri.LocalPath;
-            if (filePath != null)
-            {
-                Shell32.ShowFileProperties(filePath);
-            }
         }
 
         private void _UpdateMatrix()

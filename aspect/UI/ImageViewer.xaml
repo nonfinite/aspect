@@ -14,9 +14,7 @@
              ClipToBounds="True"
              SnapsToDevicePixels="True">
   <UserControl.ContextMenu>
-    <ContextMenu>
-      <MenuItem Header="Properties" Click="_ShowProperties" />
-    </ContextMenu>
+    <local:ImageViewerContextMenu x:Name="mContextMenu" />
   </UserControl.ContextMenu>
   <Grid>
     <mah:MetroProgressBar x:Name="mLoadingBar" Margin="4" IsIndeterminate="True"

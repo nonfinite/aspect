@@ -1,5 +1,7 @@
 # Version 1
 
+* 1.7.0 - Added context menu to open the containing folder of the current image.
+* 1.6.0 - Added context menu to copy the image, file, or file path.
 * 1.5.1 - Added exception handling when loading animated gif to fall back to static image if loading fails.
 * 1.5.0 - Images display correctly with exif rotation.
 * 1.4.0 - Added playback controls to animated gifs.
