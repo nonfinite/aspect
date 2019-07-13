@@ -114,6 +114,9 @@
     <Compile Include="UI\ImageViewer.xaml.cs">
       <DependentUpon>ImageViewer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\ImageViewerContextMenu.xaml.cs">
+      <DependentUpon>ImageViewerContextMenu.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\MediaControls.cs" />
     <Compile Include="UI\MediaControlsView.xaml.cs">
       <DependentUpon>MediaControlsView.xaml</DependentUpon>
@@ -137,6 +140,10 @@
     <Compile Include="Utility\SplatLoggerProxy.cs" />
     <Compile Include="Utility\TaskEx.cs" />
     <Page Include="UI\ImageListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\ImageViewerContextMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
